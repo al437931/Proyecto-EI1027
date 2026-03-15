@@ -1,8 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Modificar Usuari OVI</title>
+
+    <style>
+        a { color: #003366; }
+    </style>
 </head>
 <body>
 
@@ -10,32 +14,31 @@
 
 <form th:action="@{/usuariovi/update}" th:object="${usuariOVI}" method="post">
 
-    <!-- Campo oculto para mantener el ID -->
     <input type="hidden" th:field="*{idUsuari}">
 
-    <label>Nom:</label>
-    <input type="text" th:field="*{nom}" required><br><br>
+    <label for="nom">Nom:</label>
+    <input id="nom" type="text" th:field="*{nom}" required><br><br>
 
-    <label>Cognoms:</label>
-    <input type="text" th:field="*{cognoms}" required><br><br>
+    <label for="cognoms">Cognoms:</label>
+    <input id="cognoms" type="text" th:field="*{cognoms}" required><br><br>
 
-    <label>Email:</label>
-    <input type="email" th:field="*{email}" required><br><br>
+    <label for="email">Email:</label>
+    <input id="email" type="email" th:field="*{email}" required><br><br>
 
-    <label>Telèfon:</label>
-    <input type="text" th:field="*{telefon}" required><br><br>
+    <label for="telefon">Telèfon:</label>
+    <input id="telefon" type="text" th:field="*{telefon}" required><br><br>
 
-    <label>Adreça:</label>
-    <input type="text" th:field="*{adreca}"><br><br>
+    <label for="adreca">Adreça:</label>
+    <input id="adreca" type="text" th:field="*{adreca}"><br><br>
 
-    <label>Consentiment RGPD:</label>
-    <input type="checkbox" th:field="*{consentimentRGPD}"><br><br>
+    <label for="consentimentRGPD">Consentiment RGPD:</label>
+    <input id="consentimentRGPD" type="checkbox" th:field="*{consentimentRGPD}"><br><br>
 
-    <label>Data registre:</label>
-    <input type="date" th:field="*{dataRegistre}" required><br><br>
+    <label for="dataRegistre">Data registre:</label>
+    <input id="dataRegistre" type="date" th:field="*{dataRegistre}" required><br><br>
 
-    <label>Estat compte:</label>
-    <input type="text" th:field="*{estatCompte}" required><br><br>
+    <label for="estatCompte">Estat compte:</label>
+    <input id="estatCompte" type="text" th:field="*{estatCompte}" required><br><br>
 
     <button type="submit">Actualitzar</button>
 </form>
