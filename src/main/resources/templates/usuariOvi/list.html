@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Llista d'usuaris OVI</title>
+</head>
+<body>
+
+<h1>Llista d'usuaris OVI</h1>
+
+<a th:href="@{/usuariovi/add}">Afegir usuari</a>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Nom</th>
+        <th>Cognoms</th>
+        <th>Email</th>
+        <th>Telèfon</th>
+        <th>Accions</th>
+    </tr>
+
+    <tr th:each="u : ${usuaris}">
+        <td th:text="${u.idUsuari}"></td>
+        <td th:text="${u.nom}"></td>
+        <td th:text="${u.cognoms}"></td>
+        <td th:text="${u.email}"></td>
+        <td th:text="${u.telefon}"></td>
+
+        <td>
+            <a th:href="@{'/usuariovi/update/' + ${u.idUsuari}}">Editar</a> |
+            <a th:href="@{'/usuariovi/delete/' + ${u.idUsuari}}">Eliminar</a>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

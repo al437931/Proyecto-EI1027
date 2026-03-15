@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>EI1027</title>
+  <meta charset="UTF-8"/>
+  <!-- Afegim una fulla d’estil (Bootstrap) -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+</head>
+<body>
+<h1>Prova del controlador</h1>
+<p><b>Nadador:</b> <span th:text="${nadador.nom}"> </span></p>
+<p><b>Num. federat:</b> <span th:text="${nadador.numFederat}"> </span></p>
+<p><b>Pais:</b> <span th:text="${nadador.pais}"> </span></p>
+<p><b>Edat:</b> <span th:text="${nadador.edat}"> </span></p>
+<p><b>Categoria:</b> <span th:text="${categoria}"></span></p>
+
+<a href="/">Tornar</a>
+</body>
+</html>
