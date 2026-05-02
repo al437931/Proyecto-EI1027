@@ -84,6 +84,10 @@ public class AssistentPersonal {
         return estatAcceptat;
     }
 
+    public Boolean getEstatAcceptat() {
+        return estatAcceptat;
+    }
+
     public void setEstatAcceptat(Boolean estatAcceptat) {
         this.estatAcceptat = estatAcceptat;
     }

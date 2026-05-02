@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Llista d'assistents personals</title>
+</head>
+<body>
+<h1>Llista d'assistents personals</h1>
+<a th:href="@{/assistentpersonal/add}">Afegir assistent</a>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Nom</th>
+        <th>Cognoms</th>
+        <th>Email</th>
+        <th>Telèfon</th>
+        <th>Estat acceptat</th>
+        <th>Accions</th>
+    </tr>
+    <tr th:each="a : ${assistents}">
+        <td th:text="${a.idAssistent}"></td>
+        <td th:text="${a.nom}"></td>
+        <td th:text="${a.cognoms}"></td>
+        <td th:text="${a.email}"></td>
+        <td th:text="${a.telefon}"></td>
+        <td th:text="${a.estatAcceptat}"></td>
+        <td>
+            <a th:href="@{'/assistentpersonal/update/' + ${a.idAssistent}}">Editar</a> |
+            <a th:href="@{'/assistentpersonal/delete/' + ${a.idAssistent}}">Eliminar</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

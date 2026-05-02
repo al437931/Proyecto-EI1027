@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modificar Assistent Personal</title>
+</head>
+<body>
+<h1>Modificar Assistent Personal</h1>
+<form th:action="@{/assistentpersonal/update}" th:object="${assistentPersonal}" method="post">
+    <input type="hidden" th:field="*{idAssistent}">
+
+    <label for="nom">Nom:</label>
+    <input id="nom" type="text" th:field="*{nom}" required><br><br>
+
+    <label for="cognoms">Cognoms:</label>
+    <input id="cognoms" type="text" th:field="*{cognoms}" required><br><br>
+
+    <label for="email">Email:</label>
+    <input id="email" type="email" th:field="*{email}" required><br><br>
+
+    <label for="telefon">Telèfon:</label>
+    <input id="telefon" type="text" th:field="*{telefon}"><br><br>
+
+    <label for="formacio">Formació:</label>
+    <textarea id="formacio" th:field="*{formacio}"></textarea><br><br>
+
+    <label for="experiencia">Experiència:</label>
+    <textarea id="experiencia" th:field="*{experiencia}"></textarea><br><br>
+
+    <label for="disponibilitat">Disponibilitat:</label>
+    <input id="disponibilitat" type="text" th:field="*{disponibilitat}"><br><br>
+
+    <label for="estatAcceptat">Estat acceptat:</label>
+    <input id="estatAcceptat" type="checkbox" th:field="*{estatAcceptat}"><br><br>
+
+    <button type="submit">Actualitzar</button>
+</form>
+<br>
+<a th:href="@{/assistentpersonal/list}">Tornar a la llista</a>
+</body>
+</html>
