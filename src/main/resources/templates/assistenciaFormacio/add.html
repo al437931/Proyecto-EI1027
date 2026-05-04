@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Afegir activitat de formació</title>
+</head>
+<body>
+<h1>Afegir activitat de formació</h1>
+<form th:action="@{/activitatformacio/add}" th:object="${activitatFormacio}" method="post">
+    <label for="idActivitat">ID Activitat:</label>
+    <input id="idActivitat" type="number" th:field="*{idActivitat}" required><br><br>
+
+    <label for="idFormador">ID Formador:</label>
+    <input id="idFormador" type="number" th:field="*{idFormador}" required><br><br>
+
+    <label for="titol">Títol:</label>
+    <input id="titol" type="text" th:field="*{titol}" required><br><br>
+
+    <label for="descripcio">Descripció:</label>
+    <textarea id="descripcio" th:field="*{descripcio}"></textarea><br><br>
+
+    <label for="data">Data:</label>
+    <input id="data" type="date" th:field="*{data}" required><br><br>
+
+    <label for="tipus">Tipus:</label>
+    <select id="tipus" th:field="*{tipus}" required>
+        <option value="formacio">Formació</option>
+        <option value="divulgacio">Divulgació</option>
+    </select><br><br>
+
+    <label for="aforament">Aforament:</label>
+    <input id="aforament" type="number" th:field="*{aforament}"><br><br>
+
+    <button type="submit">Afegir</button>
+</form>
+<br>
+<a th:href="@{/activitatformacio/list}">Tornar a la llista</a>
+</body>
+</html>

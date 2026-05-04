@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modificar formador</title>
+</head>
+<body>
+<h1>Modificar formador</h1>
+<form th:action="@{/formador/update}" th:object="${formador}" method="post">
+    <input type="hidden" th:field="*{idFormador}">
+
+    <label for="nom">Nom:</label>
+    <input id="nom" type="text" th:field="*{nom}" required><br><br>
+
+    <label for="cognoms">Cognoms:</label>
+    <input id="cognoms" type="text" th:field="*{cognoms}" required><br><br>
+
+    <label for="especialitat">Especialitat:</label>
+    <input id="especialitat" type="text" th:field="*{especialitat}"><br><br>
+
+    <label for="email">Email:</label>
+    <input id="email" type="email" th:field="*{email}" required><br><br>
+
+    <button type="submit">Actualitzar</button>
+</form>
+<br>
+<a th:href="@{/formador/list}">Tornar a la llista</a>
+</body>
+</html>

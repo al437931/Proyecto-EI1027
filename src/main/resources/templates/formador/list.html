@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Llista de formadors</title>
+</head>
+<body>
+<h1>Llista de formadors</h1>
+<a th:href="@{/formador/add}">Afegir formador</a>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Nom</th>
+        <th>Cognoms</th>
+        <th>Especialitat</th>
+        <th>Email</th>
+        <th>Accions</th>
+    </tr>
+    <tr th:each="f : ${formadors}">
+        <td th:text="${f.idFormador}"></td>
+        <td th:text="${f.nom}"></td>
+        <td th:text="${f.cognoms}"></td>
+        <td th:text="${f.especialitat}"></td>
+        <td th:text="${f.email}"></td>
+        <td>
+            <a th:href="@{'/formador/update/' + ${f.idFormador}}">Editar</a> |
+            <a th:href="@{'/formador/delete/' + ${f.idFormador}}">Eliminar</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

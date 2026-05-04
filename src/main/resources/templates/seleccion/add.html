@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Afegir selecció</title>
+</head>
+<body>
+<h1>Afegir selecció</h1>
+<form th:action="@{/seleccion/add}" th:object="${seleccion}" method="post">
+    <label for="idSeleccion">ID Selecció:</label>
+    <input id="idSeleccion" type="number" th:field="*{idSeleccion}" required><br><br>
+
+    <label for="idRequest">ID Sol·licitud:</label>
+    <input id="idRequest" type="number" th:field="*{idRequest}" required><br><br>
+
+    <label for="idAssistent">ID Assistent:</label>
+    <input id="idAssistent" type="number" th:field="*{idAssistent}" required><br><br>
+
+    <label for="dataProposta">Data proposta:</label>
+    <input id="dataProposta" type="date" th:field="*{dataProposta}" required><br><br>
+
+    <label for="estat">Estat:</label>
+    <input id="estat" type="text" th:field="*{estat}" required><br><br>
+
+    <button type="submit">Afegir</button>
+</form>
+<br>
+<a th:href="@{/seleccion/list}">Tornar a la llista</a>
+</body>
+</html>

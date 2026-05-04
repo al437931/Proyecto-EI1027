@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modificar registre de contracte</title>
+</head>
+<body>
+<h1>Modificar registre de contracte</h1>
+<form th:action="@{/registrecontracte/update}" th:object="${registreContracte}" method="post">
+    <input type="hidden" th:field="*{idContracte}">
+
+    <label for="idAssistent">ID Assistent:</label>
+    <input id="idAssistent" type="number" th:field="*{idAssistent}" required><br><br>
+
+    <label for="idRequest">ID Sol·licitud:</label>
+    <input id="idRequest" type="number" th:field="*{idRequest}" required><br><br>
+
+    <label for="dataInici">Data inici:</label>
+    <input id="dataInici" type="date" th:field="*{dataInici}" required><br><br>
+
+    <label for="dataFi">Data fi:</label>
+    <input id="dataFi" type="date" th:field="*{dataFi}"><br><br>
+
+    <label for="pdfContracte">PDF Contracte (ruta):</label>
+    <input id="pdfContracte" type="text" th:field="*{pdfContracte}"><br><br>
+
+    <button type="submit">Actualitzar</button>
+</form>
+<br>
+<a th:href="@{/registrecontracte/list}">Tornar a la llista</a>
+</body>
+</html>
