@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Llista de sol·licituds d'AP</title>
+</head>
+<body>
+<h1>Llista de sol·licituds d'AP</h1>
+<a th:href="@{/aprequest/add}">Afegir sol·licitud</a>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>ID Usuari</th>
+        <th>Data creació</th>
+        <th>Estat</th>
+        <th>Tipus assistència</th>
+        <th>Accions</th>
+    </tr>
+    <tr th:each="r : ${requests}">
+        <td th:text="${r.idRequest}"></td>
+        <td th:text="${r.idUsuari}"></td>
+        <td th:text="${r.dataCreacio}"></td>
+        <td th:text="${r.estat}"></td>
+        <td th:text="${r.tipusAssistencia}"></td>
+        <td>
+            <a th:href="@{'/aprequest/update/' + ${r.idRequest}}">Editar</a> |
+            <a th:href="@{'/aprequest/delete/' + ${r.idRequest}}">Eliminar</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

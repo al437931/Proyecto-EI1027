@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modificar sol·licitud d'AP</title>
+</head>
+<body>
+<h1>Modificar sol·licitud d'AP</h1>
+<form th:action="@{/aprequest/update}" th:object="${apRequest}" method="post">
+    <input type="hidden" th:field="*{idRequest}">
+
+    <label for="idUsuari">ID Usuari:</label>
+    <input id="idUsuari" type="number" th:field="*{idUsuari}" required><br><br>
+
+    <label for="dataCreacio">Data creació:</label>
+    <input id="dataCreacio" type="date" th:field="*{dataCreacio}" required><br><br>
+
+    <label for="estat">Estat:</label>
+    <select id="estat" th:field="*{estat}" required>
+        <option value="en revisio">En revisió</option>
+        <option value="aprovada">Aprovada</option>
+        <option value="tancada amb contracte">Tancada amb contracte</option>
+        <option value="tancada amb contracte finalitzat">Tancada amb contracte finalitzat</option>
+        <option value="rebutjada">Rebutjada</option>
+    </select><br><br>
+
+    <label for="tipusAssistencia">Tipus assistència:</label>
+    <select id="tipusAssistencia" th:field="*{tipusAssistencia}" required>
+        <option value="PAP">PAP</option>
+        <option value="PATI">PATI</option>
+    </select><br><br>
+
+    <label for="descripcioNecessitats">Descripció necessitats:</label>
+    <textarea id="descripcioNecessitats" th:field="*{descripcioNecessitats}"></textarea><br><br>
+
+    <button type="submit">Actualitzar</button>
+</form>
+<br>
+<a th:href="@{/aprequest/list}">Tornar a la llista</a>
+</body>
+</html>
