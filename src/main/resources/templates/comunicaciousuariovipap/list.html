@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Llista de comunicacions</title>
+</head>
+<body>
+<h1>Llista de comunicacions</h1>
+<a th:href="@{/comunicacio/add}">Afegir comunicació</a>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>ID Selecció</th>
+        <th>Data i hora</th>
+        <th>Emissor</th>
+        <th>Missatge</th>
+        <th>Accions</th>
+    </tr>
+    <tr th:each="c : ${comunicacions}">
+        <td th:text="${c.idComunicacio}"></td>
+        <td th:text="${c.idSeleccion}"></td>
+        <td th:text="${c.dataHora}"></td>
+        <td th:text="${c.emissor}"></td>
+        <td th:text="${c.missatge}"></td>
+        <td>
+            <a th:href="@{'/comunicacio/update/' + ${c.idComunicacio}}">Editar</a> |
+            <a th:href="@{'/comunicacio/delete/' + ${c.idComunicacio}}">Eliminar</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
