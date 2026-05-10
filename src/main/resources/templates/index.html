@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ca"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>Inici</title></head>
+<body>
+<section layout:fragment="content">
+    <div class="text-center py-4">
+        <h1>Oficina per la Vida Independent</h1>
+        <p class="lead">"Sole Arnau Ripollés" de Castelló</p>
+        <hr>
+    </div>
+
+    <!-- No autenticat -->
+    <div th:if="${session.usuariLogat == null}" class="row justify-content-center mt-4">
+        <div class="col-md-5 text-center">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="h4">Benvingut/da a SgOVI</h2>
+                    <p>Sistema de gestió de l'Oficina per la Vida Independent.</p>
+                    <a th:href="@{/login}" class="btn btn-success btn-lg mt-2">Iniciar sessió</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Usuari OVI -->
+    <div th:if="${session.usuariLogat != null and session.usuariLogat.rol == 'usuari'}"
+         class="mt-4">
+        <h2>Benvingut/da, <span th:text="${session.usuariLogat.nom}"></span></h2>
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="card h-100 border-success">
+                    <div class="card-body text-center">
+                        <h3 class="h5">Les meues sol·licituds</h3>
+                        <p>Consulta i gestiona les teues sol·licituds d'assistència personal.</p>
+                        <a th:href="@{/usuari/solicituds}" class="btn btn-success">Veure</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-success">
+                    <div class="card-body text-center">
+                        <h3 class="h5">Nova sol·licitud</h3>
+                        <p>Registra una nova petició d'assistència personal (PAP o PATI).</p>
+                        <a th:href="@{/usuari/nova-solicitud}" class="btn btn-outline-success">Crear</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tècnic -->
+    <div th:if="${session.usuariLogat != null and session.usuariLogat.rol == 'tecnic'}"
+         class="mt-4">
+        <h2>Panell del tècnic OVI</h2>
+        <div class="row mt-3">
+            <div class="col-md-3">
+                <div class="card h-100 border-warning">
+                    <div class="card-body text-center">
+                        <h3 class="h5">Sol·licituds</h3>
+                        <p>Revisar i aprovar sol·licituds d'assistència personal.</p>
+                        <a th:href="@{/tecnic/solicituds}" class="btn btn-warning">Gestionar</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 border-secondary">
+                    <div class="card-body text-center">
+                        <h3 class="h5">Usuaris OVI</h3>
+                        <a th:href="@{/usuariovi/list}" class="btn btn-outline-secondary mt-2">Veure</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 border-secondary">
+                    <div class="card-body text-center">
+                        <h3 class="h5">Assistents</h3>
+                        <a th:href="@{/assistentPersonal/list}" class="btn btn-outline-secondary mt-2">Veure</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 border-secondary">
+                    <div class="card-body text-center">
+                        <h3 class="h5">Formadors</h3>
+                        <a th:href="@{/formador/list}" class="btn btn-outline-secondary mt-2">Veure</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

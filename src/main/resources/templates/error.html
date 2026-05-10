@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ca"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>Error</title></head>
+<body>
+<section layout:fragment="content">
+    <div class="alert mt-4"
+         th:classappend="${#strings.equals(errorName, 'Error inesperat')} ?
+                          'alert-warning' : 'alert-danger'">
+        <h2 class="fs-4 fw-bold" th:text="${errorName}">Error</h2>
+        <p th:text="${message}">S'ha produït un error.</p>
+        <hr>
+        <a th:href="@{/}" class="btn"
+           th:classappend="${#strings.equals(errorName, 'Error inesperat')} ?
+                            'btn-warning' : 'btn-danger'">
+            Anar a l'inici
+        </a>
+    </div>
+</section>
+</body>
+</html>
