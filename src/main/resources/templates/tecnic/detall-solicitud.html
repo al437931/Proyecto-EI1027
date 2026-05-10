@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ca"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>Revisió de sol·licitud</title></head>
+<body>
+<section layout:fragment="content">
+    <h1>Revisió de la sol·licitud núm. <span th:text="${solicitud.idRequest}"></span></h1>
+
+    <div class="row">
+        <div class="col-md-7">
+            <table class="table table-bordered mb-4">
+                <caption>Dades de la sol·licitud</caption>
+                <tbody>
+                    <tr>
+                        <th scope="row" class="table-light" style="width:40%">Número</th>
+                        <td th:text="${solicitud.idRequest}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="table-light">ID Usuari</th>
+                        <td th:text="${solicitud.idUsuari}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="table-light">Data creació</th>
+                        <td th:text="${#temporals.format(solicitud.dataCreacio, 'dd/MM/yyyy')}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="table-light">Tipus</th>
+                        <td th:text="${solicitud.tipusAssistencia}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="table-light">Estat actual</th>
+                        <td th:text="${solicitud.estat}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="table-light">Descripció necessitats</th>
+                        <td th:text="${solicitud.descripcioNecessitats}"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Accions disponibles segons l'estat -->
+            <div th:if="${solicitud.estat == 'en revisio'}">
+                <h2>Acció</h2>
+                <div class="d-flex gap-2">
+                    <form th:action="@{'/tecnic/solicitud/' + ${solicitud.idRequest} + '/aprovar'}"
+                          method="post">
+                        <button type="submit" class="btn btn-success">
+                            ✓ Aprovar i cercar candidats
+                        </button>
+                    </form>
+                    <form th:action="@{'/tecnic/solicitud/' + ${solicitud.idRequest} + '/rebutjar'}"
+                          method="post">
+                        <button type="submit" class="btn btn-danger">
+                            ✗ Rebutjar sol·licitud
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div th:if="${solicitud.estat == 'aprovada'}" class="alert alert-success">
+                <strong>Sol·licitud aprovada.</strong>
+                <a th:href="@{'/tecnic/solicitud/' + ${solicitud.idRequest} + '/candidats'}"
+                   class="btn btn-sm btn-success ms-2">Veure candidats proposats</a>
+            </div>
+
+            <div th:if="${solicitud.estat == 'rebutjada'}" class="alert alert-danger">
+                Aquesta sol·licitud ha estat rebutjada.
+            </div>
+
+            <div th:if="${solicitud.estat == 'tancada amb contracte'}" class="alert alert-info">
+                Aquesta sol·licitud té un contracte actiu.
+            </div>
+
+            <div class="mt-3">
+                <a th:href="@{/tecnic/solicituds}" class="btn btn-outline-secondary">
+                    &larr; Tornar a la llista
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ca"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>Gestió de sol·licituds</title></head>
+<body>
+<section layout:fragment="content">
+    <h1>Panell del tècnic OVI</h1>
+
+    <h2>Sol·licituds pendents de revisió</h2>
+
+    <div th:if="${#lists.isEmpty(pendents)}" class="alert alert-success">
+        No hi ha sol·licituds pendents de revisió.
+    </div>
+
+    <table th:unless="${#lists.isEmpty(pendents)}"
+           class="table table-striped table-hover">
+        <caption>Sol·licituds en revisió</caption>
+        <thead class="table-warning">
+            <tr>
+                <th scope="col">Núm.</th>
+                <th scope="col">ID Usuari</th>
+                <th scope="col">Data creació</th>
+                <th scope="col">Tipus</th>
+                <th scope="col">Estat</th>
+                <th scope="col">Accions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="s : ${pendents}">
+                <td th:text="${s.idRequest}"></td>
+                <td th:text="${s.idUsuari}"></td>
+                <td th:text="${#temporals.format(s.dataCreacio, 'dd/MM/yyyy')}"></td>
+                <td th:text="${s.tipusAssistencia}"></td>
+                <td><span class="estat-en-revisio" th:text="${s.estat}"></span></td>
+                <td>
+                    <a th:href="@{'/tecnic/solicitud/' + ${s.idRequest}}"
+                       class="btn btn-sm btn-warning">Revisar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 class="mt-4">Totes les sol·licituds</h2>
+
+    <div th:if="${#lists.isEmpty(totes)}" class="alert alert-info">
+        No hi ha sol·licituds registrades.
+    </div>
+
+    <table th:unless="${#lists.isEmpty(totes)}"
+           class="table table-striped table-hover table-sm">
+        <caption>Historial complet de sol·licituds</caption>
+        <thead class="table-success">
+            <tr>
+                <th scope="col">Núm.</th>
+                <th scope="col">ID Usuari</th>
+                <th scope="col">Data</th>
+                <th scope="col">Tipus</th>
+                <th scope="col">Estat</th>
+                <th scope="col">Accions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="s : ${totes}">
+                <td th:text="${s.idRequest}"></td>
+                <td th:text="${s.idUsuari}"></td>
+                <td th:text="${#temporals.format(s.dataCreacio, 'dd/MM/yyyy')}"></td>
+                <td th:text="${s.tipusAssistencia}"></td>
+                <td th:text="${s.estat}"></td>
+                <td>
+                    <a th:href="@{'/tecnic/solicitud/' + ${s.idRequest}}"
+                       class="btn btn-sm btn-outline-primary">Veure</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+</body>
+</html>
