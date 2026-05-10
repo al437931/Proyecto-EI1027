@@ -1,38 +1,41 @@
 <!DOCTYPE html>
-<html lang="ca" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Llista d'usuaris OVI</title>
-</head>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>Usuaris OVI</title></head>
 <body>
-
-<h1>Llista d'usuaris OVI</h1>
-
-<a th:href="@{/usuariovi/add}">Afegir usuari</a>
-
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Nom</th>
-        <th>Cognoms</th>
-        <th>Email</th>
-        <th>Telèfon</th>
-        <th>Accions</th>
-    </tr>
-
-    <tr th:each="u : ${usuaris}">
+<section layout:fragment="content">
+  <h1>Llista d'usuaris OVI</h1>
+  <a th:href="@{/usuariovi/add}" class="btn btn-success mb-3">+ Afegir usuari</a>
+  <div th:if="${#lists.isEmpty(usuaris)}" class="alert alert-info">No hi ha usuaris registrats.</div>
+  <table th:unless="${#lists.isEmpty(usuaris)}" class="table table-striped table-hover align-middle">
+    <caption>Usuaris registrats a l'OVI</caption>
+    <thead class="table-success">
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Nom</th>
+        <th scope="col">Cognoms</th>
+        <th scope="col">Email</th>
+        <th scope="col">Telèfon</th>
+        <th scope="col">Estat</th>
+        <th scope="col">Accions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="u : ${usuaris}">
         <td th:text="${u.idUsuari}"></td>
         <td th:text="${u.nom}"></td>
         <td th:text="${u.cognoms}"></td>
-        <td th:text="${u.email}"></td>
+        <td><a th:href="'mailto:'+${u.email}" th:text="${u.email}"></a></td>
         <td th:text="${u.telefon}"></td>
-
+        <td th:text="${u.estatCompte}"></td>
         <td>
-            <a th:href="@{'/usuariovi/update/' + ${u.idUsuari}}">Editar</a> |
-            <a th:href="@{'/usuariovi/delete/' + ${u.idUsuari}}">Eliminar</a>
+          <a th:href="@{'/usuariovi/update/'+${u.idUsuari}}" class="btn btn-sm btn-warning">Editar</a>
+          <a th:href="@{'/usuariovi/delete/'+${u.idUsuari}}" class="btn btn-sm btn-danger">Eliminar</a>
         </td>
-    </tr>
-</table>
-
+      </tr>
+    </tbody>
+  </table>
+</section>
 </body>
 </html>

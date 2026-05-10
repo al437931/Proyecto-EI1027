@@ -1,50 +1,63 @@
 <!DOCTYPE html>
-<html lang="ca" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Modificar Usuari OVI</title>
-
-    <style>
-        a { color: #003366; }
-    </style>
-</head>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>Modificar Usuari OVI</title></head>
 <body>
-
-<h1>Modificar Usuari OVI</h1>
-
-<form th:action="@{/usuariovi/update}" th:object="${usuariOVI}" method="post">
-
-    <input type="hidden" th:field="*{idUsuari}">
-
-    <label for="nom">Nom:</label>
-    <input id="nom" type="text" th:field="*{nom}" required><br><br>
-
-    <label for="cognoms">Cognoms:</label>
-    <input id="cognoms" type="text" th:field="*{cognoms}" required><br><br>
-
-    <label for="email">Email:</label>
-    <input id="email" type="email" th:field="*{email}" required><br><br>
-
-    <label for="telefon">Telèfon:</label>
-    <input id="telefon" type="text" th:field="*{telefon}" required><br><br>
-
-    <label for="adreca">Adreça:</label>
-    <input id="adreca" type="text" th:field="*{adreca}"><br><br>
-
-    <label for="consentimentRGPD">Consentiment RGPD:</label>
-    <input id="consentimentRGPD" type="checkbox" th:field="*{consentimentRGPD}"><br><br>
-
-    <label for="dataRegistre">Data registre:</label>
-    <input id="dataRegistre" type="date" th:field="*{dataRegistre}" required><br><br>
-
-    <label for="estatCompte">Estat compte:</label>
-    <input id="estatCompte" type="text" th:field="*{estatCompte}" required><br><br>
-
-    <button type="submit">Actualitzar</button>
-</form>
-
-<br>
-<a th:href="@{/usuariovi/list}">Tornar a la llista</a>
-
+<section layout:fragment="content">
+  <h1>Modificar Usuari OVI</h1>
+  <form th:action="@{/usuariovi/update}" th:object="${usuariOVI}" method="post" class="row g-3">
+    <input type="hidden" th:field="*{idUsuari}"/>
+    <div class="col-md-4">
+      <label for="nom" class="form-label">Nom</label>
+      <input id="nom" type="text" th:field="*{nom}" class="form-control" maxlength="50" required th:errorclass="needcorrection"/>
+      <div th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}" class="error"></div>
+    </div>
+    <div class="col-md-8">
+      <label for="cognoms" class="form-label">Cognoms</label>
+      <input id="cognoms" type="text" th:field="*{cognoms}" class="form-control" maxlength="80" required th:errorclass="needcorrection"/>
+      <div th:if="${#fields.hasErrors('cognoms')}" th:errors="*{cognoms}" class="error"></div>
+    </div>
+    <div class="col-md-5">
+      <label for="email" class="form-label">Email</label>
+      <input id="email" type="email" th:field="*{email}" class="form-control" maxlength="100" required th:errorclass="needcorrection"/>
+      <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error"></div>
+    </div>
+    <div class="col-md-3">
+      <label for="telefon" class="form-label">Telèfon</label>
+      <input id="telefon" type="tel" th:field="*{telefon}" class="form-control" minlength="9" maxlength="9" th:errorclass="needcorrection"/>
+      <div th:if="${#fields.hasErrors('telefon')}" th:errors="*{telefon}" class="error"></div>
+    </div>
+    <div class="col-md-4">
+      <label for="dataRegistre" class="form-label">Data registre</label>
+      <input id="dataRegistre" type="date" th:field="*{dataRegistre}" class="form-control" required th:errorclass="needcorrection"/>
+      <div th:if="${#fields.hasErrors('dataRegistre')}" th:errors="*{dataRegistre}" class="error"></div>
+    </div>
+    <div class="col-md-8">
+      <label for="adreca" class="form-label">Adreça</label>
+      <input id="adreca" type="text" th:field="*{adreca}" class="form-control" maxlength="120" th:errorclass="needcorrection"/>
+      <div th:if="${#fields.hasErrors('adreca')}" th:errors="*{adreca}" class="error"></div>
+    </div>
+    <div class="col-md-4">
+      <label for="estatCompte" class="form-label">Estat compte</label>
+      <select id="estatCompte" th:field="*{estatCompte}" class="form-select" required th:errorclass="needcorrection">
+        <option value="pendent">Pendent</option>
+        <option value="actiu">Actiu</option>
+        <option value="inactiu">Inactiu</option>
+      </select>
+      <div th:if="${#fields.hasErrors('estatCompte')}" th:errors="*{estatCompte}" class="error"></div>
+    </div>
+    <div class="col-12">
+      <div class="form-check">
+        <input id="consentimentRGPD" type="checkbox" th:field="*{consentimentRGPD}" class="form-check-input"/>
+        <label for="consentimentRGPD" class="form-check-label">Consentiment RGPD</label>
+      </div>
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-warning">Actualitzar</button>
+      <a th:href="@{/usuariovi/list}" class="btn btn-outline-secondary ms-2">Cancel·lar</a>
+    </div>
+  </form>
+</section>
 </body>
 </html>
