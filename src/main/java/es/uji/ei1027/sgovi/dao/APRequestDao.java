@@ -71,4 +71,30 @@ public class APRequestDao {
                 new APRequestRowMapper()
         );
     }
+
+    // Retorna les sol·licituds d'un usuari concret
+    public List<APRequest> getAPRequestsByUsuari(int idUsuari) {
+        return jdbcTemplate.query(
+                "SELECT * FROM aprequest WHERE idusuari = ? ORDER BY datacreacio DESC",
+                new APRequestRowMapper(),
+                idUsuari
+        );
+    }
+
+    // Retorna les sol·licituds en estat "en revisio" (pendents de revisió pel tècnic)
+    public List<APRequest> getAPRequestsPendents() {
+        return jdbcTemplate.query(
+                "SELECT * FROM aprequest WHERE estat = 'en revisio' ORDER BY datacreacio",
+                new APRequestRowMapper()
+        );
+    }
+
+    // Actualitza únicament l'estat d'una sol·licitud
+    public void updateEstat(int idRequest, String nouEstat) {
+        jdbcTemplate.update(
+                "UPDATE aprequest SET estat = ? WHERE idrequest = ?",
+                nouEstat,
+                idRequest
+        );
+    }
 }
