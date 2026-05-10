@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="loggeduser" th:object="${session}" th:fragment="logininfo">
+    <p th:if="*{usuariLogat == null}">
+        No autenticat &nbsp;
+        <a th:href="@{/login}" class="btn btn-sm btn-outline-primary">Entrar</a>
+    </p>
+    <p th:unless="*{usuariLogat == null}">
+        Autenticat com
+        <strong th:text="*{usuariLogat.nom}"></strong>
+        (<span th:text="*{usuariLogat.rol}"></span>)
+        &nbsp;
+        <a th:href="@{/logout}" class="btn btn-sm btn-outline-secondary">Eixir</a>
+    </p>
+</div>
+</body>
+</html>

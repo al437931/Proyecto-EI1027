@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ca"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          crossorigin="anonymous"/>
+    <!-- Bootstrap 5 JS (per a dropdowns i navbar) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+            crossorigin="anonymous"></script>
+    <!-- CSS propi -->
+    <link type="text/css" th:href="@{/css/sgovi.css}" href="/css/sgovi.css" rel="stylesheet"/>
+    <title layout:title-pattern="$CONTENT_TITLE - SgOVI">SgOVI</title>
+</head>
+<body>
+<header>
+    <div th:replace="~{fragments/menu :: menu}"></div>
+    <div class="container">
+        <div th:replace="~{fragments/logininfo :: logininfo}"></div>
+    </div>
+</header>
+
+<main class="container mt-3">
+    <section layout:fragment="content">
+        <!-- El contingut específic de cada pàgina es col·locarà aquí -->
+    </section>
+</main>
+
+<footer class="container mt-5">
+    <hr>
+    <p class="text-body-secondary text-center">
+        SgOVI - Oficina per la Vida Independent "Sole Arnau Ripollés" de Castelló
+        &nbsp;|&nbsp; EI1027 - Disseny i Implementació de Sistemes d'Informació
+    </p>
+</footer>
+</body>
+</html>
