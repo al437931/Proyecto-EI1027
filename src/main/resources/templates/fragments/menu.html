@@ -34,6 +34,20 @@
                     </ul>
                 </li>
             </ul>
+            <!-- Usuari autenticat a la dreta del navbar -->
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item" th:if="${session.usuariLogat == null}">
+                    <a th:href="@{/login}" class="nav-link">Entrar</a>
+                </li>
+                <li class="nav-item" th:if="${session.usuariLogat != null}">
+                    <span class="navbar-text me-2">
+                        <strong th:text="${session.usuariLogat.nom}"></strong>
+                    </span>
+                </li>
+                <li class="nav-item" th:if="${session.usuariLogat != null}">
+                    <a th:href="@{/logout}" class="nav-link">Eixir</a>
+                </li>
+            </ul>
         </div>
     </div>
 </nav>
