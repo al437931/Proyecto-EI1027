@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ca"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>Nova sol·licitud d'AP</title></head>
+<body>
+<section layout:fragment="content">
+    <h1>Nova sol·licitud d'assistència personal</h1>
+
+    <div class="row">
+        <div class="col-md-7">
+            <form th:action="@{/usuari/nova-solicitud}" th:object="${apRequest}" method="post">
+
+                <fieldset class="mb-4">
+                    <legend class="h5">Dades de la sol·licitud</legend>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-4 col-form-label">Tipus d'assistència:</label>
+                        <div class="col-sm-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio"
+                                       th:field="*{tipusAssistencia}"
+                                       value="PAP" id="tipusPAP"
+                                       th:errorclass="needcorrection"/>
+                                <label class="form-check-label" for="tipusPAP">
+                                    PAP - Professional d'Assistència Personal
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio"
+                                       th:field="*{tipusAssistencia}"
+                                       value="PATI" id="tipusPATI"
+                                       th:errorclass="needcorrection"/>
+                                <label class="form-check-label" for="tipusPATI">
+                                    PATI - Professional d'Assistència Terapèutica Infantil
+                                </label>
+                            </div>
+                            <div th:if="${#fields.hasErrors('tipusAssistencia')}"
+                                 th:errors="*{tipusAssistencia}" class="error"></div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="descripcioNecessitats" class="col-sm-4 col-form-label">
+                            Descripció de les necessitats:
+                        </label>
+                        <div class="col-sm-8">
+                            <textarea id="descripcioNecessitats"
+                                      class="form-control"
+                                      th:field="*{descripcioNecessitats}"
+                                      th:errorclass="needcorrection"
+                                      rows="5"
+                                      maxlength="1000"
+                                      placeholder="Descriviu detalladament les necessitats d'assistència personal..."></textarea>
+                            <div th:if="${#fields.hasErrors('descripcioNecessitats')}"
+                                 th:errors="*{descripcioNecessitats}" class="error"></div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="row">
+                    <div class="col-sm-8 offset-sm-4">
+                        <button type="submit" class="btn btn-success me-2">Enviar sol·licitud</button>
+                        <a th:href="@{/usuari/solicituds}" class="btn btn-outline-secondary">Cancel·lar</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-5">
+            <div class="alert alert-info">
+                <h5>Informació</h5>
+                <p>Un cop enviada, la sol·licitud serà revisada pel personal tècnic de l'OVI.</p>
+                <p>Podeu fer el seguiment de l'estat a la llista de sol·licituds.</p>
+                <p><strong>PAP:</strong> per a persones adultes que necessiten assistència personal.</p>
+                <p><strong>PATI:</strong> per a infants i joves que necessiten assistència terapèutica.</p>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

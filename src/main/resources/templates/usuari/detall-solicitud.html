@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ca"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>Detall de la sol·licitud</title></head>
+<body>
+<section layout:fragment="content">
+    <h1>Detall de la sol·licitud</h1>
+
+    <div class="row">
+        <div class="col-md-7">
+            <table class="table table-bordered">
+                <caption>Informació de la sol·licitud</caption>
+                <tbody>
+                    <tr>
+                        <th scope="row" class="table-light" style="width:40%">Número de sol·licitud</th>
+                        <td th:text="${solicitud.idRequest}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="table-light">Data de creació</th>
+                        <td th:text="${#temporals.format(solicitud.dataCreacio, 'dd/MM/yyyy')}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="table-light">Tipus d'assistència</th>
+                        <td th:text="${solicitud.tipusAssistencia}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="table-light">Estat</th>
+                        <td>
+                            <span th:text="${solicitud.estat}"
+                                  th:classappend="${solicitud.estat == 'en revisio'} ? 'estat-en-revisio' :
+                                                 (${solicitud.estat == 'aprovada'} ? 'estat-aprovada' :
+                                                 (${solicitud.estat == 'rebutjada'} ? 'estat-rebutjada' : 'estat-tancada'))">
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="table-light">Descripció de necessitats</th>
+                        <td th:text="${solicitud.descripcioNecessitats}"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Missatge d'estat -->
+            <div th:switch="${solicitud.estat}" class="mt-3">
+                <div th:case="'en revisio'" class="alert alert-warning">
+                    <strong>En revisió:</strong> La vostra sol·licitud està sent revisada
+                    pel personal tècnic de l'OVI. Rebreu una notificació quan hi haja novetats.
+                </div>
+                <div th:case="'aprovada'" class="alert alert-success">
+                    <strong>Aprovada:</strong> La vostra sol·licitud ha estat aprovada.
+                    El tècnic us proposarà aviat candidats adequats.
+                </div>
+                <div th:case="'rebutjada'" class="alert alert-danger">
+                    <strong>Rebutjada:</strong> La vostra sol·licitud ha estat rebutjada.
+                    Poseu-vos en contacte amb l'OVI per a més informació.
+                </div>
+                <div th:case="'tancada amb contracte'" class="alert alert-info">
+                    <strong>Contracte actiu:</strong> S'ha assignat un assistent personal
+                    a la vostra sol·licitud. El contracte és vigent.
+                </div>
+                <div th:case="'tancada amb contracte finalitzat'" class="alert alert-secondary">
+                    <strong>Finalitzada:</strong> El contracte associat a aquesta sol·licitud
+                    ha finalitzat.
+                </div>
+            </div>
+
+            <a th:href="@{/usuari/solicituds}" class="btn btn-outline-secondary mt-2">
+                &larr; Tornar a les meues sol·licituds
+            </a>
+        </div>
+    </div>
+</section>
+</body>
+</html>

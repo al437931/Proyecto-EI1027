@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ca"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>Les meues sol·licituds</title></head>
+<body>
+<section layout:fragment="content">
+    <h1>Les meues sol·licituds d'assistència personal</h1>
+
+    <a th:href="@{/usuari/nova-solicitud}" class="btn btn-success mb-3">
+        + Nova sol·licitud
+    </a>
+
+    <div th:if="${#lists.isEmpty(solicituds)}" class="alert alert-info">
+        Encara no tens cap sol·licitud registrada.
+    </div>
+
+    <table th:unless="${#lists.isEmpty(solicituds)}"
+           class="table table-striped table-hover">
+        <caption>Sol·licituds d'assistència personal</caption>
+        <thead class="table-success">
+            <tr>
+                <th scope="col">Núm.</th>
+                <th scope="col">Data creació</th>
+                <th scope="col">Tipus</th>
+                <th scope="col">Estat</th>
+                <th scope="col">Accions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="s : ${solicituds}">
+                <td th:text="${s.idRequest}"></td>
+                <td th:text="${#temporals.format(s.dataCreacio, 'dd/MM/yyyy')}"></td>
+                <td th:text="${s.tipusAssistencia}"></td>
+                <td>
+                    <span th:text="${s.estat}"
+                          th:classappend="${s.estat == 'en revisio'} ? 'estat-en-revisio' :
+                                         (${s.estat == 'aprovada'} ? 'estat-aprovada' :
+                                         (${s.estat == 'rebutjada'} ? 'estat-rebutjada' : 'estat-tancada'))">
+                    </span>
+                </td>
+                <td>
+                    <a th:href="@{'/usuari/solicitud/' + ${s.idRequest}}"
+                       class="btn btn-sm btn-outline-primary">Veure detall</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+</body>
+</html>
