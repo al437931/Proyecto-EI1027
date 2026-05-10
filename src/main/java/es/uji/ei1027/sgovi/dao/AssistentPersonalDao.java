@@ -76,4 +76,12 @@ public class AssistentPersonalDao {
                 new AssistentPersonalRowMapper()
         );
     }
+
+    // Retorna els assistents que han estat acceptats pel tècnic
+    public List<AssistentPersonal> getAssistentsAcceptats() {
+        return jdbcTemplate.query(
+                "SELECT * FROM assistentpersonal WHERE estatacceptat = true ORDER BY nom",
+                new AssistentPersonalRowMapper()
+        );
+    }
 }
