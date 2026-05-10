@@ -2,31 +2,29 @@
 <html lang="ca" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Llista d'activitats de formació</title>
+    <title>Llista d'assistències a formació</title>
 </head>
 <body>
-<h1>Llista d'activitats de formació</h1>
-<a th:href="@{/activitatformacio/add}">Afegir activitat</a>
+<h1>Llista d'assistències a formació</h1>
+<a th:href="@{/assistenciaformacio/add}">Afegir assistència</a>
 <table border="1">
     <tr>
         <th>ID</th>
-        <th>ID Formador</th>
-        <th>Títol</th>
-        <th>Data</th>
-        <th>Tipus</th>
-        <th>Aforament</th>
+        <th>ID Activitat</th>
+        <th>ID Assistent</th>
+        <th>Ha assistit</th>
+        <th>Certificat emès</th>
         <th>Accions</th>
     </tr>
-    <tr th:each="a : ${activitats}">
+    <tr th:each="a : ${assistencies}">
+        <td th:text="${a.idAssistencia}"></td>
         <td th:text="${a.idActivitat}"></td>
-        <td th:text="${a.idFormador}"></td>
-        <td th:text="${a.titol}"></td>
-        <td th:text="${a.data}"></td>
-        <td th:text="${a.tipus}"></td>
-        <td th:text="${a.aforament}"></td>
+        <td th:text="${a.idAssistent}"></td>
+        <td th:text="${a.assistent}"></td>
+        <td th:text="${a.certificatEmes}"></td>
         <td>
-            <a th:href="@{'/activitatformacio/update/' + ${a.idActivitat}}">Editar</a> |
-            <a th:href="@{'/activitatformacio/delete/' + ${a.idActivitat}}">Eliminar</a>
+            <a th:href="@{'/assistenciaformacio/update/' + ${a.idAssistencia}}">Editar</a> |
+            <a th:href="@{'/assistenciaformacio/delete/' + ${a.idAssistencia}}">Eliminar</a>
         </td>
     </tr>
 </table>
