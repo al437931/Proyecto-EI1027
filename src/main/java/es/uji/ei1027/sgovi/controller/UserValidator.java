@@ -1,4 +1,4 @@
-package es.uji.ei1027.sgovi.controller;
+    package es.uji.ei1027.sgovi.controller;
 
 import es.uji.ei1027.sgovi.model.UserDetails;
 import org.springframework.validation.Errors;
