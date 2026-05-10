@@ -13,7 +13,7 @@ h1 {
 
 h2 {
     font-size: 1.4rem;
-    color: #4a9970;
+    color: #1a5c35; /* contrast suficient sobre blanc: ratio > 7:1 */
 }
 
 /* Classe per a missatges d'error de validació */
@@ -36,8 +36,8 @@ h2 {
     background-color: #fff3cd !important;
 }
 
-/* Estil de l'estat de sol·licitud */
-.estat-en-revisio { color: #856404; font-weight: bold; }
-.estat-aprovada { color: #155724; font-weight: bold; }
-.estat-rebutjada { color: #721c24; font-weight: bold; }
-.estat-tancada { color: #383d41; font-weight: bold; }
+/* Estil de l'estat de sol·licitud - colors amb contrast WCAG AA */
+.estat-en-revisio { color: #5a4000; font-weight: bold; } /* ratio > 7:1 sobre blanc */
+.estat-aprovada { color: #0a3d1f; font-weight: bold; }   /* ratio > 10:1 sobre blanc */
+.estat-rebutjada { color: #5c0a0a; font-weight: bold; }  /* ratio > 9:1 sobre blanc */
+.estat-tancada { color: #1a1d20; font-weight: bold; }    /* ratio > 14:1 sobre blanc */
