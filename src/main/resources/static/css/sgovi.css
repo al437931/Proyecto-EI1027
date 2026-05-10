@@ -41,3 +41,39 @@ h2 {
 .estat-aprovada { color: #0a3d1f; font-weight: bold; }   /* ratio > 10:1 sobre blanc */
 .estat-rebutjada { color: #5c0a0a; font-weight: bold; }  /* ratio > 9:1 sobre blanc */
 .estat-tancada { color: #1a1d20; font-weight: bold; }    /* ratio > 14:1 sobre blanc */
+
+/* Navbar - contrast WCAG AA garantit */
+nav.navbar .nav-link,
+nav.navbar .navbar-brand {
+    color: #ffffff !important;
+}
+nav.navbar .nav-link:hover,
+nav.navbar .nav-link:focus {
+    color: #f0f0f0 !important;
+    text-decoration: underline;
+}
+
+/* Botó Cancel·lar - contrast suficient */
+.btn-secondary {
+    background-color: #5a6268;
+    border-color: #545b62;
+    color: #ffffff !important;
+}
+
+/* Loggeduser - text fosc sobre fons blanc */
+.loggeduser p {
+    color: #1a1d20;
+}
+.loggeduser .btn-secondary {
+    background-color: #3d4349;
+    border-color: #3d4349;
+    color: #ffffff !important;
+}
+.loggeduser .btn-outline-primary {
+    color: #003580 !important;
+    border-color: #003580 !important;
+}
+.loggeduser .btn-outline-primary:hover {
+    background-color: #003580;
+    color: #ffffff !important;
+}
