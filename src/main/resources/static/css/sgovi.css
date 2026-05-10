@@ -1,0 +1,43 @@
+/* SgOVI - Full d'estils propi */
+
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    background-color: #f8f9fa;
+}
+
+h1 {
+    font-size: 2rem;
+    color: #2c6e49;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 1.4rem;
+    color: #4a9970;
+}
+
+/* Classe per a missatges d'error de validació */
+.error {
+    color: #dc3545;
+    font-size: 90%;
+}
+
+/* Usuari autenticat (fragment logininfo) */
+.loggeduser {
+    color: #343a40;
+    text-align: right;
+    margin-right: 10pt;
+    font-size: 0.9rem;
+}
+
+/* Classe per a camps erronis */
+.needcorrection {
+    border-color: #dc3545 !important;
+    background-color: #fff3cd !important;
+}
+
+/* Estil de l'estat de sol·licitud */
+.estat-en-revisio { color: #856404; font-weight: bold; }
+.estat-aprovada { color: #155724; font-weight: bold; }
+.estat-rebutjada { color: #721c24; font-weight: bold; }
+.estat-tancada { color: #383d41; font-weight: bold; }

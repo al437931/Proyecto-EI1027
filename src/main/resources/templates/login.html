@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ca"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head>
+    <title>Iniciar sessió</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <h1>Iniciar sessió</h1>
+
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <form th:action="@{/login}" th:object="${user}" method="post">
+
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Email:</label>
+                            <input id="username" type="email" class="form-control"
+                                   th:field="*{username}"
+                                   th:errorclass="needcorrection"
+                                   placeholder="nom@exemple.com" required/>
+                            <div th:if="${#fields.hasErrors('username')}"
+                                 th:errors="*{username}" class="error"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Contrasenya:</label>
+                            <input id="password" type="password" class="form-control"
+                                   th:field="*{password}"
+                                   th:errorclass="needcorrection"
+                                   required/>
+                            <div th:if="${#fields.hasErrors('password')}"
+                                 th:errors="*{password}" class="error"></div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success">Accedir</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
