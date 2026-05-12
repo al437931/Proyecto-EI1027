@@ -47,8 +47,8 @@
       <select id="estatCompte" th:field="*{estatCompte}" class="form-select" required th:errorclass="needcorrection">
         <option value="">-- Seleccioneu --</option>
         <option value="pendent">Pendent</option>
-        <option value="actiu">Actiu</option>
-        <option value="inactiu">Inactiu</option>
+        <option value="acceptat">Acceptat</option>
+        <option value="rebutjat">Rebutjat</option>
       </select>
       <div th:if="${#fields.hasErrors('estatCompte')}" th:errors="*{estatCompte}" class="error"></div>
     </div>

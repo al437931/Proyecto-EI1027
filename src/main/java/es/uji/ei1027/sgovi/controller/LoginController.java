@@ -68,7 +68,7 @@ public class LoginController {
             return "login/login";
         }
 
-        if (!"actiu".equals(usuari.getEstatCompte())) {
+        if (!"acceptat".equals(usuari.getEstatCompte())) {
             bindingResult.rejectValue("username", "notActive",
                     "El compte encara no ha estat activat pel tècnic");
             return "login/login";
@@ -92,4 +92,4 @@ public class LoginController {
         session.invalidate();
         return "redirect:/login";
     }
-}
+}   

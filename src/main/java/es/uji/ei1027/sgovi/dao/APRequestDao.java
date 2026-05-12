@@ -22,7 +22,7 @@ public class APRequestDao {
 
     public void addAPRequest(APRequest request) {
         jdbcTemplate.update(
-                "INSERT INTO aprequest (idrequest, idusuari, datacreacio, estat, tipusassistencia, descripcioneccessitats) " +
+                "INSERT INTO aprequest (idrequest, idusuari, datacreacio, estat, tipusassistencia, descripcionecessitats) " +
                         "VALUES (?, ?, ?, ?, ?, ?)",
                 request.getIdRequest(),
                 request.getIdUsuari(),
