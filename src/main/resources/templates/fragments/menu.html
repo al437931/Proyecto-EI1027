@@ -3,49 +3,100 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#1a5c35;" th:fragment="menu">
     <div class="container-fluid">
-        <a class="navbar-brand fw-bold" th:href="@{/}">SgOVI</a>
-        <div class="navbar-collapse collapse">
+        <a class="navbar-brand fw-bold" th:href="@{/}">
+            <i class="bi bi-house-heart-fill me-1"></i>SgOVI
+        </a>
+        <!-- Botó hamburguesa per a mòbil -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSgovi" aria-controls="navbarSgovi"
+                aria-expanded="false" aria-label="Obrir menú de navegació">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse" id="navbarSgovi">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/}">Inici</a>
+                    <a class="nav-link" th:href="@{/}"><i class="bi bi-house-door me-1"></i>Inici</a>
                 </li>
-                <!-- Menú usuari OVI -->
+
+                <!-- ========== MENÚ USUARI OVI ========== -->
                 <li class="nav-item"
                     th:if="${session.usuariLogat != null and session.usuariLogat.rol == 'usuari'}">
-                    <a class="nav-link" th:href="@{/usuari/solicituds}">Les meues sol·licituds</a>
+                    <a class="nav-link" th:href="@{/usuari/solicituds}">
+                        <i class="bi bi-file-earmark-text me-1"></i>Les meues sol·licituds
+                    </a>
                 </li>
                 <li class="nav-item"
                     th:if="${session.usuariLogat != null and session.usuariLogat.rol == 'usuari'}">
-                    <a class="nav-link" th:href="@{/usuari/nova-solicitud}">Nova sol·licitud</a>
+                    <a class="nav-link" th:href="@{/usuari/nova-solicitud}">
+                        <i class="bi bi-plus-circle me-1"></i>Nova sol·licitud
+                    </a>
                 </li>
-                <!-- Menú tècnic -->
+                <li class="nav-item"
+                    th:if="${session.usuariLogat != null and session.usuariLogat.rol == 'usuari'}">
+                    <a class="nav-link" th:href="@{/usuari/perfil}">
+                        <i class="bi bi-person-circle me-1"></i>El meu perfil
+                    </a>
+                </li>
+
+                <!-- ========== MENÚ TÈCNIC ========== -->
                 <li class="nav-item"
                     th:if="${session.usuariLogat != null and session.usuariLogat.rol == 'tecnic'}">
-                    <a class="nav-link" th:href="@{/tecnic/solicituds}">Gestió sol·licituds</a>
+                    <a class="nav-link" th:href="@{/tecnic/solicituds}">
+                        <i class="bi bi-clipboard-check me-1"></i>Sol·licituds
+                    </a>
                 </li>
+                <!-- Dropdown Gestió de Persones -->
                 <li class="nav-item dropdown"
                     th:if="${session.usuariLogat != null and session.usuariLogat.rol == 'tecnic'}">
                     <a class="nav-link dropdown-toggle" href="#" role="button"
-                       data-bs-toggle="dropdown">Gestió</a>
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-people-fill me-1"></i>Persones
+                    </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" th:href="@{/usuariovi/list}">Usuaris OVI</a></li>
-                        <li><a class="dropdown-item" th:href="@{/assistentpersonal/list}">Assistents</a></li>
-                        <li><a class="dropdown-item" th:href="@{/formador/list}">Formadors</a></li>
+                        <li><a class="dropdown-item" th:href="@{/usuariovi/list}">
+                            <i class="bi bi-person me-1"></i>Usuaris OVI</a></li>
+                        <li><a class="dropdown-item" th:href="@{/assistentpersonal/list}">
+                            <i class="bi bi-person-badge me-1"></i>Assistents Personals</a></li>
+                        <li><a class="dropdown-item" th:href="@{/formador/list}">
+                            <i class="bi bi-mortarboard me-1"></i>Formadors</a></li>
+                    </ul>
+                </li>
+                <!-- Dropdown Gestió de Serveis -->
+                <li class="nav-item dropdown"
+                    th:if="${session.usuariLogat != null and session.usuariLogat.rol == 'tecnic'}">
+                    <a class="nav-link dropdown-toggle" href="#" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-gear-fill me-1"></i>Serveis
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" th:href="@{/registrecontracte/list}">
+                            <i class="bi bi-file-earmark-pdf me-1"></i>Contractes</a></li>
+                        <li><a class="dropdown-item" th:href="@{/activitatformacio/list}">
+                            <i class="bi bi-calendar-event me-1"></i>Activitats de Formació</a></li>
+                        <li><a class="dropdown-item" th:href="@{/seleccion/list}">
+                            <i class="bi bi-check2-square me-1"></i>Seleccions</a></li>
+                        <li><a class="dropdown-item" th:href="@{/comunicacio/list}">
+                            <i class="bi bi-chat-dots me-1"></i>Comunicacions</a></li>
                     </ul>
                 </li>
             </ul>
             <!-- Usuari autenticat a la dreta del navbar -->
             <ul class="navbar-nav ms-auto align-items-center">
                 <li class="nav-item" th:if="${session.usuariLogat == null}">
-                    <a th:href="@{/login}" class="nav-link">Entrar</a>
+                    <a th:href="@{/login}" class="nav-link">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>Entrar
+                    </a>
                 </li>
                 <li class="nav-item" th:if="${session.usuariLogat != null}">
                     <span class="navbar-text me-2" style="color:#ffffff;">
-                        <strong th:text="${session.usuariLogat.nom}"></strong>
+                        <i class="bi bi-person-circle me-1"></i>
+                        <strong th:text="${session.usuariLogat.nom + ' ' + (session.usuariLogat.cognoms != null ? session.usuariLogat.cognoms : '')}"></strong>
                     </span>
                 </li>
                 <li class="nav-item" th:if="${session.usuariLogat != null}">
-                    <a th:href="@{/logout}" class="nav-link">Eixir</a>
+                    <a th:href="@{/logout}" class="nav-link">
+                        <i class="bi bi-box-arrow-right me-1"></i>Eixir
+                    </a>
                 </li>
             </ul>
         </div>
