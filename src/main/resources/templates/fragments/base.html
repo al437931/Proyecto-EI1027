@@ -5,13 +5,19 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content="SgOVI - Sistema de Gestió de l'Oficina per la Vida Independent de Castelló"/>
     <!-- Bootstrap 5 CSS -->
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
           crossorigin="anonymous"/>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
     <!-- Bootstrap 5 JS (per a dropdowns i navbar) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
             crossorigin="anonymous"></script>
+    <!-- JS per a taules ordenables -->
+    <script th:src="@{/js/sortable-tables.js}" src="/js/sortable-tables.js" defer></script>
     <!-- CSS propi -->
     <link type="text/css" th:href="@{/css/sgovi.css}" href="/css/sgovi.css" rel="stylesheet"/>
     <title layout:title-pattern="$CONTENT_TITLE - SgOVI">SgOVI</title>
@@ -22,6 +28,18 @@
 </header>
 
 <main class="container mt-3">
+    <!-- Missatges flash de feedback -->
+    <div th:if="${missatgeExitFlash}" class="alert alert-success alert-flash alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <span th:text="${missatgeExitFlash}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tancar"></button>
+    </div>
+    <div th:if="${missatgeErrorFlash}" class="alert alert-danger alert-flash alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <span th:text="${missatgeErrorFlash}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tancar"></button>
+    </div>
+
     <section layout:fragment="content">
         <!-- El contingut específic de cada pàgina es col·locarà aquí -->
     </section>
