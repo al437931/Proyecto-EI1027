@@ -1,33 +1,132 @@
 <!DOCTYPE html>
-<html lang="ca" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Afegir registre de contracte</title>
-</head>
+<html lang="ca"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>Afegir contracte</title></head>
 <body>
-<h1>Afegir registre de contracte</h1>
-<form th:action="@{/registrecontracte/add}" th:object="${registreContracte}" method="post">
-    <label for="idContracte">ID Contracte:</label>
-    <input id="idContracte" type="number" th:field="*{idContracte}" required><br><br>
+<section layout:fragment="content">
+    <nav class="breadcrumb-sgovi" aria-label="Ruta de navegacio">
+        <a th:href="@{/}">Inici</a>
+        <span class="separator">&#8250;</span>
+        <a th:href="@{/registrecontracte/list}">Contractes</a>
+        <span class="separator">&#8250;</span>
+        <span class="current">Afegir contracte</span>
+    </nav>
 
-    <label for="idAssistent">ID Assistent:</label>
-    <input id="idAssistent" type="number" th:field="*{idAssistent}" required><br><br>
+    <h1><i class="bi bi-plus-circle me-2"></i>Afegir contracte</h1>
 
-    <label for="idRequest">ID Sol·licitud:</label>
-    <input id="idRequest" type="number" th:field="*{idRequest}" required><br><br>
+    <form method="post" enctype="multipart/form-data"
+          th:action="@{/registrecontracte/add}" class="row g-3" id="formContracte" th:object="${registreContracte}">
 
-    <label for="dataInici">Data inici:</label>
-    <input id="dataInici" type="date" th:field="*{dataInici}" required><br><br>
+        <div class="col-md-6">
+            <label for="idAssistent" class="form-label">Assistent Personal *</label>
+            <select id="idAssistent" th:field="*{idAssistent}" class="form-select" required th:errorclass="is-invalid">
+                <option value="">-- Seleccioneu un assistent --</option>
+                <option th:each="a : ${assistents}" th:value="${a.idAssistent}" 
+                        th:text="${a.nom + ' ' + a.cognoms + ' (' + a.email + ')'}"></option>
+            </select>
+            <div th:if="${#fields.hasErrors('idAssistent')}" th:errors="*{idAssistent}" class="invalid-feedback"></div>
+            <div class="form-text">Al seleccionar un assistent, es carregaran les sol·licituds on ha estat proposat.</div>
+        </div>
 
-    <label for="dataFi">Data fi:</label>
-    <input id="dataFi" type="date" th:field="*{dataFi}"><br><br>
+        <div class="col-md-6">
+            <label for="idRequest" class="form-label">Sol·licitud associada *</label>
+            <select id="idRequest" th:field="*{idRequest}" class="form-select" required disabled th:errorclass="is-invalid">
+                <option value="">-- Primer seleccioneu un assistent --</option>
+            </select>
+            <div th:if="${#fields.hasErrors('idRequest')}" th:errors="*{idRequest}" class="invalid-feedback"></div>
+            <div id="solicitudInfo" class="form-text"></div>
+        </div>
 
-    <label for="pdfContracte">PDF Contracte (ruta):</label>
-    <input id="pdfContracte" type="text" th:field="*{pdfContracte}"><br><br>
+        <div class="col-md-4">
+            <label for="dataInici" class="form-label">Data inici *</label>
+            <input id="dataInici" type="date" th:field="*{dataInici}" class="form-control" required th:errorclass="is-invalid"/>
+            <div th:if="${#fields.hasErrors('dataInici')}" th:errors="*{dataInici}" class="invalid-feedback"></div>
+        </div>
 
-    <button type="submit">Afegir</button>
-</form>
-<br>
-<a th:href="@{/registrecontracte/list}">Tornar a la llista</a>
+        <div class="col-md-4">
+            <label for="dataFi" class="form-label">Data fi</label>
+            <input id="dataFi" type="date" th:field="*{dataFi}" class="form-control" th:errorclass="is-invalid"/>
+            <div th:if="${#fields.hasErrors('dataFi')}" th:errors="*{dataFi}" class="invalid-feedback"></div>
+        </div>
+
+        <div class="col-md-4">
+            <label for="fitxerPdf" class="form-label">Document PDF del contracte</label>
+            <input id="fitxerPdf" type="file" name="fitxerPdf" class="form-control"
+                   accept=".pdf"/>
+            <div class="form-text">Opcional. Formats acceptats: PDF.</div>
+        </div>
+
+        <div class="col-12 mt-3">
+            <button type="submit" class="btn btn-success">
+                <i class="bi bi-check-lg me-1"></i>Afegir contracte
+            </button>
+            <a th:href="@{/registrecontracte/list}" class="btn btn-outline-secondary ms-2">
+                <i class="bi bi-x-lg me-1"></i>Cancel·lar
+            </a>
+        </div>
+    </form>
+
+        // Carrega les solicituds de l'assistent actual en cas d'error de validació
+        document.addEventListener('DOMContentLoaded', function() {
+            const idAssistent = document.getElementById('idAssistent').value;
+            const currentIdRequest = document.getElementById('idRequest').getAttribute('value');
+            if (idAssistent) {
+                // Necessitem un timeout xicotet per permetre que Thymeleaf assigne el valor
+                setTimeout(() => carregarSolicituds(idAssistent, currentIdRequest), 100);
+            }
+        });
+
+        document.getElementById('idAssistent').addEventListener('change', function() {
+            carregarSolicituds(this.value, null);
+        });
+
+        function carregarSolicituds(idAssistent, preselect) {
+            const selectSolicitud = document.getElementById('idRequest');
+            const infoDiv = document.getElementById('solicitudInfo');
+            
+            if (!idAssistent) {
+                selectSolicitud.innerHTML = '<option value="">-- Primer seleccioneu un assistent --</option>';
+                selectSolicitud.disabled = true;
+                infoDiv.textContent = '';
+                return;
+            }
+
+            selectSolicitud.innerHTML = '<option value="">Carregant...</option>';
+            selectSolicitud.disabled = true;
+
+            fetch('/registrecontracte/api/solicituds-per-assistent/' + idAssistent)
+                .then(r => r.json())
+                .then(data => {
+                    selectSolicitud.innerHTML = '';
+                    if (data.length === 0) {
+                        selectSolicitud.innerHTML = '<option value="">-- No hi ha sol·licituds per a aquest assistent --</option>';
+                        infoDiv.textContent = 'Aquest assistent no ha estat proposat en cap sol·licitud.';
+                        selectSolicitud.disabled = true;
+                        return;
+                    }
+                    selectSolicitud.innerHTML = '<option value="">-- Seleccioneu una sol·licitud --</option>';
+                    data.forEach(function(s) {
+                        const idPadded = String(s.idRequest).padStart(4, '0');
+                        const opt = document.createElement('option');
+                        opt.value = s.idRequest;
+                        opt.textContent = 'REQ-2026-' + idPadded + ' | ' + s.tipusAssistencia + ' | ' + s.nomUsuari + ' [' + s.estat + ']';
+                        if (s.idRequest == preselect) {
+                            opt.selected = true;
+                        }
+                        selectSolicitud.appendChild(opt);
+                    });
+                    selectSolicitud.disabled = false;
+                    infoDiv.textContent = data.length + ' sol·licitud(s) trobada(es).';
+                })
+                .catch(() => {
+                    selectSolicitud.innerHTML = '<option value="">Error al carregar</option>';
+                    selectSolicitud.disabled = true;
+                });
+        }
+    </script>
+</section>
 </body>
 </html>
+
