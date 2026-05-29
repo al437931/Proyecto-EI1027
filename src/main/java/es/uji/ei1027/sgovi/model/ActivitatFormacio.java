@@ -1,12 +1,14 @@
 package es.uji.ei1027.sgovi.model;
 
 import java.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class ActivitatFormacio {
     private int idActivitat;
     private int idFormador;
     private String titol;
     private String descripcio;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate data;
     private String tipus;
     private int aforament;

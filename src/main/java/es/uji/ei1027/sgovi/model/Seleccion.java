@@ -1,11 +1,13 @@
 package es.uji.ei1027.sgovi.model;
 
 import java.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class Seleccion {
     private int idSeleccion;
     private int idRequest;
     private int idAssistent;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dataProposta;
     private String estat;
 

@@ -1,12 +1,15 @@
 package es.uji.ei1027.sgovi.model;
 
 import java.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class RegistreContracte {
     private int idContracte;
     private int idAssistent;
     private int idRequest;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dataInici;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dataFi;
     private String pdfContracte;
 

@@ -1,6 +1,7 @@
 package es.uji.ei1027.sgovi.model;
 
 import java.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class UsuariOVI {
     private int idUsuari;
@@ -10,6 +11,7 @@ public class UsuariOVI {
     private String telefon;
     private String adreca;
     private Boolean consentimentRGPD;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dataRegistre;
     private String estatCompte;
     private String password;

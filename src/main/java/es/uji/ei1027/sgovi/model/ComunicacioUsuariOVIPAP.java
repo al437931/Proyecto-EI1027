@@ -1,10 +1,12 @@
 package es.uji.ei1027.sgovi.model;
 
 import java.time.LocalDateTime;
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class ComunicacioUsuariOVIPAP {
     private int idComunicacio;
     private int idSeleccion;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime dataHora;
     private String emissor;
     private String missatge;

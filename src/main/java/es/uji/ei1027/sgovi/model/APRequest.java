@@ -1,10 +1,12 @@
 package es.uji.ei1027.sgovi.model;
 
 import java.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class APRequest {
     private int idRequest;
     private int idUsuari;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dataCreacio;
     private String estat;
     private String tipusAssistencia;
