@@ -22,8 +22,8 @@ public class UsuariOVIDao {
 
     public void addUsuariOVI(UsuariOVI usuari) {
         jdbcTemplate.update(
-                "INSERT INTO usuariovi (idusuari, nom, cognoms, email, telefon, adreca, consentimentrgpd, dataregistre, estatcompte) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO usuariovi (idusuari, nom, cognoms, email, telefon, adreca, consentimentrgpd, dataregistre, estatcompte, password) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 usuari.getIdUsuari(),
                 usuari.getNom(),
                 usuari.getCognoms(),
@@ -32,7 +32,8 @@ public class UsuariOVIDao {
                 usuari.getAdreca(),
                 usuari.getConsentimentRGPD(),
                 Date.valueOf(usuari.getDataRegistre()),
-                usuari.getEstatCompte()
+                usuari.getEstatCompte(),
+                usuari.getPassword()
         );
     }
 
@@ -73,5 +74,14 @@ public class UsuariOVIDao {
                 "SELECT * FROM usuariovi ORDER BY idusuari",
                 new UsuariOVIRowMapper()
         );
+    }
+
+    // Obté el pròxim ID disponible
+    public int getNextId() {
+        Integer max = jdbcTemplate.queryForObject(
+                "SELECT COALESCE(MAX(idusuari), 0) FROM usuariovi",
+                Integer.class
+        );
+        return (max != null ? max : 0) + 1;
     }
 }
