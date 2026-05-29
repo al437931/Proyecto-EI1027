@@ -1,34 +1,38 @@
 <!DOCTYPE html>
-<html lang="ca" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Llista d'assistents personals</title>
-</head>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>Assistents Personals</title></head>
 <body>
-<h1>Llista d'assistents personals</h1>
-<a th:href="@{/assistentpersonal/add}">Afegir assistent</a>
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Nom</th>
-        <th>Cognoms</th>
-        <th>Email</th>
-        <th>Telèfon</th>
-        <th>Estat acceptat</th>
-        <th>Accions</th>
-    </tr>
-    <tr th:each="a : ${assistents}">
-        <td th:text="${a.idAssistent}"></td>
-        <td th:text="${a.nom}"></td>
-        <td th:text="${a.cognoms}"></td>
-        <td th:text="${a.email}"></td>
-        <td th:text="${a.telefon}"></td>
-        <td th:text="${a.estatAcceptat}"></td>
-        <td>
-            <a th:href="@{'/assistentpersonal/update/' + ${a.idAssistent}}">Editar</a> |
-            <a th:href="@{'/assistentpersonal/delete/' + ${a.idAssistent}}">Eliminar</a>
-        </td>
-    </tr>
-</table>
+<section layout:fragment="content">
+  <nav class="breadcrumb-sgovi" aria-label="Ruta de navegacio">
+    <a th:href="@{/}">Inici</a><span class="separator">&#8250;</span>
+    <span class="current">Assistents Personals</span>
+  </nav>
+  <h1><i class="bi bi-person-badge me-2"></i>Assistents Personals</h1>
+  <a th:href="@{/assistentpersonal/add}" class="btn btn-success mb-3"><i class="bi bi-plus-circle me-1"></i>Afegir assistent</a>
+  <div th:if="${#lists.isEmpty(assistents)}" class="alert alert-info">No hi ha assistents registrats.</div>
+  <div th:unless="${#lists.isEmpty(assistents)}" class="table-responsive">
+    <table class="table table-striped table-hover sortable">
+      <caption>Assistents personals registrats</caption>
+      <thead class="table-success"><tr>
+        <th scope="col">ID</th><th scope="col">Nom</th><th scope="col">Cognoms</th>
+        <th scope="col">Email</th><th scope="col">Formacio</th><th scope="col">Disponibilitat</th>
+        <th scope="col">Acceptat</th><th scope="col" class="no-sort">Accions</th>
+      </tr></thead>
+      <tbody>
+        <tr th:each="a : ${assistents}">
+          <td th:text="${a.idAssistent}"></td><td th:text="${a.nom}"></td><td th:text="${a.cognoms}"></td>
+          <td th:text="${a.email}"></td><td th:text="${a.formacio}"></td><td th:text="${a.disponibilitat}"></td>
+          <td><span th:class="${a.estatAcceptat ? 'badge-estat badge-aprovada' : 'badge-estat badge-en-revisio'}" th:text="${a.estatAcceptat ? 'Si' : 'No'}"></span></td>
+          <td>
+            <a th:href="@{'/assistentpersonal/update/' + ${a.idAssistent}}" class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-pencil"></i></a>
+            <a th:href="@{'/assistentpersonal/delete/' + ${a.idAssistent}}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Esteu segur?')"><i class="bi bi-trash"></i></a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
 </body>
 </html>

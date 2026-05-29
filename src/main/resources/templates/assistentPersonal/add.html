@@ -1,42 +1,23 @@
 <!DOCTYPE html>
-<html lang="ca" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Afegir Assistent Personal</title>
-</head>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>Afegir assistent</title></head>
 <body>
-<h1>Afegir Assistent Personal</h1>
-<form th:action="@{/assistentpersonal/add}" th:object="${assistentPersonal}" method="post">
-    <label for="idAssistent">ID Assistent:</label>
-    <input id="idAssistent" type="number" th:field="*{idAssistent}" required><br><br>
-
-    <label for="nom">Nom:</label>
-    <input id="nom" type="text" th:field="*{nom}" required><br><br>
-
-    <label for="cognoms">Cognoms:</label>
-    <input id="cognoms" type="text" th:field="*{cognoms}" required><br><br>
-
-    <label for="email">Email:</label>
-    <input id="email" type="email" th:field="*{email}" required><br><br>
-
-    <label for="telefon">Telèfon:</label>
-    <input id="telefon" type="text" th:field="*{telefon}"><br><br>
-
-    <label for="formacio">Formació:</label>
-    <textarea id="formacio" th:field="*{formacio}"></textarea><br><br>
-
-    <label for="experiencia">Experiència:</label>
-    <textarea id="experiencia" th:field="*{experiencia}"></textarea><br><br>
-
-    <label for="disponibilitat">Disponibilitat:</label>
-    <input id="disponibilitat" type="text" th:field="*{disponibilitat}"><br><br>
-
-    <label for="estatAcceptat">Estat acceptat:</label>
-    <input id="estatAcceptat" type="checkbox" th:field="*{estatAcceptat}"><br><br>
-
-    <button type="submit">Afegir</button>
-</form>
-<br>
-<a th:href="@{/assistentpersonal/list}">Tornar a la llista</a>
+<section layout:fragment="content">
+  <nav class="breadcrumb-sgovi" aria-label="Ruta"><a th:href="@{/}">Inici</a><span class="separator">&#8250;</span><a th:href="@{/assistentpersonal/list}">Assistents</a><span class="separator">&#8250;</span><span class="current">Afegir</span></nav>
+  <h1><i class="bi bi-person-plus me-2"></i>Afegir Assistent Personal</h1>
+  <form th:action="@{/assistentpersonal/add}" th:object="${assistentPersonal}" method="post" class="row g-3">
+    <div class="col-md-4"><label for="nom" class="form-label">Nom *</label><input id="nom" type="text" th:field="*{nom}" class="form-control" required/></div>
+    <div class="col-md-4"><label for="cognoms" class="form-label">Cognoms *</label><input id="cognoms" type="text" th:field="*{cognoms}" class="form-control" required/></div>
+    <div class="col-md-4"><label for="email" class="form-label">Email *</label><input id="email" type="email" th:field="*{email}" class="form-control" required/></div>
+    <div class="col-md-3"><label for="telefon" class="form-label">Telefon</label><input id="telefon" type="tel" th:field="*{telefon}" class="form-control"/></div>
+    <div class="col-md-3"><label for="formacio" class="form-label">Formacio</label><input id="formacio" type="text" th:field="*{formacio}" class="form-control"/></div>
+    <div class="col-md-3"><label for="experiencia" class="form-label">Experiencia</label><input id="experiencia" type="text" th:field="*{experiencia}" class="form-control"/></div>
+    <div class="col-md-3"><label for="disponibilitat" class="form-label">Disponibilitat</label><input id="disponibilitat" type="text" th:field="*{disponibilitat}" class="form-control"/></div>
+    <div class="col-12"><div class="form-check"><input id="estatAcceptat" type="checkbox" th:field="*{estatAcceptat}" class="form-check-input"/><label for="estatAcceptat" class="form-check-label">Acceptat pel tecnic</label></div></div>
+    <div class="col-12"><button type="submit" class="btn btn-success"><i class="bi bi-check-lg me-1"></i>Afegir</button> <a th:href="@{/assistentpersonal/list}" class="btn btn-outline-secondary ms-2"><i class="bi bi-x-lg me-1"></i>Cancel·lar</a></div>
+  </form>
+</section>
 </body>
 </html>

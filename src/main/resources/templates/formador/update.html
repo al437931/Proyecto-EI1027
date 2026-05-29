@@ -1,29 +1,18 @@
 <!DOCTYPE html>
-<html lang="ca" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Modificar formador</title>
-</head>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{fragments/base}">
+<head><title>Editar formador</title></head>
 <body>
-<h1>Modificar formador</h1>
-<form th:action="@{/formador/update}" th:object="${formador}" method="post">
-    <input type="hidden" th:field="*{idFormador}">
-
-    <label for="nom">Nom:</label>
-    <input id="nom" type="text" th:field="*{nom}" required><br><br>
-
-    <label for="cognoms">Cognoms:</label>
-    <input id="cognoms" type="text" th:field="*{cognoms}" required><br><br>
-
-    <label for="especialitat">Especialitat:</label>
-    <input id="especialitat" type="text" th:field="*{especialitat}"><br><br>
-
-    <label for="email">Email:</label>
-    <input id="email" type="email" th:field="*{email}" required><br><br>
-
-    <button type="submit">Actualitzar</button>
-</form>
-<br>
-<a th:href="@{/formador/list}">Tornar a la llista</a>
+<section layout:fragment="content">
+  <nav class="breadcrumb-sgovi" aria-label="Ruta"><a th:href="@{/}">Inici</a><span class="separator">&#8250;</span><a th:href="@{/formador/list}">Formadors</a><span class="separator">&#8250;</span><span class="current">Editar</span></nav>
+  <h1><i class="bi bi-pencil me-2"></i>Editar Formador</h1>
+  <form th:action="@{/formador/update}" th:object="${formador}" method="post" class="row g-3">
+    <input type="hidden" th:field="*{idFormador}"/>
+    <div class="col-md-4"><label for="nom" class="form-label">Nom *</label><input id="nom" type="text" th:field="*{nom}" class="form-control" required/></div>
+    <div class="col-md-4"><label for="cognoms" class="form-label">Cognoms *</label><input id="cognoms" type="text" th:field="*{cognoms}" class="form-control" required/></div>
+    <div class="col-md-4"><label for="email" class="form-label">Email *</label><input id="email" type="email" th:field="*{email}" class="form-control" required/></div>
+    <div class="col-md-6"><label for="especialitat" class="form-label">Especialitat</label><input id="especialitat" type="text" th:field="*{especialitat}" class="form-control"/></div>
+    <div class="col-12"><button type="submit" class="btn btn-success"><i class="bi bi-check-lg me-1"></i>Guardar</button> <a th:href="@{/formador/list}" class="btn btn-outline-secondary ms-2"><i class="bi bi-x-lg me-1"></i>Cancel·lar</a></div>
+  </form>
+</section>
 </body>
 </html>
