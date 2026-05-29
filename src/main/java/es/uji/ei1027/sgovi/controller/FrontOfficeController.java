@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,10 +19,28 @@ import java.util.List;
 public class FrontOfficeController {
 
     private APRequestDao apRequestDao;
+    private es.uji.ei1027.sgovi.dao.SeleccionDao seleccionDao;
+    private es.uji.ei1027.sgovi.dao.AssistentPersonalDao assistentPersonalDao;
+    private es.uji.ei1027.sgovi.dao.UsuariOVIDao usuariOVIDao;
+
+    @Autowired
+    public void setUsuariOVIDao(es.uji.ei1027.sgovi.dao.UsuariOVIDao usuariOVIDao) {
+        this.usuariOVIDao = usuariOVIDao;
+    }
 
     @Autowired
     public void setAPRequestDao(APRequestDao apRequestDao) {
         this.apRequestDao = apRequestDao;
+    }
+
+    @Autowired
+    public void setSeleccionDao(es.uji.ei1027.sgovi.dao.SeleccionDao seleccionDao) {
+        this.seleccionDao = seleccionDao;
+    }
+
+    @Autowired
+    public void setAssistentPersonalDao(es.uji.ei1027.sgovi.dao.AssistentPersonalDao assistentPersonalDao) {
+        this.assistentPersonalDao = assistentPersonalDao;
     }
 
     // Comprova sessió d'usuari OVI
@@ -45,6 +64,37 @@ public class FrontOfficeController {
         return "usuari/solicituds";
     }
 
+    // GET /usuari/perfil - Veure el perfil del ciutadà
+    @RequestMapping(value = "/perfil", method = RequestMethod.GET)
+    public String veurePerfil(HttpSession session, Model model) {
+        UsuariOVI usuari = getUsuariOSession(session);
+        if (usuari == null) return "redirect:/login";
+        model.addAttribute("usuariOVI", usuariOVIDao.getUsuariOVI(usuari.getIdUsuari()));
+        model.addAttribute("usuariLogat", usuari);
+        return "usuari/perfil";
+    }
+
+    // POST /usuari/perfil - Actualitzar dades del perfil
+    @RequestMapping(value = "/perfil", method = RequestMethod.POST)
+    public String actualitzarPerfil(@ModelAttribute("usuariOVI") UsuariOVI usuariOVI,
+                                    HttpSession session, RedirectAttributes redirectAttributes) {
+        UsuariOVI usuariLogat = getUsuariOSession(session);
+        if (usuariLogat == null) return "redirect:/login";
+
+        UsuariOVI existent = usuariOVIDao.getUsuariOVI(usuariLogat.getIdUsuari());
+        existent.setNom(usuariOVI.getNom());
+        existent.setCognoms(usuariOVI.getCognoms());
+        existent.setTelefon(usuariOVI.getTelefon());
+        existent.setAdreca(usuariOVI.getAdreca());
+        // El correu no es pot canviar ací per evitar col·lisions, o si es canvia s'ha de validar
+
+        usuariOVIDao.updateUsuariOVI(existent);
+        session.setAttribute("usuariLogat", existent);
+        
+        redirectAttributes.addFlashAttribute("missatgeExitFlash", "El perfil s'ha actualitzat correctament.");
+        return "redirect:/usuari/perfil";
+    }
+
     // GET /usuari/nova-solicitud - formulari nova sol·licitud
     @RequestMapping(value = "/nova-solicitud", method = RequestMethod.GET)
     public String novaSolicitudForm(HttpSession session, Model model) {
@@ -62,7 +112,8 @@ public class FrontOfficeController {
     @RequestMapping(value = "/nova-solicitud", method = RequestMethod.POST)
     public String guardarSolicitud(@ModelAttribute("apRequest") APRequest apRequest,
                                    BindingResult bindingResult,
-                                   HttpSession session, Model model) {
+                                   HttpSession session, Model model,
+                                   RedirectAttributes redirectAttributes) {
         UsuariOVI usuari = getUsuariOSession(session);
         if (usuari == null) return "redirect:/login";
 
@@ -74,7 +125,7 @@ public class FrontOfficeController {
             return "usuari/nova-solicitud";
         }
 
-        // Generar ID nou
+        // Generar ID automàtic
         List<APRequest> totes = apRequestDao.getAPRequests();
         int nouId = totes.stream().mapToInt(APRequest::getIdRequest).max().orElse(0) + 1;
 
@@ -84,6 +135,9 @@ public class FrontOfficeController {
         apRequest.setEstat("en revisio");
 
         apRequestDao.addAPRequest(apRequest);
+
+        redirectAttributes.addFlashAttribute("missatgeExitFlash",
+                "Sol·licitud creada correctament. El tècnic la revisarà prompte.");
         return "redirect:/usuari/solicituds";
     }
 
@@ -105,6 +159,49 @@ public class FrontOfficeController {
 
         model.addAttribute("solicitud", solicitud);
         model.addAttribute("usuariLogat", usuari);
+
+        // Si la sol·licitud està tancada, carreguem la seua selecció i l'assistent proposat
+        if ("tancada".equals(solicitud.getEstat())) {
+            List<es.uji.ei1027.sgovi.model.Seleccion> seleccions = seleccionDao.getSeleccionsByRequest(id);
+            if (!seleccions.isEmpty()) {
+                es.uji.ei1027.sgovi.model.Seleccion seleccion = seleccions.get(0);
+                model.addAttribute("seleccion", seleccion);
+                es.uji.ei1027.sgovi.model.AssistentPersonal assistent = assistentPersonalDao.getAssistentPersonal(seleccion.getIdAssistent());
+                model.addAttribute("assistentProposat", assistent);
+            }
+        }
+
         return "usuari/detall-solicitud";
+    }
+
+    // POST /usuari/solicitud/{idRequest}/seleccion/{idSeleccion}/acceptar
+    @RequestMapping(value = "/solicitud/{idRequest}/seleccion/{idSeleccion}/acceptar", method = RequestMethod.POST)
+    public String acceptarCandidat(@PathVariable int idRequest, @PathVariable int idSeleccion,
+                                   HttpSession session, RedirectAttributes redirectAttributes) {
+        if (getUsuariOSession(session) == null) return "redirect:/login";
+        es.uji.ei1027.sgovi.model.Seleccion seleccion = seleccionDao.getSeleccion(idSeleccion);
+        if (seleccion != null) {
+            seleccion.setEstat("acceptat");
+            seleccionDao.updateSeleccion(seleccion);
+            redirectAttributes.addFlashAttribute("missatgeExitFlash", "Candidat acceptat correctament.");
+        }
+        return "redirect:/usuari/solicitud/" + idRequest;
+    }
+
+    // POST /usuari/solicitud/{idRequest}/seleccion/{idSeleccion}/rebutjar
+    @RequestMapping(value = "/solicitud/{idRequest}/seleccion/{idSeleccion}/rebutjar", method = RequestMethod.POST)
+    public String rebutjarCandidat(@PathVariable int idRequest, @PathVariable int idSeleccion,
+                                   HttpSession session, RedirectAttributes redirectAttributes) {
+        if (getUsuariOSession(session) == null) return "redirect:/login";
+        es.uji.ei1027.sgovi.model.Seleccion seleccion = seleccionDao.getSeleccion(idSeleccion);
+        if (seleccion != null) {
+            seleccion.setEstat("rebutjat");
+            seleccionDao.updateSeleccion(seleccion);
+            
+            // Tornem a obrir la sol·licitud perquè el tècnic propose un altre
+            apRequestDao.updateEstat(idRequest, "aprovada");
+            redirectAttributes.addFlashAttribute("missatgeExitFlash", "Candidat rebutjat. La sol·licitud tornarà al tècnic per a una nova proposta.");
+        }
+        return "redirect:/usuari/solicitud/" + idRequest;
     }
 }

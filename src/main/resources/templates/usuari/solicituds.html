@@ -1,52 +1,60 @@
 <!DOCTYPE html>
-<html lang="ca"
-      xmlns:th="http://www.thymeleaf.org"
+<html lang="ca" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragments/base}">
 <head><title>Les meues sol·licituds</title></head>
 <body>
 <section layout:fragment="content">
-    <h1>Les meues sol·licituds d'assistència personal</h1>
+  <nav class="breadcrumb-sgovi" aria-label="Ruta de navegació">
+    <a th:href="@{/}">Inici</a>
+    <span class="separator">›</span>
+    <span class="current">Les meues sol·licituds</span>
+  </nav>
 
-    <a th:href="@{/usuari/nova-solicitud}" class="btn btn-success mb-3">
-        + Nova sol·licitud
-    </a>
+  <h1><i class="bi bi-file-earmark-text me-2"></i>Les meues sol·licituds</h1>
 
-    <div th:if="${#lists.isEmpty(solicituds)}" class="alert alert-info">
-        Encara no tens cap sol·licitud registrada.
-    </div>
+  <a th:href="@{/usuari/nova-solicitud}" class="btn btn-success mb-3">
+    <i class="bi bi-plus-circle me-1"></i>Nova sol·licitud
+  </a>
 
-    <table th:unless="${#lists.isEmpty(solicituds)}"
-           class="table table-striped table-hover">
-        <caption>Sol·licituds d'assistència personal</caption>
-        <thead class="table-success">
-            <tr>
-                <th scope="col">Núm.</th>
-                <th scope="col">Data creació</th>
-                <th scope="col">Tipus</th>
-                <th scope="col">Estat</th>
-                <th scope="col">Accions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="s : ${solicituds}">
-                <td th:text="${s.idRequest}"></td>
-                <td th:text="${#temporals.format(s.dataCreacio, 'dd/MM/yyyy')}"></td>
-                <td th:text="${s.tipusAssistencia}"></td>
-                <td>
-                    <span th:text="${s.estat}"
-                          th:classappend="${s.estat == 'en revisio'} ? 'estat-en-revisio' :
-                                         (${s.estat == 'aprovada'} ? 'estat-aprovada' :
-                                         (${s.estat == 'rebutjada'} ? 'estat-rebutjada' : 'estat-tancada'))">
-                    </span>
-                </td>
-                <td>
-                    <a th:href="@{'/usuari/solicitud/' + ${s.idRequest}}"
-                       class="btn btn-sm btn-outline-primary">Veure detall</a>
-                </td>
-            </tr>
-        </tbody>
+  <div th:if="${#lists.isEmpty(solicituds)}" class="alert alert-info">
+    <i class="bi bi-info-circle me-1"></i>Encara no heu creat cap sol·licitud.
+  </div>
+
+  <div th:unless="${#lists.isEmpty(solicituds)}" class="table-responsive">
+    <table class="table table-striped table-hover sortable">
+      <caption>Les meues sol·licituds d'assistència personal</caption>
+      <thead class="table-success">
+        <tr>
+          <th scope="col">Núm.</th>
+          <th scope="col">Data creació</th>
+          <th scope="col">Tipus</th>
+          <th scope="col">Estat</th>
+          <th scope="col" class="no-sort">Accions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="s : ${solicituds}">
+          <td th:text="|REQ-2026-${#numbers.formatInteger(s.idRequest, 4)}|"></td>
+          <td th:text="${#temporals.format(s.dataCreacio, 'dd/MM/yyyy')}"></td>
+          <td th:text="${s.tipusAssistencia}"></td>
+          <td>
+            <span th:class="${'badge-estat ' +
+                (s.estat == 'en revisio' ? 'badge-en-revisio' :
+                 s.estat == 'aprovada' ? 'badge-aprovada' :
+                 s.estat == 'rebutjada' ? 'badge-rebutjada' : 'badge-tancada')}"
+                  th:text="${s.estat}"></span>
+          </td>
+          <td>
+            <a th:href="@{'/usuari/solicitud/' + ${s.idRequest}}"
+               class="btn btn-sm btn-outline-primary">
+              <i class="bi bi-eye me-1"></i>Veure detall
+            </a>
+          </td>
+        </tr>
+      </tbody>
     </table>
+  </div>
 </section>
 </body>
 </html>
