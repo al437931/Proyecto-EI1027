@@ -5,63 +5,82 @@
 <head><title>Afegir Usuari OVI</title></head>
 <body>
 <section layout:fragment="content">
-  <h1>Afegir Usuari OVI</h1>
+  <nav class="breadcrumb-sgovi" aria-label="Ruta de navegació">
+    <a th:href="@{/}">Inici</a>
+    <span class="separator">›</span>
+    <a th:href="@{/usuariovi/list}">Usuaris OVI</a>
+    <span class="separator">›</span>
+    <span class="current">Afegir usuari</span>
+  </nav>
+
+  <h1><i class="bi bi-person-plus me-2"></i>Afegir Usuari OVI</h1>
+
   <form th:action="@{/usuariovi/add}" th:object="${usuariOVI}" method="post" class="row g-3">
-    <div class="col-md-2">
-      <label for="idUsuari" class="form-label">ID Usuari</label>
-      <input id="idUsuari" type="number" th:field="*{idUsuari}" class="form-control" min="1" th:errorclass="needcorrection"/>
-      <div th:if="${#fields.hasErrors('idUsuari')}" th:errors="*{idUsuari}" class="error"></div>
-    </div>
+    <!-- ID generat automàticament, no es mostra -->
+
     <div class="col-md-4">
-      <label for="nom" class="form-label">Nom</label>
-      <input id="nom" type="text" th:field="*{nom}" class="form-control" maxlength="50" placeholder="Nom" required th:errorclass="needcorrection"/>
+      <label for="nom" class="form-label">Nom <span class="text-danger">*</span></label>
+      <input id="nom" type="text" th:field="*{nom}" class="form-control" maxlength="50"
+             placeholder="Nom" required th:errorclass="needcorrection"/>
       <div th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}" class="error"></div>
     </div>
-    <div class="col-md-6">
-      <label for="cognoms" class="form-label">Cognoms</label>
-      <input id="cognoms" type="text" th:field="*{cognoms}" class="form-control" maxlength="80" placeholder="Cognoms" required th:errorclass="needcorrection"/>
+    <div class="col-md-8">
+      <label for="cognoms" class="form-label">Cognoms <span class="text-danger">*</span></label>
+      <input id="cognoms" type="text" th:field="*{cognoms}" class="form-control" maxlength="80"
+             placeholder="Cognoms" required th:errorclass="needcorrection"/>
       <div th:if="${#fields.hasErrors('cognoms')}" th:errors="*{cognoms}" class="error"></div>
     </div>
     <div class="col-md-5">
-      <label for="email" class="form-label">Email</label>
-      <input id="email" type="email" th:field="*{email}" class="form-control" maxlength="100" placeholder="usuari@exemple.com" required th:errorclass="needcorrection"/>
+      <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+      <input id="email" type="email" th:field="*{email}" class="form-control" maxlength="100"
+             placeholder="usuari@exemple.com" required th:errorclass="needcorrection"/>
       <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error"></div>
     </div>
     <div class="col-md-3">
       <label for="telefon" class="form-label">Telèfon</label>
-      <input id="telefon" type="tel" th:field="*{telefon}" class="form-control" minlength="9" maxlength="9" placeholder="123456789" th:errorclass="needcorrection"/>
+      <input id="telefon" type="tel" th:field="*{telefon}" class="form-control"
+             minlength="9" maxlength="9" placeholder="123456789" th:errorclass="needcorrection"/>
       <div th:if="${#fields.hasErrors('telefon')}" th:errors="*{telefon}" class="error"></div>
     </div>
     <div class="col-md-4">
-      <label for="dataRegistre" class="form-label">Data registre</label>
-      <input id="dataRegistre" type="date" th:field="*{dataRegistre}" class="form-control" required th:errorclass="needcorrection"/>
-      <div th:if="${#fields.hasErrors('dataRegistre')}" th:errors="*{dataRegistre}" class="error"></div>
-    </div>
-    <div class="col-md-8">
-      <label for="adreca" class="form-label">Adreça</label>
-      <input id="adreca" type="text" th:field="*{adreca}" class="form-control" maxlength="120" placeholder="Carrer, número, ciutat" th:errorclass="needcorrection"/>
-      <div th:if="${#fields.hasErrors('adreca')}" th:errors="*{adreca}" class="error"></div>
-    </div>
-    <div class="col-md-4">
       <label for="estatCompte" class="form-label">Estat compte</label>
-      <select id="estatCompte" th:field="*{estatCompte}" class="form-select" required th:errorclass="needcorrection">
-        <option value="">-- Seleccioneu --</option>
+      <select id="estatCompte" th:field="*{estatCompte}" class="form-select"
+              th:errorclass="needcorrection">
         <option value="pendent">Pendent</option>
         <option value="acceptat">Acceptat</option>
         <option value="rebutjat">Rebutjat</option>
       </select>
-      <div th:if="${#fields.hasErrors('estatCompte')}" th:errors="*{estatCompte}" class="error"></div>
+    </div>
+    <div class="col-md-8">
+      <label for="adreca" class="form-label">Adreça</label>
+      <input id="adreca" type="text" th:field="*{adreca}" class="form-control" maxlength="120"
+             placeholder="Carrer, número, ciutat" th:errorclass="needcorrection"/>
+      <div th:if="${#fields.hasErrors('adreca')}" th:errors="*{adreca}" class="error"></div>
+    </div>
+    <div class="col-md-4">
+      <label for="dataRegistre" class="form-label">Data registre</label>
+      <input id="dataRegistre" type="date" th:field="*{dataRegistre}" class="form-control"
+             th:errorclass="needcorrection"/>
+      <div class="form-text">Si no s'indica, s'assignarà la data actual.</div>
     </div>
     <div class="col-12">
       <div class="form-check">
-        <input id="consentimentRGPD" type="checkbox" th:field="*{consentimentRGPD}" class="form-check-input"/>
-        <label for="consentimentRGPD" class="form-check-label">Consentiment RGPD (obligatori)</label>
+        <input id="consentimentRGPD" type="checkbox" th:field="*{consentimentRGPD}"
+               class="form-check-input"/>
+        <label for="consentimentRGPD" class="form-check-label">
+          <strong>Consentiment RGPD</strong> - Autoritze el tractament de les meues dades personals
+          d'acord amb la normativa LOPD/RGPD vigent. <span class="text-danger">(obligatori)</span>
+        </label>
       </div>
       <div th:if="${#fields.hasErrors('consentimentRGPD')}" th:errors="*{consentimentRGPD}" class="error"></div>
     </div>
     <div class="col-12">
-      <button type="submit" class="btn btn-success">Afegir usuari</button>
-      <a th:href="@{/usuariovi/list}" class="btn btn-outline-secondary ms-2">Cancel·lar</a>
+      <button type="submit" class="btn btn-success">
+        <i class="bi bi-check-lg me-1"></i>Afegir usuari
+      </button>
+      <a th:href="@{/usuariovi/list}" class="btn btn-outline-secondary ms-2">
+        <i class="bi bi-x-lg me-1"></i>Cancel·lar
+      </a>
     </div>
   </form>
 </section>
