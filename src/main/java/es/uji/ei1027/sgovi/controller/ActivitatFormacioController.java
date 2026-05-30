@@ -1,6 +1,7 @@
 package es.uji.ei1027.sgovi.controller;
 
 import es.uji.ei1027.sgovi.dao.ActivitatFormacioDao;
+import es.uji.ei1027.sgovi.dao.FormadorDao;
 import es.uji.ei1027.sgovi.model.ActivitatFormacio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,10 +14,16 @@ import org.springframework.web.bind.annotation.*;
 public class ActivitatFormacioController {
 
     private ActivitatFormacioDao activitatFormacioDao;
+    private FormadorDao formadorDao;
 
     @Autowired
     public void setActivitatFormacioDao(ActivitatFormacioDao activitatFormacioDao) {
         this.activitatFormacioDao = activitatFormacioDao;
+    }
+
+    @Autowired
+    public void setFormadorDao(FormadorDao formadorDao) {
+        this.formadorDao = formadorDao;
     }
 
     @GetMapping("/list")
@@ -28,13 +35,15 @@ public class ActivitatFormacioController {
     @GetMapping("/add")
     public String addActivitatForm(Model model) {
         model.addAttribute("activitatFormacio", new ActivitatFormacio());
+        model.addAttribute("formadors", formadorDao.getFormadors());
         return "activitatformacio/add";
     }
 
     @PostMapping("/add")
     public String addActivitat(@ModelAttribute("activitatFormacio") ActivitatFormacio activitat,
-                               BindingResult bindingResult) {
+                               BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("formadors", formadorDao.getFormadors());
             return "activitatformacio/add";
         }
         activitatFormacioDao.addActivitatFormacio(activitat);
@@ -44,13 +53,15 @@ public class ActivitatFormacioController {
     @GetMapping("/update/{id}")
     public String updateActivitatForm(@PathVariable int id, Model model) {
         model.addAttribute("activitatFormacio", activitatFormacioDao.getActivitatFormacio(id));
+        model.addAttribute("formadors", formadorDao.getFormadors());
         return "activitatformacio/update";
     }
 
     @PostMapping("/update")
     public String updateActivitat(@ModelAttribute("activitatFormacio") ActivitatFormacio activitat,
-                                  BindingResult bindingResult) {
+                                  BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("formadors", formadorDao.getFormadors());
             return "activitatformacio/update";
         }
         activitatFormacioDao.updateActivitatFormacio(activitat);

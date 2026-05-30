@@ -1,32 +1,23 @@
 <!DOCTYPE html>
-<html lang="ca" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Llista de seleccions</title>
-</head>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{fragments/base}">
+<head><title>Seleccions</title></head>
 <body>
-<h1>Llista de seleccions</h1>
-<a th:href="@{/seleccion/add}">Afegir selecció</a>
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>ID Sol·licitud</th>
-        <th>ID Assistent</th>
-        <th>Data proposta</th>
-        <th>Estat</th>
-        <th>Accions</th>
-    </tr>
-    <tr th:each="s : ${seleccions}">
-        <td th:text="${s.idSeleccion}"></td>
-        <td th:text="${s.idRequest}"></td>
-        <td th:text="${s.idAssistent}"></td>
-        <td th:text="${s.dataProposta}"></td>
-        <td th:text="${s.estat}"></td>
-        <td>
-            <a th:href="@{'/seleccion/update/' + ${s.idSeleccion}}">Editar</a> |
-            <a th:href="@{'/seleccion/delete/' + ${s.idSeleccion}}">Eliminar</a>
-        </td>
-    </tr>
-</table>
+<section layout:fragment="content">
+  <nav class="breadcrumb-sgovi" aria-label="Ruta"><a th:href="@{/}">Inici</a><span class="separator">&#8250;</span><span class="current">Seleccions</span></nav>
+  <h1><i class="bi bi-check2-square me-2"></i>Seleccions</h1>
+  <div th:if="${#lists.isEmpty(seleccions)}" class="alert alert-info">No hi ha seleccions registrades.</div>
+  <div th:unless="${#lists.isEmpty(seleccions)}" class="table-responsive">
+    <table class="table table-striped table-hover sortable">
+      <caption>Seleccions d'assistents</caption>
+      <thead class="table-success"><tr><th scope="col">ID</th><th scope="col">Sol·licitud</th><th scope="col">Assistent</th><th scope="col">Data proposta</th><th scope="col">Estat</th><th scope="col" class="no-sort">Accions</th></tr></thead>
+      <tbody><tr th:each="s : ${seleccions}">
+        <td th:text="${s.idSeleccion}"></td><td th:text="${'#' + s.idRequest}"></td><td th:text="${'#' + s.idAssistent}"></td>
+        <td th:text="${s.dataProposta != null ? #temporals.format(s.dataProposta, 'dd/MM/yyyy') : '-'}"></td>
+        <td><span th:class="${'badge-estat ' + (s.estat == 'acceptat' ? 'badge-aprovada' : s.estat == 'rebutjat' ? 'badge-rebutjada' : 'badge-en-revisio')}" th:text="${s.estat}"></span></td>
+        <td><a th:href="@{'/seleccion/delete/' + ${s.idSeleccion}}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Esteu segur?')"><i class="bi bi-trash"></i></a></td>
+      </tr></tbody>
+    </table>
+  </div>
+</section>
 </body>
 </html>

@@ -1,38 +1,26 @@
 <!DOCTYPE html>
-<html lang="ca" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Modificar activitat de formació</title>
-</head>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{fragments/base}">
+<head><title>Editar activitat</title></head>
 <body>
-<h1>Modificar activitat de formació</h1>
-<form th:action="@{/activitatformacio/update}" th:object="${activitatFormacio}" method="post">
-    <input type="hidden" th:field="*{idActivitat}">
-
-    <label for="idFormador">ID Formador:</label>
-    <input id="idFormador" type="number" th:field="*{idFormador}" required><br><br>
-
-    <label for="titol">Títol:</label>
-    <input id="titol" type="text" th:field="*{titol}" required><br><br>
-
-    <label for="descripcio">Descripció:</label>
-    <textarea id="descripcio" th:field="*{descripcio}"></textarea><br><br>
-
-    <label for="data">Data:</label>
-    <input id="data" type="date" th:field="*{data}" required><br><br>
-
-    <label for="tipus">Tipus:</label>
-    <select id="tipus" th:field="*{tipus}" required>
-        <option value="formacio">Formació</option>
-        <option value="divulgacio">Divulgació</option>
-    </select><br><br>
-
-    <label for="aforament">Aforament:</label>
-    <input id="aforament" type="number" th:field="*{aforament}"><br><br>
-
-    <button type="submit">Actualitzar</button>
-</form>
-<br>
-<a th:href="@{/activitatformacio/list}">Tornar a la llista</a>
+<section layout:fragment="content">
+  <nav class="breadcrumb-sgovi" aria-label="Ruta"><a th:href="@{/}">Inici</a><span class="separator">&#8250;</span><a th:href="@{/activitatformacio/list}">Activitats</a><span class="separator">&#8250;</span><span class="current">Editar</span></nav>
+  <h1><i class="bi bi-pencil me-2"></i>Editar Activitat de Formacio</h1>
+  <form th:action="@{/activitatformacio/update}" th:object="${activitatFormacio}" method="post" class="row g-3">
+    <input type="hidden" th:field="*{idActivitat}"/>
+    <div class="col-md-8"><label for="titol" class="form-label">Titol *</label><input id="titol" type="text" th:field="*{titol}" class="form-control" required/></div>
+    <div class="col-md-4"><label for="data" class="form-label">Data *</label><input id="data" type="date" th:field="*{data}" class="form-control" required/></div>
+    <div class="col-12"><label for="descripcio" class="form-label">Descripcio</label><textarea id="descripcio" th:field="*{descripcio}" class="form-control" rows="3"></textarea></div>
+    <div class="col-md-4"><label for="tipus" class="form-label">Tipus *</label><select id="tipus" th:field="*{tipus}" class="form-select" required><option value="formacio">Formacio</option><option value="divulgacio">Divulgacio</option></select></div>
+    <div class="col-md-4"><label for="aforament" class="form-label">Aforament</label><input id="aforament" type="number" th:field="*{aforament}" class="form-control" min="1"/></div>
+    <div class="col-md-4">
+        <label for="idFormador" class="form-label">Formador *</label>
+        <select id="idFormador" th:field="*{idFormador}" class="form-select" required>
+            <option value="">-- Seleccioneu un formador --</option>
+            <option th:each="f : ${formadors}" th:value="${f.idFormador}" th:text="${f.nom + ' ' + f.cognoms + ' (' + (f.especialitat != null ? f.especialitat : 'General') + ')'}"></option>
+        </select>
+    </div>
+    <div class="col-12"><button type="submit" class="btn btn-success"><i class="bi bi-check-lg me-1"></i>Guardar</button> <a th:href="@{/activitatformacio/list}" class="btn btn-outline-secondary ms-2"><i class="bi bi-x-lg me-1"></i>Cancel·lar</a></div>
+  </form>
+</section>
 </body>
 </html>
