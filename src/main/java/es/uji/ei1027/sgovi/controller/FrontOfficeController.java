@@ -176,7 +176,7 @@ public class FrontOfficeController {
 
     // POST /usuari/solicitud/{idRequest}/seleccion/{idSeleccion}/acceptar
     @RequestMapping(value = "/solicitud/{idRequest}/seleccion/{idSeleccion}/acceptar", method = RequestMethod.POST)
-    public String acceptarCandidat(@PathVariable int idRequest, @PathVariable int idSeleccion,
+    public String acceptarCandidat(@PathVariable Integer idRequest, @PathVariable int idSeleccion,
                                    HttpSession session, RedirectAttributes redirectAttributes) {
         if (getUsuariOSession(session) == null) return "redirect:/login";
         es.uji.ei1027.sgovi.model.Seleccion seleccion = seleccionDao.getSeleccion(idSeleccion);
@@ -190,7 +190,7 @@ public class FrontOfficeController {
 
     // POST /usuari/solicitud/{idRequest}/seleccion/{idSeleccion}/rebutjar
     @RequestMapping(value = "/solicitud/{idRequest}/seleccion/{idSeleccion}/rebutjar", method = RequestMethod.POST)
-    public String rebutjarCandidat(@PathVariable int idRequest, @PathVariable int idSeleccion,
+    public String rebutjarCandidat(@PathVariable Integer idRequest, @PathVariable int idSeleccion,
                                    HttpSession session, RedirectAttributes redirectAttributes) {
         if (getUsuariOSession(session) == null) return "redirect:/login";
         es.uji.ei1027.sgovi.model.Seleccion seleccion = seleccionDao.getSeleccion(idSeleccion);
