@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ca"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head>
+    <title>Registre d'Assistent Personal</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <h1><i class="bi bi-person-badge me-2"></i>Treballa amb nosaltres (Assistent PAP/PATI)</h1>
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle me-1"></i>
+        En registrar-se, presentarà la seua candidatura per treballar com a Assistent Personal o Tecnològic a l'OVI. Un tècnic avaluarà el seu perfil abans d'acceptar-lo.
+    </div>
+
+    <form th:action="@{/register-assistent}" th:object="${assistentPersonal}" method="post" class="row g-3">
+        <div class="col-md-5">
+            <label for="nom" class="form-label">Nom *</label>
+            <input id="nom" type="text" th:field="*{nom}" class="form-control" th:errorclass="is-invalid" required/>
+            <div th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}" class="text-danger small mt-1"></div>
+        </div>
+        <div class="col-md-7">
+            <label for="cognoms" class="form-label">Cognoms *</label>
+            <input id="cognoms" type="text" th:field="*{cognoms}" class="form-control" th:errorclass="is-invalid" required/>
+            <div th:if="${#fields.hasErrors('cognoms')}" th:errors="*{cognoms}" class="text-danger small mt-1"></div>
+        </div>
+        
+        <div class="col-md-6">
+            <label for="email" class="form-label">Correu electrònic *</label>
+            <input id="email" type="email" th:field="*{email}" class="form-control" th:errorclass="is-invalid" required/>
+            <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger small mt-1"></div>
+        </div>
+        <div class="col-md-6">
+            <label for="telefon" class="form-label">Telèfon *</label>
+            <input id="telefon" type="text" th:field="*{telefon}" class="form-control" th:errorclass="is-invalid" required/>
+            <div th:if="${#fields.hasErrors('telefon')}" th:errors="*{telefon}" class="text-danger small mt-1"></div>
+        </div>
+        
+        <div class="col-12 mt-4">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="consentiment" required/>
+                <label class="form-check-label" for="consentiment">
+                    He llegit i accepte la política de privacitat i cedisc les meues dades curriculars a l'OVI. *
+                </label>
+            </div>
+        </div>
+
+        <div class="col-12 mt-3">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-person-check-fill me-1"></i>Enviar candidatura</button>
+            <a th:href="@{/login}" class="btn btn-outline-secondary ms-2">Cancel·lar</a>
+        </div>
+    </form>
+</section>
+</body>
+</html>

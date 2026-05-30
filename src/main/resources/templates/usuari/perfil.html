@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>El meu perfil</title></head>
+<body>
+<section layout:fragment="content">
+  <nav class="breadcrumb-sgovi" aria-label="Ruta de navegació">
+    <a th:href="@{/}">Inici</a>
+    <span class="separator">›</span>
+    <span class="current">El meu perfil</span>
+  </nav>
+
+  <h1><i class="bi bi-person-circle me-2"></i>El meu perfil</h1>
+
+  <div class="card card-sgovi">
+    <div class="card-body">
+      <form th:action="@{/usuari/perfil}" th:object="${usuariOVI}" method="post" class="row g-3">
+        <!-- Només lectura -->
+        <div class="col-md-4">
+          <label class="form-label">Email (No modificable)</label>
+          <input type="email" class="form-control" th:field="*{email}" readonly disabled/>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Estat del compte</label>
+          <input type="text" class="form-control" th:field="*{estatCompte}" readonly disabled/>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Data de registre</label>
+          <input type="date" class="form-control" th:field="*{dataRegistre}" readonly disabled/>
+        </div>
+
+        <!-- Camps editables -->
+        <div class="col-md-6 mt-4">
+          <label for="nom" class="form-label">Nom <span class="text-danger">*</span></label>
+          <input id="nom" type="text" th:field="*{nom}" class="form-control" required/>
+        </div>
+        <div class="col-md-6 mt-4">
+          <label for="cognoms" class="form-label">Cognoms <span class="text-danger">*</span></label>
+          <input id="cognoms" type="text" th:field="*{cognoms}" class="form-control" required/>
+        </div>
+        <div class="col-md-4">
+          <label for="telefon" class="form-label">Telèfon <span class="text-danger">*</span></label>
+          <input id="telefon" type="text" th:field="*{telefon}" class="form-control" required/>
+        </div>
+        <div class="col-md-8">
+          <label for="adreca" class="form-label">Adreça</label>
+          <input id="adreca" type="text" th:field="*{adreca}" class="form-control"/>
+        </div>
+
+        <div class="col-12 mt-4">
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-save me-1"></i>Actualitzar dades
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+</body>
+</html>
