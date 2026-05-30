@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ca"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head>
+    <title>Registre de nou usuari</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <h1><i class="bi bi-person-plus me-2"></i>Registre de ciutadà (Usuari OVI)</h1>
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle me-1"></i>
+        En registrar-se, crearà un compte per poder sol·licitar Assistència Personal o Tecnològica. Un tècnic haurà de validar i activar el seu compte abans que puga iniciar sessió.
+    </div>
+
+    <form th:action="@{/register}" th:object="${usuariOVI}" method="post" class="row g-3">
+        <div class="col-md-4">
+            <label for="nom" class="form-label">Nom *</label>
+            <input id="nom" type="text" th:field="*{nom}" class="form-control" required/>
+        </div>
+        <div class="col-md-8">
+            <label for="cognoms" class="form-label">Cognoms *</label>
+            <input id="cognoms" type="text" th:field="*{cognoms}" class="form-control" required/>
+        </div>
+        <div class="col-md-6">
+            <label for="email" class="form-label">Correu electrònic *</label>
+            <input id="email" type="email" th:field="*{email}" class="form-control" th:errorclass="is-invalid" required/>
+            <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger small mt-1"></div>
+        </div>
+        <div class="col-md-6">
+            <label for="password" class="form-label">Contrasenya *</label>
+            <input id="password" type="password" th:field="*{password}" class="form-control" required/>
+        </div>
+        <div class="col-md-6">
+            <label for="telefon" class="form-label">Telèfon *</label>
+            <input id="telefon" type="text" th:field="*{telefon}" class="form-control" required/>
+        </div>
+        <div class="col-md-6">
+            <label for="adreca" class="form-label">Adreça completa</label>
+            <input id="adreca" type="text" th:field="*{adreca}" class="form-control"/>
+        </div>
+
+        <div class="col-12 mt-4">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="consentimentRGPD" th:field="*{consentimentRGPD}" required/>
+                <label class="form-check-label" for="consentimentRGPD">
+                    He llegit i accepte la política de privacitat i el tractament de dades (RGPD). *
+                </label>
+            </div>
+            <div th:if="${#fields.hasErrors('consentimentRGPD')}" th:errors="*{consentimentRGPD}" class="text-danger small"></div>
+        </div>
+
+        <div class="col-12 mt-3">
+            <button type="submit" class="btn btn-success"><i class="bi bi-person-check-fill me-1"></i>Registrar-se</button>
+            <a th:href="@{/login}" class="btn btn-outline-secondary ms-2">Cancel·lar</a>
+        </div>
+    </form>
+</section>
+</body>
+</html>

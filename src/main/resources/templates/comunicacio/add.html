@@ -1,30 +1,43 @@
 <!DOCTYPE html>
-<html lang="ca" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Afegir comunicació</title>
-</head>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>Afegir comunicació</title></head>
 <body>
-<h1>Afegir comunicació</h1>
-<form th:action="@{/comunicacio/add}" th:object="${comunicacio}" method="post">
-    <label for="idComunicacio">ID Comunicació:</label>
-    <input id="idComunicacio" type="number" th:field="*{idComunicacio}" required><br><br>
+<section layout:fragment="content">
+  <nav class="breadcrumb-sgovi" aria-label="Ruta">
+    <a th:href="@{/}">Inici</a><span class="separator">&#8250;</span>
+    <a th:href="@{/comunicacio/list}">Comunicacions</a><span class="separator">&#8250;</span>
+    <span class="current">Afegir</span>
+  </nav>
 
-    <label for="idSeleccion">ID Selecció:</label>
-    <input id="idSeleccion" type="number" th:field="*{idSeleccion}" required><br><br>
+  <h1><i class="bi bi-chat-left-text me-2"></i>Afegir comunicació</h1>
 
-    <label for="dataHora">Data i hora:</label>
-    <input id="dataHora" type="datetime-local" th:field="*{dataHora}" required><br><br>
-
-    <label for="emissor">Emissor:</label>
-    <input id="emissor" type="text" th:field="*{emissor}" required><br><br>
-
-    <label for="missatge">Missatge:</label>
-    <textarea id="missatge" th:field="*{missatge}" required></textarea><br><br>
-
-    <button type="submit">Afegir</button>
-</form>
-<br>
-<a th:href="@{/comunicacio/list}">Tornar a la llista</a>
+  <form method="post" th:action="@{/comunicacio/add}" th:object="${comunicacio}" class="row g-3 mt-2">
+    <div class="col-md-4">
+      <label for="idSeleccion" class="form-label">ID Selecció *</label>
+      <input id="idSeleccion" type="number" th:field="*{idSeleccion}" class="form-control" required min="1"/>
+    </div>
+    <div class="col-md-4">
+      <label for="dataHora" class="form-label">Data i hora *</label>
+      <input id="dataHora" type="datetime-local" th:field="*{dataHora}" class="form-control" required/>
+    </div>
+    <div class="col-md-4">
+      <label for="emissor" class="form-label">Emissor *</label>
+      <select id="emissor" th:field="*{emissor}" class="form-select" required>
+        <option value="tecnic">Tècnic</option>
+        <option value="usuari">Usuari OVI</option>
+      </select>
+    </div>
+    <div class="col-12">
+      <label for="missatge" class="form-label">Missatge *</label>
+      <textarea id="missatge" th:field="*{missatge}" class="form-control" rows="4" required></textarea>
+    </div>
+    <div class="col-12 mt-4">
+      <button type="submit" class="btn btn-success"><i class="bi bi-check-lg me-1"></i>Afegir</button>
+      <a th:href="@{/comunicacio/list}" class="btn btn-outline-secondary ms-2"><i class="bi bi-x-lg me-1"></i>Cancel·lar</a>
+    </div>
+  </form>
+</section>
 </body>
 </html>
