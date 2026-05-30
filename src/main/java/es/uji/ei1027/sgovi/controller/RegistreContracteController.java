@@ -232,7 +232,7 @@ public class RegistreContracteController {
     // API REST: retorna les sol·licituds assignades a un assistent concret (via seleccion)
     @GetMapping("/api/solicituds-per-assistent/{idAssistent}")
     @ResponseBody
-    public List<Map<String, Object>> getSolicitudsPerAssistent(@PathVariable int idAssistent) {
+    public List<Map<String, Object>> getSolicitudsPerAssistent(@PathVariable Integer idAssistent) {
         List<Seleccion> seleccions = seleccionDao.getSeleccions().stream()
                 .filter(s -> s.getIdAssistent() == idAssistent)
                 .toList();
