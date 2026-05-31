@@ -13,10 +13,16 @@ import org.springframework.web.bind.annotation.*;
 public class FormadorController {
 
     private FormadorDao formadorDao;
+    private es.uji.ei1027.sgovi.services.EmailValidationService emailValidationService;
 
     @Autowired
     public void setFormadorDao(FormadorDao formadorDao) {
         this.formadorDao = formadorDao;
+    }
+
+    @Autowired
+    public void setEmailValidationService(es.uji.ei1027.sgovi.services.EmailValidationService emailValidationService) {
+        this.emailValidationService = emailValidationService;
     }
 
     @GetMapping("/list")
@@ -34,6 +40,11 @@ public class FormadorController {
     @PostMapping("/add")
     public String addFormador(@ModelAttribute("formador") Formador formador,
                               BindingResult bindingResult) {
+        if (emailValidationService.isEmailTaken(formador.getEmail(), null, null)) {
+            bindingResult.rejectValue("email", "email.duplicat",
+                    "Aquest correu electrònic ja està registrat en el sistema (com a usuari, assistent o formador).");
+        }
+
         if (bindingResult.hasErrors()) {
             return "formador/add";
         }
@@ -50,6 +61,11 @@ public class FormadorController {
     @PostMapping("/update")
     public String updateFormador(@ModelAttribute("formador") Formador formador,
                                  BindingResult bindingResult) {
+        if (emailValidationService.isEmailTaken(formador.getEmail(), "formador", formador.getIdFormador())) {
+            bindingResult.rejectValue("email", "email.duplicat",
+                    "Aquest correu electrònic ja està en ús per una altra persona.");
+        }
+
         if (bindingResult.hasErrors()) {
             return "formador/update";
         }
