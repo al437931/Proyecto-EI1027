@@ -22,13 +22,15 @@ public class ComunicacioUsuariOVIPAPDao {
 
     public void addComunicacio(ComunicacioUsuariOVIPAP comunicacio) {
         jdbcTemplate.update(
-                "INSERT INTO comunicaciousuariovipap (idcomunicacio, idseleccion, datahora, emissor, missatge) " +
-                        "VALUES (?, ?, ?, ?, ?)",
+                "INSERT INTO comunicaciousuariovipap (idcomunicacio, destinatari, assumpte, datahora, emissor, missatge, tipuscomunicacio) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)",
                 comunicacio.getIdComunicacio(),
-                comunicacio.getIdSeleccion(),
+                comunicacio.getDestinatari(),
+                comunicacio.getAssumpte(),
                 Timestamp.valueOf(comunicacio.getDataHora()),
                 comunicacio.getEmissor(),
-                comunicacio.getMissatge()
+                comunicacio.getMissatge(),
+                comunicacio.getTipusComunicacio()
         );
     }
 
@@ -41,12 +43,14 @@ public class ComunicacioUsuariOVIPAPDao {
 
     public void updateComunicacio(ComunicacioUsuariOVIPAP comunicacio) {
         jdbcTemplate.update(
-                "UPDATE comunicaciousuariovipap SET idseleccion = ?, datahora = ?, emissor = ?, missatge = ? " +
+                "UPDATE comunicaciousuariovipap SET destinatari = ?, assumpte = ?, datahora = ?, emissor = ?, missatge = ?, tipuscomunicacio = ? " +
                         "WHERE idcomunicacio = ?",
-                comunicacio.getIdSeleccion(),
+                comunicacio.getDestinatari(),
+                comunicacio.getAssumpte(),
                 Timestamp.valueOf(comunicacio.getDataHora()),
                 comunicacio.getEmissor(),
                 comunicacio.getMissatge(),
+                comunicacio.getTipusComunicacio(),
                 comunicacio.getIdComunicacio()
         );
     }
@@ -65,8 +69,25 @@ public class ComunicacioUsuariOVIPAPDao {
 
     public List<ComunicacioUsuariOVIPAP> getComunicacions() {
         return jdbcTemplate.query(
-                "SELECT * FROM comunicaciousuariovipap ORDER BY idcomunicacio",
+                "SELECT * FROM comunicaciousuariovipap ORDER BY datahora DESC",
                 new ComunicacioUsuariOVIPAPRowMapper()
         );
+    }
+
+    public List<ComunicacioUsuariOVIPAP> getComunicacionsByDestinatari(String email) {
+        return jdbcTemplate.query(
+                "SELECT * FROM comunicaciousuariovipap WHERE destinatari = ? ORDER BY datahora DESC",
+                new ComunicacioUsuariOVIPAPRowMapper(),
+                email
+        );
+    }
+
+    // Obté el pròxim ID disponible
+    public int getNextId() {
+        Integer max = jdbcTemplate.queryForObject(
+                "SELECT COALESCE(MAX(idcomunicacio), 0) FROM comunicaciousuariovipap",
+                Integer.class
+        );
+        return (max != null ? max : 0) + 1;
     }
 }

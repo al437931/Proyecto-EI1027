@@ -33,19 +33,25 @@
         <!-- Camps editables -->
         <div class="col-md-6 mt-4">
           <label for="nom" class="form-label">Nom <span class="text-danger">*</span></label>
-          <input id="nom" type="text" th:field="*{nom}" class="form-control" required/>
+          <input id="nom" type="text" th:field="*{nom}" class="form-control" th:errorclass="is-invalid"
+                 required maxlength="50" pattern="[A-Za-zÀ-ÿ\s'-]+"/>
+          <div th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}" class="text-danger small mt-1"></div>
         </div>
         <div class="col-md-6 mt-4">
           <label for="cognoms" class="form-label">Cognoms <span class="text-danger">*</span></label>
-          <input id="cognoms" type="text" th:field="*{cognoms}" class="form-control" required/>
+          <input id="cognoms" type="text" th:field="*{cognoms}" class="form-control" th:errorclass="is-invalid"
+                 required maxlength="80" pattern="[A-Za-zÀ-ÿ\s'-]+"/>
+          <div th:if="${#fields.hasErrors('cognoms')}" th:errors="*{cognoms}" class="text-danger small mt-1"></div>
         </div>
         <div class="col-md-4">
           <label for="telefon" class="form-label">Telèfon <span class="text-danger">*</span></label>
-          <input id="telefon" type="text" th:field="*{telefon}" class="form-control" required/>
+          <input id="telefon" type="tel" th:field="*{telefon}" class="form-control" th:errorclass="is-invalid"
+                 required maxlength="9" pattern="[0-9]{9}"/>
+          <div th:if="${#fields.hasErrors('telefon')}" th:errors="*{telefon}" class="text-danger small mt-1"></div>
         </div>
         <div class="col-md-8">
           <label for="adreca" class="form-label">Adreça</label>
-          <input id="adreca" type="text" th:field="*{adreca}" class="form-control"/>
+          <input id="adreca" type="text" th:field="*{adreca}" class="form-control" maxlength="150"/>
         </div>
 
         <div class="col-12 mt-4">

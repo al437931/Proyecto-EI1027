@@ -4,22 +4,53 @@
 <body>
 <section layout:fragment="content">
   <nav class="breadcrumb-sgovi" aria-label="Ruta"><a th:href="@{/}">Inici</a><span class="separator">&#8250;</span><a th:href="@{/activitatformacio/list}">Activitats</a><span class="separator">&#8250;</span><span class="current">Editar</span></nav>
-  <h1><i class="bi bi-pencil me-2"></i>Editar Activitat de Formacio</h1>
+  <h1><i class="bi bi-pencil me-2"></i>Editar Activitat de Formació</h1>
   <form th:action="@{/activitatformacio/update}" th:object="${activitatFormacio}" method="post" class="row g-3">
     <input type="hidden" th:field="*{idActivitat}"/>
-    <div class="col-md-8"><label for="titol" class="form-label">Titol *</label><input id="titol" type="text" th:field="*{titol}" class="form-control" required/></div>
-    <div class="col-md-4"><label for="data" class="form-label">Data *</label><input id="data" type="date" th:field="*{data}" class="form-control" required/></div>
-    <div class="col-12"><label for="descripcio" class="form-label">Descripcio</label><textarea id="descripcio" th:field="*{descripcio}" class="form-control" rows="3"></textarea></div>
-    <div class="col-md-4"><label for="tipus" class="form-label">Tipus *</label><select id="tipus" th:field="*{tipus}" class="form-select" required><option value="formacio">Formacio</option><option value="divulgacio">Divulgacio</option></select></div>
-    <div class="col-md-4"><label for="aforament" class="form-label">Aforament</label><input id="aforament" type="number" th:field="*{aforament}" class="form-control" min="1"/></div>
-    <div class="col-md-4">
-        <label for="idFormador" class="form-label">Formador *</label>
-        <select id="idFormador" th:field="*{idFormador}" class="form-select" required>
-            <option value="">-- Seleccioneu un formador --</option>
-            <option th:each="f : ${formadors}" th:value="${f.idFormador}" th:text="${f.nom + ' ' + f.cognoms + ' (' + (f.especialitat != null ? f.especialitat : 'General') + ')'}"></option>
-        </select>
+    <div class="col-md-8">
+      <label for="titol" class="form-label">Títol <span class="text-danger">*</span></label>
+      <input id="titol" type="text" th:field="*{titol}" class="form-control" th:errorclass="is-invalid"
+             required="required" maxlength="150"/>
+      <div th:if="${#fields.hasErrors('titol')}" th:errors="*{titol}" class="text-danger small mt-1"></div>
     </div>
-    <div class="col-12"><button type="submit" class="btn btn-success"><i class="bi bi-check-lg me-1"></i>Guardar</button> <a th:href="@{/activitatformacio/list}" class="btn btn-outline-secondary ms-2"><i class="bi bi-x-lg me-1"></i>Cancel·lar</a></div>
+    <div class="col-md-4">
+      <label for="data" class="form-label">Data <span class="text-danger">*</span></label>
+      <input id="data" type="date" th:field="*{data}" class="form-control" th:errorclass="is-invalid" required="required"/>
+      <div th:if="${#fields.hasErrors('data')}" th:errors="*{data}" class="text-danger small mt-1"></div>
+    </div>
+    <div class="col-12">
+      <label for="descripcio" class="form-label">Descripció</label>
+      <textarea id="descripcio" th:field="*{descripcio}" class="form-control" rows="3" maxlength="500"></textarea>
+      <div th:if="${#fields.hasErrors('descripcio')}" th:errors="*{descripcio}" class="text-danger small mt-1"></div>
+    </div>
+    <div class="col-md-4">
+      <label for="tipus" class="form-label">Tipus <span class="text-danger">*</span></label>
+      <select id="tipus" th:field="*{tipus}" class="form-select" th:errorclass="is-invalid" required="required">
+        <option value="">-- Seleccioneu --</option>
+        <option value="formacio">Formació</option>
+        <option value="divulgacio">Divulgació</option>
+      </select>
+      <div th:if="${#fields.hasErrors('tipus')}" th:errors="*{tipus}" class="text-danger small mt-1"></div>
+    </div>
+    <div class="col-md-4">
+      <label for="aforament" class="form-label">Aforament <span class="text-danger">*</span></label>
+      <input id="aforament" type="number" th:field="*{aforament}" class="form-control" th:errorclass="is-invalid"
+             min="1" required="required"/>
+      <div th:if="${#fields.hasErrors('aforament')}" th:errors="*{aforament}" class="text-danger small mt-1"></div>
+    </div>
+    <div class="col-md-4">
+      <label for="idFormador" class="form-label">Formador <span class="text-danger">*</span></label>
+      <select id="idFormador" th:field="*{idFormador}" class="form-select" th:errorclass="is-invalid" required="required">
+        <option value="0">-- Seleccioneu un formador --</option>
+        <option th:each="f : ${formadors}" th:value="${f.idFormador}"
+                th:text="${f.nom} + ' ' + ${f.cognoms}"></option>
+      </select>
+      <div th:if="${#fields.hasErrors('idFormador')}" th:errors="*{idFormador}" class="text-danger small mt-1"></div>
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i>Actualitzar</button>
+      <a th:href="@{/activitatformacio/list}" class="btn btn-outline-secondary ms-2"><i class="bi bi-x-lg me-1"></i>Cancel·lar</a>
+    </div>
   </form>
 </section>
 </body>

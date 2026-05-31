@@ -10,6 +10,10 @@ public class Seleccion {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dataProposta;
     private String estat;
+    
+    // Transient fields for UI display
+    private String nomUsuariComplet;
+    private String nomAssistentComplet;
 
     public Seleccion() {
 
@@ -54,6 +58,22 @@ public class Seleccion {
 
     public void setEstat(String estat) {
         this.estat = estat;
+    }
+
+    public String getNomUsuariComplet() {
+        return nomUsuariComplet;
+    }
+
+    public void setNomUsuariComplet(String nomUsuariComplet) {
+        this.nomUsuariComplet = nomUsuariComplet;
+    }
+
+    public String getNomAssistentComplet() {
+        return nomAssistentComplet;
+    }
+
+    public void setNomAssistentComplet(String nomAssistentComplet) {
+        this.nomAssistentComplet = nomAssistentComplet;
     }
 
     @Override

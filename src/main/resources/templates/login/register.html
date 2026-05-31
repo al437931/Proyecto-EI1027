@@ -16,36 +16,46 @@
 
     <form th:action="@{/register}" th:object="${usuariOVI}" method="post" class="row g-3">
         <div class="col-md-4">
-            <label for="nom" class="form-label">Nom *</label>
-            <input id="nom" type="text" th:field="*{nom}" class="form-control" required/>
+            <label for="nom" class="form-label">Nom <span class="text-danger">*</span></label>
+            <input id="nom" type="text" th:field="*{nom}" class="form-control" th:errorclass="is-invalid"
+                   required maxlength="50" pattern="[A-Za-zÀ-ÿ\s'-]+"/>
+            <div th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}" class="text-danger small mt-1"></div>
         </div>
         <div class="col-md-8">
-            <label for="cognoms" class="form-label">Cognoms *</label>
-            <input id="cognoms" type="text" th:field="*{cognoms}" class="form-control" required/>
+            <label for="cognoms" class="form-label">Cognoms <span class="text-danger">*</span></label>
+            <input id="cognoms" type="text" th:field="*{cognoms}" class="form-control" th:errorclass="is-invalid"
+                   required maxlength="80" pattern="[A-Za-zÀ-ÿ\s'-]+"/>
+            <div th:if="${#fields.hasErrors('cognoms')}" th:errors="*{cognoms}" class="text-danger small mt-1"></div>
         </div>
         <div class="col-md-6">
-            <label for="email" class="form-label">Correu electrònic *</label>
-            <input id="email" type="email" th:field="*{email}" class="form-control" th:errorclass="is-invalid" required/>
+            <label for="email" class="form-label">Correu electrònic <span class="text-danger">*</span></label>
+            <input id="email" type="email" th:field="*{email}" class="form-control" th:errorclass="is-invalid"
+                   required maxlength="100"/>
             <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger small mt-1"></div>
         </div>
         <div class="col-md-6">
-            <label for="password" class="form-label">Contrasenya *</label>
-            <input id="password" type="password" th:field="*{password}" class="form-control" required/>
+            <label for="password" class="form-label">Contrasenya <span class="text-danger">*</span></label>
+            <input id="password" type="password" th:field="*{password}" class="form-control" th:errorclass="is-invalid"
+                   required minlength="6" maxlength="50"/>
+            <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger small mt-1"></div>
+            <div class="form-text">Mínim 6 caràcters.</div>
         </div>
         <div class="col-md-6">
-            <label for="telefon" class="form-label">Telèfon *</label>
-            <input id="telefon" type="text" th:field="*{telefon}" class="form-control" required/>
+            <label for="telefon" class="form-label">Telèfon <span class="text-danger">*</span></label>
+            <input id="telefon" type="tel" th:field="*{telefon}" class="form-control" th:errorclass="is-invalid"
+                   required maxlength="9" pattern="[0-9]{9}"/>
+            <div th:if="${#fields.hasErrors('telefon')}" th:errors="*{telefon}" class="text-danger small mt-1"></div>
         </div>
         <div class="col-md-6">
             <label for="adreca" class="form-label">Adreça completa</label>
-            <input id="adreca" type="text" th:field="*{adreca}" class="form-control"/>
+            <input id="adreca" type="text" th:field="*{adreca}" class="form-control" maxlength="150"/>
         </div>
 
         <div class="col-12 mt-4">
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="consentimentRGPD" th:field="*{consentimentRGPD}" required/>
                 <label class="form-check-label" for="consentimentRGPD">
-                    He llegit i accepte la política de privacitat i el tractament de dades (RGPD). *
+                    He llegit i accepte la política de privacitat i el tractament de dades (RGPD). <span class="text-danger">*</span>
                 </label>
             </div>
             <div th:if="${#fields.hasErrors('consentimentRGPD')}" th:errors="*{consentimentRGPD}" class="text-danger small"></div>

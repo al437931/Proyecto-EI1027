@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>Activitats disponibles</title></head>
+<body>
+<section layout:fragment="content">
+  <nav class="breadcrumb-sgovi" aria-label="Ruta">
+    <a th:href="@{/}">Inici</a><span class="separator">›</span>
+    <span class="current">Activitats de Formació</span>
+  </nav>
+
+  <h1><i class="bi bi-calendar-event me-2"></i>Activitats de Formació disponibles</h1>
+  <div class="alert alert-info">
+    <i class="bi bi-info-circle me-1"></i>
+    Inscriu-te a les activitats de formació disponibles. Consulta les places lliures abans d'inscriure't.
+  </div>
+
+  <div th:if="${#lists.isEmpty(activitats)}" class="alert alert-warning">
+    No hi ha activitats disponibles en aquest moment.
+  </div>
+
+  <div th:unless="${#lists.isEmpty(activitats)}" class="row">
+    <div th:each="a : ${activitats}" class="col-md-6 col-lg-4 mb-4">
+      <div class="card card-sgovi h-100">
+        <div class="card-header">
+          <i class="bi bi-calendar-event me-1"></i>
+          <span th:text="${a.titol}"></span>
+        </div>
+        <div class="card-body">
+          <p class="mb-1"><strong>Data:</strong>
+            <span th:text="${a.data != null ? #temporals.format(a.data, 'dd/MM/yyyy') : 'Per determinar'}"></span>
+          </p>
+          <p class="mb-1"><strong>Tipus:</strong>
+            <span th:class="${a.tipus == 'formacio' ? 'badge-estat badge-aprovada' : 'badge-estat badge-en-revisio'}"
+                  th:text="${a.tipus}"></span>
+          </p>
+          <p class="mb-1"><strong>Places:</strong>
+            <span class="badge bg-info" th:text="${inscritsMap[a.idActivitat] + ' / ' + a.aforament}"></span>
+            <span th:if="${inscritsMap[a.idActivitat] >= a.aforament}" class="badge bg-danger ms-1">Complet</span>
+          </p>
+          <p th:if="${a.descripcio != null and !a.descripcio.isEmpty()}" class="mb-0 mt-2 text-muted small"
+             th:text="${a.descripcio}"></p>
+        </div>
+        <div class="card-footer text-center">
+          <!-- Si ja està inscrit -->
+          <div th:if="${inscritMap[a.idActivitat]}">
+            <span class="badge bg-success mb-2"><i class="bi bi-check-circle me-1"></i>Inscrit/a</span><br>
+            <form th:action="@{'/activitatformacio/usuari/desinscriure/' + ${a.idActivitat}}" method="post" style="display:inline">
+              <button type="submit" class="btn btn-sm btn-outline-danger"
+                      onclick="return confirm('Esteu segur de voler cancel·lar la inscripció?')">
+                <i class="bi bi-x-circle me-1"></i>Cancel·lar inscripció
+              </button>
+            </form>
+          </div>
+          <!-- Si no està inscrit i queden places -->
+          <div th:unless="${inscritMap[a.idActivitat]}">
+            <form th:if="${inscritsMap[a.idActivitat] < a.aforament}"
+                  th:action="@{'/activitatformacio/usuari/inscriure/' + ${a.idActivitat}}" method="post" style="display:inline">
+              <button type="submit" class="btn btn-sm btn-success">
+                <i class="bi bi-check-lg me-1"></i>Inscriure'm
+              </button>
+            </form>
+            <span th:unless="${inscritsMap[a.idActivitat] < a.aforament}" class="text-muted">
+              <i class="bi bi-lock me-1"></i>Sense places
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>

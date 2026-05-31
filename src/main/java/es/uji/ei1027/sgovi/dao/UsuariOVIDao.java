@@ -22,8 +22,8 @@ public class UsuariOVIDao {
 
     public void addUsuariOVI(UsuariOVI usuari) {
         jdbcTemplate.update(
-                "INSERT INTO usuariovi (idusuari, nom, cognoms, email, telefon, adreca, consentimentrgpd, dataregistre, estatcompte, password) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO usuariovi (idusuari, nom, cognoms, email, telefon, adreca, consentimentrgpd, dataregistre, estatcompte, password, motiu_rebuig) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 usuari.getIdUsuari(),
                 usuari.getNom(),
                 usuari.getCognoms(),
@@ -33,7 +33,8 @@ public class UsuariOVIDao {
                 usuari.getConsentimentRGPD(),
                 Date.valueOf(usuari.getDataRegistre()),
                 usuari.getEstatCompte(),
-                usuari.getPassword()
+                usuari.getPassword(),
+                usuari.getMotiuRebuig()
         );
     }
 
@@ -43,7 +44,7 @@ public class UsuariOVIDao {
 
     public void updateUsuariOVI(UsuariOVI usuari) {
         jdbcTemplate.update(
-                "UPDATE usuariovi SET nom = ?, cognoms = ?, email = ?, telefon = ?, adreca = ?, consentimentrgpd = ?, dataregistre = ?, estatcompte = ? " +
+                "UPDATE usuariovi SET nom = ?, cognoms = ?, email = ?, telefon = ?, adreca = ?, consentimentrgpd = ?, dataregistre = ?, estatcompte = ?, motiu_rebuig = ?, password = ? " +
                         "WHERE idusuari = ?",
                 usuari.getNom(),
                 usuari.getCognoms(),
@@ -53,6 +54,8 @@ public class UsuariOVIDao {
                 usuari.getConsentimentRGPD(),
                 Date.valueOf(usuari.getDataRegistre()),
                 usuari.getEstatCompte(),
+                usuari.getMotiuRebuig(),
+                usuari.getPassword(),
                 usuari.getIdUsuari()
         );
     }

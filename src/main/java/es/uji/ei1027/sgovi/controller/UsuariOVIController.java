@@ -19,6 +19,7 @@ public class UsuariOVIController {
 
     private UsuariOVIDao usuariOVIDao;
     private es.uji.ei1027.sgovi.services.EmailValidationService emailValidationService;
+    private es.uji.ei1027.sgovi.dao.ComunicacioUsuariOVIPAPDao comunicacioDao;
 
     @Autowired
     public void setUsuariOVIDao(UsuariOVIDao usuariOVIDao) {
@@ -28,6 +29,11 @@ public class UsuariOVIController {
     @Autowired
     public void setEmailValidationService(es.uji.ei1027.sgovi.services.EmailValidationService emailValidationService) {
         this.emailValidationService = emailValidationService;
+    }
+
+    @Autowired
+    public void setComunicacioDao(es.uji.ei1027.sgovi.dao.ComunicacioUsuariOVIPAPDao comunicacioDao) {
+        this.comunicacioDao = comunicacioDao;
     }
 
     @GetMapping("/list")
@@ -148,6 +154,36 @@ public class UsuariOVIController {
             usuariOVIDao.updateUsuariOVI(usuari);
             redirectAttributes.addFlashAttribute("missatgeExitFlash",
                     "Compte de '" + usuari.getNom() + " " + usuari.getCognoms() + "' activat correctament.");
+        }
+        return "redirect:/usuariovi/list";
+    }
+
+    @PostMapping("/rebutjar/{id}")
+    public String rebutjarUsuari(@PathVariable int id,
+                                 @RequestParam("motiu") String motiu,
+                                 RedirectAttributes redirectAttributes) {
+        UsuariOVI usuari = usuariOVIDao.getUsuariOVI(id);
+        if (usuari != null) {
+            usuari.setEstatCompte("rebutjat");
+            usuari.setMotiuRebuig(motiu);
+            usuariOVIDao.updateUsuariOVI(usuari);
+
+            // Generar correu simulat
+            es.uji.ei1027.sgovi.model.ComunicacioUsuariOVIPAP c = new es.uji.ei1027.sgovi.model.ComunicacioUsuariOVIPAP();
+            c.setIdComunicacio(comunicacioDao.getNextId());
+            c.setDestinatari(usuari.getEmail());
+            c.setAssumpte("Sol·licitud de registre rebutjada");
+            c.setDataHora(java.time.LocalDateTime.now());
+            c.setEmissor("tecnic@ovi.es");
+            c.setMissatge("Estimat/ada " + usuari.getNom() + ",\n\n" +
+                    "La seua sol·licitud de registre a OVI ha estat REBUTJADA.\n\n" +
+                    "Motiu: " + motiu + "\n\n" +
+                    "Atentament,\nTècnic OVI");
+            c.setTipusComunicacio("rebuig_registre");
+            comunicacioDao.addComunicacio(c);
+
+            redirectAttributes.addFlashAttribute("missatgeExitFlash",
+                    "S'ha rebutjat la sol·licitud de registre de l'usuari correctament.");
         }
         return "redirect:/usuariovi/list";
     }

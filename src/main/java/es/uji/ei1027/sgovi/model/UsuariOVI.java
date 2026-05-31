@@ -15,6 +15,7 @@ public class UsuariOVI {
     private LocalDate dataRegistre;
     private String estatCompte;
     private String password;
+    private String motiuRebuig;
     private String rol; // "usuari" o "tecnic"
 
     public UsuariOVI() {}
@@ -47,7 +48,17 @@ public class UsuariOVI {
     public void setEstatCompte(String estatCompte) { this.estatCompte = estatCompte; }
 
     public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getMotiuRebuig() {
+        return motiuRebuig;
+    }
+
+    public void setMotiuRebuig(String motiuRebuig) {
+        this.motiuRebuig = motiuRebuig;
+    }
 
     public String getRol() { return rol; }
     public void setRol(String rol) { this.rol = rol; }

@@ -2,42 +2,57 @@
 <html lang="ca" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragments/base}">
-<head><title>Afegir comunicació</title></head>
+<head><title>Nova comunicació</title></head>
 <body>
 <section layout:fragment="content">
   <nav class="breadcrumb-sgovi" aria-label="Ruta">
     <a th:href="@{/}">Inici</a><span class="separator">&#8250;</span>
     <a th:href="@{/comunicacio/list}">Comunicacions</a><span class="separator">&#8250;</span>
-    <span class="current">Afegir</span>
+    <span class="current">Nova comunicació</span>
   </nav>
 
-  <h1><i class="bi bi-chat-left-text me-2"></i>Afegir comunicació</h1>
+  <h1><i class="bi bi-envelope-plus me-2"></i>Nova comunicació</h1>
 
-  <form method="post" th:action="@{/comunicacio/add}" th:object="${comunicacio}" class="row g-3 mt-2">
-    <div class="col-md-4">
-      <label for="idSeleccion" class="form-label">ID Selecció *</label>
-      <input id="idSeleccion" type="number" th:field="*{idSeleccion}" class="form-control" required min="1"/>
+  <div class="card card-sgovi">
+    <div class="card-body">
+      <form method="post" th:action="@{/comunicacio/add}" th:object="${comunicacio}" class="row g-3">
+        <div class="col-md-6">
+          <label for="destinatari" class="form-label">Destinatari (email) <span class="text-danger">*</span></label>
+          <input id="destinatari" type="email" th:field="*{destinatari}" class="form-control"
+                 required placeholder="usuari@exemple.com" maxlength="100" th:errorclass="is-invalid"/>
+          <div th:if="${#fields.hasErrors('destinatari')}" th:errors="*{destinatari}" class="text-danger small mt-1"></div>
+        </div>
+        <div class="col-md-6">
+          <label for="tipusComunicacio" class="form-label">Tipus</label>
+          <select id="tipusComunicacio" th:field="*{tipusComunicacio}" class="form-select">
+            <option value="general">General</option>
+            <option value="acceptacio_solicitud">Acceptació de sol·licitud</option>
+            <option value="rebuig_solicitud">Rebuig de sol·licitud</option>
+            <option value="acceptacio_usuari">Acceptació d'usuari</option>
+            <option value="rebuig_usuari">Rebuig d'usuari</option>
+            <option value="acceptacio_assistent">Acceptació d'assistent</option>
+            <option value="rebuig_assistent">Rebuig d'assistent</option>
+          </select>
+        </div>
+        <div class="col-12">
+          <label for="assumpte" class="form-label">Assumpte <span class="text-danger">*</span></label>
+          <input id="assumpte" type="text" th:field="*{assumpte}" class="form-control"
+                 required maxlength="200" th:errorclass="is-invalid"/>
+          <div th:if="${#fields.hasErrors('assumpte')}" th:errors="*{assumpte}" class="text-danger small mt-1"></div>
+        </div>
+        <div class="col-12">
+          <label for="missatge" class="form-label">Missatge <span class="text-danger">*</span></label>
+          <textarea id="missatge" th:field="*{missatge}" class="form-control" rows="6" required
+                    th:errorclass="is-invalid"></textarea>
+          <div th:if="${#fields.hasErrors('missatge')}" th:errors="*{missatge}" class="text-danger small mt-1"></div>
+        </div>
+        <div class="col-12 mt-3">
+          <button type="submit" class="btn btn-success"><i class="bi bi-send me-1"></i>Enviar comunicació</button>
+          <a th:href="@{/comunicacio/list}" class="btn btn-outline-secondary ms-2"><i class="bi bi-x-lg me-1"></i>Cancel·lar</a>
+        </div>
+      </form>
     </div>
-    <div class="col-md-4">
-      <label for="dataHora" class="form-label">Data i hora *</label>
-      <input id="dataHora" type="datetime-local" th:field="*{dataHora}" class="form-control" required/>
-    </div>
-    <div class="col-md-4">
-      <label for="emissor" class="form-label">Emissor *</label>
-      <select id="emissor" th:field="*{emissor}" class="form-select" required>
-        <option value="tecnic">Tècnic</option>
-        <option value="usuari">Usuari OVI</option>
-      </select>
-    </div>
-    <div class="col-12">
-      <label for="missatge" class="form-label">Missatge *</label>
-      <textarea id="missatge" th:field="*{missatge}" class="form-control" rows="4" required></textarea>
-    </div>
-    <div class="col-12 mt-4">
-      <button type="submit" class="btn btn-success"><i class="bi bi-check-lg me-1"></i>Afegir</button>
-      <a th:href="@{/comunicacio/list}" class="btn btn-outline-secondary ms-2"><i class="bi bi-x-lg me-1"></i>Cancel·lar</a>
-    </div>
-  </form>
+  </div>
 </section>
 </body>
 </html>

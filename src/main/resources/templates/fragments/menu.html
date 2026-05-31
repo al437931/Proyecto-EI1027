@@ -33,9 +33,41 @@
                 </li>
                 <li class="nav-item"
                     th:if="${session.usuariLogat != null and session.usuariLogat.rol == 'usuari'}">
+                    <a class="nav-link" th:href="@{/activitatformacio/usuari/list}">
+                        <i class="bi bi-calendar-event me-1"></i>Activitats de Formació
+                    </a>
+                </li>
+                <li class="nav-item"
+                    th:if="${session.usuariLogat != null and session.usuariLogat.rol == 'usuari'}">
                     <a class="nav-link" th:href="@{/usuari/perfil}">
                         <i class="bi bi-person-circle me-1"></i>El meu perfil
                     </a>
+                </li>
+                <li class="nav-item"
+                    th:if="${session.usuariLogat != null and session.usuariLogat.rol == 'usuari'}">
+                    <a class="nav-link" th:href="@{/usuari/historial}">
+                        <i class="bi bi-clock-history me-1"></i>El meu historial
+                    </a>
+                </li>
+
+                <!-- ========== MENÚ ASSISTENT PERSONAL ========== -->
+                <li class="nav-item dropdown"
+                    th:if="${session.usuariLogat != null and session.usuariLogat.rol == 'assistent'}">
+                    <a class="nav-link dropdown-toggle" href="#" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-badge me-1"></i>El meu panell
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" th:href="@{/}">
+                            <i class="bi bi-house-door me-1"></i>Inici (Tauler)</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" th:href="@{/assistent/propostes}">
+                            <i class="bi bi-envelope-paper me-1"></i>Propostes de treball</a></li>
+                        <li><a class="dropdown-item" th:href="@{/assistent/perfil}">
+                            <i class="bi bi-person-circle me-1"></i>El meu perfil</a></li>
+                        <li><a class="dropdown-item" th:href="@{/assistent/historial}">
+                            <i class="bi bi-clock-history me-1"></i>Historial d'usuaris</a></li>
+                    </ul>
                 </li>
 
                 <!-- ========== MENÚ TÈCNIC ========== -->
@@ -76,7 +108,7 @@
                         <li><a class="dropdown-item" th:href="@{/seleccion/list}">
                             <i class="bi bi-check2-square me-1"></i>Seleccions</a></li>
                         <li><a class="dropdown-item" th:href="@{/comunicacio/list}">
-                            <i class="bi bi-chat-dots me-1"></i>Comunicacions</a></li>
+                            <i class="bi bi-envelope me-1"></i>Comunicacions</a></li>
                     </ul>
                 </li>
             </ul>
@@ -91,6 +123,7 @@
                     <span class="navbar-text me-2" style="color:#ffffff;">
                         <i class="bi bi-person-circle me-1"></i>
                         <strong th:text="${session.usuariLogat.nom + ' ' + (session.usuariLogat.cognoms != null ? session.usuariLogat.cognoms : '')}"></strong>
+                        <span class="badge bg-light text-dark ms-1" th:text="${session.usuariLogat.rol}"></span>
                     </span>
                 </li>
                 <li class="nav-item" th:if="${session.usuariLogat != null}">

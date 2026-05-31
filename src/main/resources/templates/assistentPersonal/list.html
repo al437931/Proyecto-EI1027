@@ -17,17 +17,61 @@
       <caption>Assistents personals registrats</caption>
       <thead class="table-success"><tr>
         <th scope="col">ID</th><th scope="col">Nom</th><th scope="col">Cognoms</th>
-        <th scope="col">Email</th><th scope="col">Formacio</th><th scope="col">Disponibilitat</th>
-        <th scope="col">Acceptat</th><th scope="col" class="no-sort">Accions</th>
+        <th scope="col">Email</th><th scope="col">Tipus</th><th scope="col">Formació</th>
+        <th scope="col">Disponibilitat</th><th scope="col">Acceptat</th>
+        <th scope="col" class="no-sort">Accions</th>
       </tr></thead>
       <tbody>
         <tr th:each="a : ${assistents}">
           <td th:text="${a.idAssistent}"></td><td th:text="${a.nom}"></td><td th:text="${a.cognoms}"></td>
-          <td th:text="${a.email}"></td><td th:text="${a.formacio}"></td><td th:text="${a.disponibilitat}"></td>
-          <td><span th:class="${a.estatAcceptat ? 'badge-estat badge-aprovada' : 'badge-estat badge-en-revisio'}" th:text="${a.estatAcceptat ? 'Si' : 'No'}"></span></td>
+          <td th:text="${a.email}"></td>
+          <td><span th:class="${a.tipusAssistent == 'PAP' ? 'badge bg-primary' : a.tipusAssistent == 'PATI' ? 'badge bg-info text-dark' : 'badge bg-secondary'}" th:text="${a.tipusAssistent != null ? a.tipusAssistent : '-'}"></span></td>
+          <td th:text="${a.formacio}"></td>
+          <td th:text="${a.disponibilitat}"></td>
           <td>
-            <a th:href="@{'/assistentpersonal/update/' + ${a.idAssistent}}" class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-pencil"></i></a>
-            <a th:href="@{'/assistentpersonal/delete/' + ${a.idAssistent}}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Esteu segur?')"><i class="bi bi-trash"></i></a>
+            <span th:class="${a.estatAcceptat != null and a.estatAcceptat ? 'badge-estat badge-aprovada' : 
+                             (a.motiuRebuig != null ? 'badge-estat badge-rebutjada' : 'badge-estat badge-en-revisio')}" 
+                  th:text="${a.estatAcceptat != null and a.estatAcceptat ? 'Sí' : (a.motiuRebuig != null ? 'Rebutjat' : 'Pendent')}"></span>
+            <div th:if="${a.motiuRebuig != null}" class="small text-danger mt-1">
+              <strong>Motiu:</strong> <span th:text="${a.motiuRebuig}"></span>
+            </div>
+          </td>
+          <td>
+            <a th:href="@{'/assistentpersonal/update/' + ${a.idAssistent}}" class="btn btn-sm btn-outline-primary me-1" title="Editar"><i class="bi bi-pencil"></i></a>
+            <a th:href="@{'/assistentpersonal/password/' + ${a.idAssistent}}" class="btn btn-sm btn-outline-secondary me-1" title="Canviar Contrasenya"><i class="bi bi-key"></i></a>
+            <a th:href="@{'/assistentpersonal/delete/' + ${a.idAssistent}}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Esteu segur?')" title="Eliminar"><i class="bi bi-trash"></i></a>
+            
+            <!-- Botó per rebutjar (només si no està acceptat i no té motiu ja) -->
+            <button th:if="${(a.estatAcceptat == null or !a.estatAcceptat) and a.motiuRebuig == null}" type="button" class="btn btn-sm btn-outline-warning ms-1" 
+                    data-bs-toggle="modal" th:data-bs-target="'#modalRebutjarAssistent' + ${a.idAssistent}" title="Rebutjar compte">
+              <i class="bi bi-x-circle"></i>
+            </button>
+
+            <!-- Modal Rebutjar -->
+            <div th:if="${(a.estatAcceptat == null or !a.estatAcceptat) and a.motiuRebuig == null}" class="modal fade" th:id="'modalRebutjarAssistent' + ${a.idAssistent}" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title"><i class="bi bi-exclamation-triangle me-2"></i>Rebutjar sol·licitud d'Assistent</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tancar"></button>
+                  </div>
+                  <form th:action="@{'/assistentpersonal/rebutjar/' + ${a.idAssistent}}" method="post">
+                    <div class="modal-body text-start">
+                      <p>Aneu a rebutjar la sol·licitud de registre com a assistent de <strong th:text="${a.nom + ' ' + a.cognoms}"></strong>.</p>
+                      <p>S'enviarà un correu electrònic a l'assistent amb el motiu indicat:</p>
+                      <div class="mb-3">
+                        <label class="form-label text-dark">Motiu del rebuig <span class="text-danger">*</span></label>
+                        <textarea name="motiu" class="form-control" rows="3" required placeholder="Especifiqueu el motiu pel qual no s'accepta l'assistent en la plataforma..."></textarea>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel·lar</button>
+                      <button type="submit" class="btn btn-warning">Rebutjar i Notificar</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
           </td>
         </tr>
       </tbody>

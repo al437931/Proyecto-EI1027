@@ -29,6 +29,7 @@
           <th scope="col">Núm.</th>
           <th scope="col">Data creació</th>
           <th scope="col">Tipus</th>
+          <th scope="col">Assistent</th>
           <th scope="col">Estat</th>
           <th scope="col" class="no-sort">Accions</th>
         </tr>
@@ -38,6 +39,7 @@
           <td th:text="|REQ-2026-${#numbers.formatInteger(s.idRequest, 4)}|"></td>
           <td th:text="${#temporals.format(s.dataCreacio, 'dd/MM/yyyy')}"></td>
           <td th:text="${s.tipusAssistencia}"></td>
+          <td th:text="${s.nomAssistentAssignat}"></td>
           <td>
             <span th:class="${'badge-estat ' +
                 (s.estat == 'en revisio' ? 'badge-en-revisio' :

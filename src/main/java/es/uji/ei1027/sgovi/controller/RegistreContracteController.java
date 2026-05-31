@@ -78,10 +78,22 @@ public class RegistreContracteController {
         return mapa;
     }
 
+    private Map<Integer, String> getMapaNomsUsuaris() {
+        Map<Integer, String> mapa = new HashMap<>();
+        for (APRequest req : apRequestDao.getAPRequests()) {
+            UsuariOVI u = usuariOVIDao.getUsuariOVI(req.getIdUsuari());
+            if (u != null) {
+                mapa.put(req.getIdRequest(), u.getNom() + " " + u.getCognoms());
+            }
+        }
+        return mapa;
+    }
+
     @GetMapping("/list")
     public String listRegistres(Model model) {
         model.addAttribute("registres", registreContracteDao.getRegistresContracte());
         model.addAttribute("nomsAssistents", getMapaNomsAssistents());
+        model.addAttribute("nomsUsuaris", getMapaNomsUsuaris());
         return "registrecontracte/list";
     }
 

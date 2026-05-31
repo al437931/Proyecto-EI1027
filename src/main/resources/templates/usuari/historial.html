@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>El meu historial</title></head>
+<body>
+<section layout:fragment="content">
+  <nav class="breadcrumb-sgovi" aria-label="Ruta de navegació">
+    <a th:href="@{/}">Inici</a>
+    <span class="separator">›</span>
+    <span class="current">El meu historial</span>
+  </nav>
+
+  <h1><i class="bi bi-clock-history me-2"></i>El meu historial de contractes</h1>
+
+  <div class="card card-sgovi mb-4">
+    <div class="card-header bg-success text-white">
+      <i class="bi bi-file-earmark-pdf me-1"></i>Contractes Formalitzats
+    </div>
+    <div class="card-body">
+      <div th:if="${#lists.isEmpty(contractes)}" class="alert alert-info mb-0">
+        <i class="bi bi-info-circle me-1"></i>Encara no teniu cap contracte d'assistència registrat.
+      </div>
+      <div th:unless="${#lists.isEmpty(contractes)}" class="table-responsive">
+        <table class="table table-hover align-middle mb-0 sortable">
+          <thead class="table-light">
+            <tr>
+              <th>ID Contracte</th>
+              <th>Sol·licitud Original</th>
+              <th>Nom de l'Assistent</th>
+              <th>Data d'Inici</th>
+              <th>Data de Fi</th>
+              <th class="no-sort">Contracte PDF</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="c : ${contractes}">
+              <td th:text="'CONT-2026-' + ${#numbers.formatInteger(c.idContracte, 4)}"></td>
+              <td>
+                <a th:href="@{'/usuari/solicitud/' + ${c.idRequest}}" th:text="'REQ-2026-' + ${#numbers.formatInteger(c.idRequest, 4)}"></a>
+              </td>
+              <td th:text="${c.nomAssistentComplet}"></td>
+              <td th:text="${#temporals.format(c.dataInici, 'dd/MM/yyyy')}"></td>
+              <td th:text="${c.dataFi != null ? #temporals.format(c.dataFi, 'dd/MM/yyyy') : 'Actiu'}"></td>
+              <td>
+                <span th:if="${c.pdfContracte != null and c.pdfContracte != ''}">
+                  <a th:href="@{'/registrecontracte/pdf/' + ${c.pdfContracte}}" target="_blank" class="btn btn-sm btn-outline-danger" th:title="${c.pdfContracte}">
+                    <i class="bi bi-file-pdf"></i> Veure PDF
+                  </a>
+                </span>
+                <span th:unless="${c.pdfContracte != null and c.pdfContracte != ''}" class="text-muted">
+                  Sense document
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>

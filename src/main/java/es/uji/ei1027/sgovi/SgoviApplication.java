@@ -1,19 +1,33 @@
 package es.uji.ei1027.sgovi;
 
-import java.util.logging.Logger;
-
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.jdbc.core.JdbcTemplate;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @SpringBootApplication
 public class SgoviApplication {
 
-	private static final Logger log =
-			Logger.getLogger(SgoviApplication.class.getName());
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-	public static void main(String[] args) {
-		// Auto-configura l'aplicació
-		new SpringApplicationBuilder(SgoviApplication.class).run(args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(SgoviApplication.class, args);
+    }
+
+    @PostConstruct
+    public void init() {
+        try {
+            jdbcTemplate.execute("ALTER TABLE usuariovi ADD COLUMN motiu_rebuig VARCHAR;");
+        } catch (Exception e) {}
+        try {
+            jdbcTemplate.execute("ALTER TABLE assistentpersonal ADD COLUMN motiu_rebuig VARCHAR;");
+        } catch (Exception e) {}
+        try {
+            jdbcTemplate.execute("ALTER TABLE assistentpersonal ALTER COLUMN formacio TYPE VARCHAR(200);");
+            jdbcTemplate.execute("ALTER TABLE assistentpersonal ALTER COLUMN experiencia TYPE VARCHAR(200);");
+            jdbcTemplate.execute("ALTER TABLE assistentpersonal ALTER COLUMN disponibilitat TYPE VARCHAR(200);");
+        } catch (Exception e) {}
+    }
 }
-
