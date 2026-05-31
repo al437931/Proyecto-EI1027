@@ -33,7 +33,7 @@ public class APRequestDao {
         );
     }
 
-    public void deleteAPRequest(int idRequest) {
+    public void deleteAPRequest(Integer idRequest) {
         jdbcTemplate.update(
                 "DELETE FROM aprequest WHERE idrequest = ?",
                 idRequest
@@ -53,7 +53,7 @@ public class APRequestDao {
         );
     }
 
-    public APRequest getAPRequest(int idRequest) {
+    public APRequest getAPRequest(Integer idRequest) {
         try {
             return jdbcTemplate.queryForObject(
                     "SELECT * FROM aprequest WHERE idrequest = ?",
@@ -90,7 +90,7 @@ public class APRequestDao {
     }
 
     // Actualitza únicament l'estat d'una sol·licitud
-    public void updateEstat(int idRequest, String nouEstat) {
+    public void updateEstat(Integer idRequest, String nouEstat) {
         jdbcTemplate.update(
                 "UPDATE aprequest SET estat = ? WHERE idrequest = ?",
                 nouEstat,

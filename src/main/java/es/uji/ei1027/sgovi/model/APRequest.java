@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class APRequest {
-    private int idRequest;
+    private Integer idRequest;
     private int idUsuari;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dataCreacio;
@@ -21,7 +21,7 @@ public class APRequest {
         return idRequest;
     }
 
-    public void setIdRequest(int idRequest) {
+    public void setIdRequest(Integer idRequest) {
         this.idRequest = idRequest;
     }
 

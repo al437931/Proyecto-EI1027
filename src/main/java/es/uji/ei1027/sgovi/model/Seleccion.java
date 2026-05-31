@@ -5,8 +5,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 public class Seleccion {
     private int idSeleccion;
-    private int idRequest;
-    private int idAssistent;
+    private Integer idRequest;
+    private Integer idAssistent;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dataProposta;
     private String estat;
@@ -28,7 +28,7 @@ public class Seleccion {
         return idRequest;
     }
 
-    public void setIdRequest(int idRequest) {
+    public void setIdRequest(Integer idRequest) {
         this.idRequest = idRequest;
     }
 
@@ -36,7 +36,7 @@ public class Seleccion {
         return idAssistent;
     }
 
-    public void setIdAssistent(int idAssistent) {
+    public void setIdAssistent(Integer idAssistent) {
         this.idAssistent = idAssistent;
     }
 

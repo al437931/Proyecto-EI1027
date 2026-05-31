@@ -1,7 +1,7 @@
 package es.uji.ei1027.sgovi.model;
 
 public class AssistentPersonal {
-    private int idAssistent;
+    private Integer idAssistent;
     private String nom;
     private String cognoms;
     private String email;
@@ -20,7 +20,7 @@ public class AssistentPersonal {
         return idAssistent;
     }
 
-    public void setIdAssistent(int idAssistent) {
+    public void setIdAssistent(Integer idAssistent) {
         this.idAssistent = idAssistent;
     }
 

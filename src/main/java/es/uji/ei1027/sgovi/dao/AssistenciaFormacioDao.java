@@ -31,7 +31,7 @@ public class AssistenciaFormacioDao {
         );
     }
 
-    public void deleteAssistenciaFormacio(int idAssistencia) {
+    public void deleteAssistenciaFormacio(  Integer idAssistencia) {
         jdbcTemplate.update(
                 "DELETE FROM assistenciaformacio WHERE idassistencia = ?",
                 idAssistencia
@@ -50,7 +50,7 @@ public class AssistenciaFormacioDao {
         );
     }
 
-    public AssistenciaFormacio getAssistenciaFormacio(int idAssistencia) {
+    public AssistenciaFormacio getAssistenciaFormacio(Integer idAssistencia) {
         try {
             return jdbcTemplate.queryForObject(
                     "SELECT * FROM assistenciaformacio WHERE idassistencia = ?",

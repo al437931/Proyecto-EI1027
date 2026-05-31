@@ -5,8 +5,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 public class RegistreContracte {
     private int idContracte;
-    private int idAssistent;
-    private int idRequest;
+    private Integer idAssistent;
+    private Integer idRequest;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dataInici;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -26,19 +26,19 @@ public class RegistreContracte {
         this.idContracte = idContracte;
     }
 
-    public int getIdAssistent() {
+    public Integer getIdAssistent() {
         return idAssistent;
     }
 
-    public void setIdAssistent(int idAssistent) {
+    public void setIdAssistent(Integer idAssistent) {
         this.idAssistent = idAssistent;
     }
 
-    public int getIdRequest() {
+    public Integer getIdRequest() {
         return idRequest;
     }
 
-    public void setIdRequest(int idRequest) {
+    public void setIdRequest(Integer idRequest) {
         this.idRequest = idRequest;
     }
 

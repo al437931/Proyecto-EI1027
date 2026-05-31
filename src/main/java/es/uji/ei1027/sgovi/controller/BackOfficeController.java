@@ -158,8 +158,8 @@ public class BackOfficeController {
     // POST /tecnic/solicitud/{idRequest}/seleccionar/{idAssistent}
     @RequestMapping(value = "/solicitud/{idRequest}/seleccionar/{idAssistent}",
             method = RequestMethod.POST)
-    public String seleccionarCandidant(@PathVariable int idRequest,
-                                       @PathVariable int idAssistent,
+    public String seleccionarCandidant(@PathVariable Integer idRequest,
+                                       @PathVariable Integer idAssistent,
                                        HttpSession session,
                                        RedirectAttributes redirectAttributes) {
         if (getTecnicSession(session) == null) return "redirect:/login";

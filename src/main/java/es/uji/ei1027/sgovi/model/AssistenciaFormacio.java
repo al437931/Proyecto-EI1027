@@ -1,9 +1,11 @@
 package es.uji.ei1027.sgovi.model;
 
+import org.codehaus.groovy.runtime.dgmimpl.arrays.IntegerArrayGetAtMetaMethod;
+
 public class AssistenciaFormacio {
-    private int idAssistencia;
+    private Integer idAssistencia;
     private int idActivitat;
-    private int idAssistent;
+    private Integer idAssistent;
     private Boolean assistent;
     private Boolean certificatEmes;
 
@@ -16,7 +18,7 @@ public class AssistenciaFormacio {
         return idAssistencia;
     }
 
-    public void setIdAssistencia(int idAssistencia) {
+    public void setIdAssistencia(Integer idAssistencia) {
         this.idAssistencia = idAssistencia;
     }
 
@@ -32,7 +34,7 @@ public class AssistenciaFormacio {
         return idAssistent;
     }
 
-    public void setIdAssistent(int idAssistent) {
+    public void setIdAssistent(Integer idAssistent) {
         this.idAssistent = idAssistent;
     }
 

@@ -35,7 +35,7 @@ public class AssistentPersonalDao {
         );
     }
 
-    public void deleteAssistentPersonal(int idAssistent) {
+    public void deleteAssistentPersonal(Integer idAssistent) {
         jdbcTemplate.update(
                 "DELETE FROM assistentpersonal WHERE idassistent = ?",
                 idAssistent
@@ -58,7 +58,7 @@ public class AssistentPersonalDao {
         );
     }
 
-    public AssistentPersonal getAssistentPersonal(int idAssistent) {
+    public AssistentPersonal getAssistentPersonal(Integer idAssistent) {
         try {
             return jdbcTemplate.queryForObject(
                     "SELECT * FROM assistentpersonal WHERE idassistent = ?",

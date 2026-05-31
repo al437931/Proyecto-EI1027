@@ -69,4 +69,12 @@ public class SeleccionDao {
                 new SeleccionRowMapper()
         );
     }
+
+    public List<Seleccion> getSeleccionsByRequest(Integer idRequest) {
+        return jdbcTemplate.query(
+                "SELECT * FROM seleccion WHERE idrequest = ?",
+                new SeleccionRowMapper(),
+                idRequest
+        );
+    }
 }
