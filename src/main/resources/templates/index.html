@@ -48,6 +48,15 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-success">
+                    <div class="card-body text-center">
+                        <h3 class="h5">El meu historial</h3>
+                        <p>Consulta l'historial de contractes d'assistència personal.</p>
+                        <a th:href="@{/usuari/historial}" class="btn btn-outline-success">Veure</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -88,6 +97,41 @@
                         <a th:href="@{/formador/list}" class="btn btn-outline-secondary mt-2">Veure</a>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assistent -->
+    <div th:if="${session.usuariLogat != null and session.usuariLogat.rol == 'assistent'}"
+         class="mt-4">
+        <h2>Benvingut/da, <span th:text="${session.usuariLogat.nom}"></span></h2>
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <a th:href="@{/assistent/propostes}" class="card h-100 shadow-sm text-center p-3 text-decoration-none text-dark border-primary">
+                    <div class="card-body">
+                        <i class="bi bi-envelope-paper text-primary" style="font-size: 2.5rem;"></i>
+                        <h3 class="card-title h5 mt-3">Revisar Sol·licituds</h3>
+                        <p class="card-text text-muted small">Consulta les propostes de treball i accepta o rebutja els usuaris.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a th:href="@{/assistent/perfil}" class="card h-100 shadow-sm text-center p-3 text-decoration-none text-dark border-success">
+                    <div class="card-body">
+                        <i class="bi bi-person-circle text-success" style="font-size: 2.5rem;"></i>
+                        <h3 class="card-title h5 mt-3">Editar Perfil</h3>
+                        <p class="card-text text-muted small">Actualitza les teues dades, formació i disponibilitat.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a th:href="@{/assistent/historial}" class="card h-100 shadow-sm text-center p-3 text-decoration-none text-dark border-warning">
+                    <div class="card-body">
+                        <i class="bi bi-clock-history text-warning" style="font-size: 2.5rem;"></i>
+                        <h3 class="card-title h5 mt-3">Historial d'Usuaris</h3>
+                        <p class="card-text text-muted small">Revisa els contractes formalitzats amb els usuaris que has assistit.</p>
+                    </div>
+                </a>
             </div>
         </div>
     </div>

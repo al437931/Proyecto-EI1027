@@ -77,4 +77,12 @@ public class SeleccionDao {
                 idRequest
         );
     }
+
+    public List<Seleccion> getSeleccionsByAssistent(Integer idAssistent) {
+        return jdbcTemplate.query(
+                "SELECT * FROM seleccion WHERE idassistent = ? ORDER BY dataproposta DESC",
+                new SeleccionRowMapper(),
+                idAssistent
+        );
+    }
 }

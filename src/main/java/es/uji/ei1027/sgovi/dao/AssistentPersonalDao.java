@@ -21,8 +21,8 @@ public class AssistentPersonalDao {
 
     public void addAssistentPersonal(AssistentPersonal assistent) {
         jdbcTemplate.update(
-                "INSERT INTO assistentpersonal (idassistent, nom, cognoms, email, telefon, formacio, experiencia, disponibilitat, estatacceptat) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO assistentpersonal (idassistent, nom, cognoms, email, telefon, formacio, experiencia, disponibilitat, estatacceptat, password, tipusassistent, motiu_rebuig) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 assistent.getIdAssistent(),
                 assistent.getNom(),
                 assistent.getCognoms(),
@@ -31,7 +31,10 @@ public class AssistentPersonalDao {
                 assistent.getFormacio(),
                 assistent.getExperiencia(),
                 assistent.getDisponibilitat(),
-                assistent.isEstatAcceptat()
+                assistent.isEstatAcceptat(),
+                assistent.getPassword(),
+                assistent.getTipusAssistent(),
+                assistent.getMotiuRebuig()
         );
     }
 
@@ -44,7 +47,7 @@ public class AssistentPersonalDao {
 
     public void updateAssistentPersonal(AssistentPersonal assistent) {
         jdbcTemplate.update(
-                "UPDATE assistentpersonal SET nom = ?, cognoms = ?, email = ?, telefon = ?, formacio = ?, experiencia = ?, disponibilitat = ?, estatacceptat = ? " +
+                "UPDATE assistentpersonal SET nom = ?, cognoms = ?, email = ?, telefon = ?, formacio = ?, experiencia = ?, disponibilitat = ?, estatacceptat = ?, tipusassistent = ?, motiu_rebuig = ?, password = ? " +
                         "WHERE idassistent = ?",
                 assistent.getNom(),
                 assistent.getCognoms(),
@@ -54,7 +57,18 @@ public class AssistentPersonalDao {
                 assistent.getExperiencia(),
                 assistent.getDisponibilitat(),
                 assistent.isEstatAcceptat(),
+                assistent.getTipusAssistent(),
+                assistent.getMotiuRebuig(),
+                assistent.getPassword(),
                 assistent.getIdAssistent()
+        );
+    }
+
+    // Actualitzar la contrasenya d'un assistent
+    public void updatePassword(Integer idAssistent, String newPassword) {
+        jdbcTemplate.update(
+                "UPDATE assistentpersonal SET password = ? WHERE idassistent = ?",
+                newPassword, idAssistent
         );
     }
 
@@ -64,6 +78,19 @@ public class AssistentPersonalDao {
                     "SELECT * FROM assistentpersonal WHERE idassistent = ?",
                     new AssistentPersonalRowMapper(),
                     idAssistent
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    // Buscar per email (per al login)
+    public AssistentPersonal getAssistentByEmail(String email) {
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM assistentpersonal WHERE email = ?",
+                    new AssistentPersonalRowMapper(),
+                    email.trim()
             );
         } catch (EmptyResultDataAccessException e) {
             return null;
@@ -82,6 +109,15 @@ public class AssistentPersonalDao {
         return jdbcTemplate.query(
                 "SELECT * FROM assistentpersonal WHERE estatacceptat = true ORDER BY nom",
                 new AssistentPersonalRowMapper()
+        );
+    }
+
+    // Retorna els assistents acceptats filtrats per tipus (PAP o PATI)
+    public List<AssistentPersonal> getAssistentsAcceptatsByTipus(String tipus) {
+        return jdbcTemplate.query(
+                "SELECT * FROM assistentpersonal WHERE estatacceptat = true AND tipusassistent = ? ORDER BY nom",
+                new AssistentPersonalRowMapper(),
+                tipus
         );
     }
 }

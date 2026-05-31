@@ -71,4 +71,30 @@ public class RegistreContracteDao {
                 new RegistreContracteRowMapper()
         );
     }
+
+    public List<RegistreContracte> getContractesByRequest(int idRequest) {
+        return jdbcTemplate.query(
+                "SELECT * FROM registrecontracte WHERE idrequest = ? ORDER BY idcontracte",
+                new RegistreContracteRowMapper(),
+                idRequest
+        );
+    }
+
+    public List<RegistreContracte> getContractesByAssistent(int idAssistent) {
+        return jdbcTemplate.query(
+                "SELECT * FROM registrecontracte WHERE idassistent = ? ORDER BY datainici DESC",
+                new RegistreContracteRowMapper(),
+                idAssistent
+        );
+    }
+
+    public List<RegistreContracte> getContractesByUsuari(int idUsuari) {
+        return jdbcTemplate.query(
+                "SELECT r.* FROM registrecontracte r " +
+                "JOIN aprequest a ON r.idrequest = a.idrequest " +
+                "WHERE a.idusuari = ? ORDER BY r.datainici DESC",
+                new RegistreContracteRowMapper(),
+                idUsuari
+        );
+    }
 }

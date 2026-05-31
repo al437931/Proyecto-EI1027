@@ -48,37 +48,87 @@
     </div>
   </div>
 
-  <!-- Bloque de propuesta de candidato -->
-  <div th:if="${solicitud.estat == 'tancada' and seleccion != null}" class="card card-sgovi mt-4 border-success">
-    <div class="card-header bg-success text-white">
-      <i class="bi bi-person-check-fill me-1"></i>Candidat Proposat
+  <!-- Accions per a sol·licitud APROVADA: veure candidats i registrar contracte -->
+  <div th:if="${solicitud.estat == 'aprovada'}" class="card card-sgovi mt-4 border-primary">
+    <div class="card-header bg-primary text-white">
+      <i class="bi bi-people me-1"></i>Sol·licitud aprovada - Accions disponibles
     </div>
     <div class="card-body">
-      <div class="row align-items-center">
-        <div class="col-md-8">
-          <h5><span th:text="${assistentProposat.nom + ' ' + assistentProposat.cognoms}"></span></h5>
-          <p class="mb-1"><i class="bi bi-telephone me-2"></i><span th:text="${assistentProposat.telefon}"></span></p>
-          <p class="mb-1"><i class="bi bi-envelope me-2"></i><span th:text="${assistentProposat.email}"></span></p>
-          <p class="mb-0 mt-2"><strong>Estat de la proposta: </strong> 
-            <span th:class="${'badge-estat ' + 
-                (seleccion.estat == 'acceptat' ? 'badge-aprovada' : 
-                 seleccion.estat == 'rebutjat' ? 'badge-rebutjada' : 'badge-en-revisio')}" 
-                  th:text="${seleccion.estat}"></span>
-          </p>
-        </div>
-        
-        <!-- Botones de acción si está pendiente -->
-        <div class="col-md-4 text-end" th:if="${seleccion.estat == 'pendent'}">
-          <p class="text-muted small mb-2">Heu d'acceptar o rebutjar aquest candidat per poder formalitzar el contracte.</p>
-          <div class="d-grid gap-2">
-            <form th:action="@{'/usuari/solicitud/' + ${solicitud.idRequest} + '/seleccion/' + ${seleccion.idSeleccion} + '/acceptar'}" method="post">
-              <button type="submit" class="btn btn-success w-100"><i class="bi bi-check-circle me-1"></i>Acceptar candidat</button>
-            </form>
-            <form th:action="@{'/usuari/solicitud/' + ${solicitud.idRequest} + '/seleccion/' + ${seleccion.idSeleccion} + '/rebutjar'}" method="post" onsubmit="return confirm('Esteu segur de voler rebutjar aquest candidat? La sol·licitud tornarà al tècnic.')">
-              <button type="submit" class="btn btn-outline-danger w-100"><i class="bi bi-x-circle me-1"></i>Rebutjar candidat</button>
-            </form>
-          </div>
-        </div>
+      <p>La seua sol·licitud ha estat aprovada pel tècnic. Ara podeu:</p>
+      <ol>
+        <li>Consultar la llista de candidats <strong th:text="${solicitud.tipusAssistencia}"></strong> disponibles.</li>
+        <li>Contactar amb el/la professional fora del sistema per formalitzar el contracte.</li>
+        <li>Una vegada formalitzat, registrar el contracte des d'ací.</li>
+      </ol>
+      <div class="d-flex gap-2">
+        <a th:href="@{'/usuari/solicitud/' + ${solicitud.idRequest} + '/candidats'}" class="btn btn-primary">
+          <i class="bi bi-people me-1"></i>Veure candidats i proposar
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Propostes d'Assistents (Seleccions) -->
+  <div th:if="${seleccions != null and !seleccions.isEmpty()}" class="card card-sgovi mt-4 border-info">
+    <div class="card-header bg-info text-dark">
+      <i class="bi bi-envelope-paper me-1"></i>Estat de les propostes (Seleccions)
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Assistent</th>
+              <th>Data Proposta</th>
+              <th>Estat</th>
+              <th>Accions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="s : ${seleccions}">
+              <td th:text="${s.nomAssistentComplet != null ? s.nomAssistentComplet : 'Assistent #' + s.idAssistent}"></td>
+              <td th:text="${#temporals.format(s.dataProposta, 'dd/MM/yyyy')}"></td>
+              <td>
+                <span th:class="${s.estat == 'Pendent Assistent' ? 'badge bg-warning text-dark' :
+                                 s.estat == 'pendent_ambdos' ? 'badge bg-warning text-dark' :
+                                 s.estat == 'Pendent Usuari' ? 'badge bg-info text-dark' :
+                                 s.estat == 'Acceptada' ? 'badge bg-success' : 'badge bg-secondary'}"
+                      th:text="${s.estat == 'pendent_ambdos' ? 'Pendent Ambdós' : s.estat}"></span>
+              </td>
+              <td>
+                <!-- Acció si està Pendent Usuari o pendent_ambdos (proposta del tècnic) -->
+                <form th:if="${s.estat == 'Pendent Usuari' or s.estat == 'pendent_ambdos'}" th:action="@{'/usuari/seleccion/' + ${s.idSeleccion} + '/acceptar'}" method="post" style="display:inline;"
+                      onsubmit="return confirm('Esteu segur de voler acceptar aquest assistent?')">
+                  <button type="submit" class="btn btn-sm btn-success">
+                    <i class="bi bi-check-circle me-1"></i>Acceptar assistent
+                  </button>
+                </form>
+                
+                <!-- Acció si està Acceptada (tots dos d'acord) -> Registrar Contracte -->
+                <a th:if="${s.estat == 'Acceptada'}" th:href="@{'/usuari/solicitud/' + ${solicitud.idRequest} + '/registrar-contracte'(idAssistent=${s.idAssistent})}" class="btn btn-sm btn-primary">
+                  <i class="bi bi-file-earmark-pdf me-1"></i>Registrar contracte
+                </a>
+                
+                <span th:unless="${s.estat == 'Pendent Usuari' or s.estat == 'pendent_ambdos' or s.estat == 'Acceptada'}">-</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contractes associats (quan la sol·licitud és tancada) -->
+  <div th:if="${solicitud.estat == 'tancada' and contractes != null and !contractes.isEmpty()}" class="card card-sgovi mt-4 border-success">
+    <div class="card-header bg-success text-white">
+      <i class="bi bi-file-earmark-check me-1"></i>Contracte registrat
+    </div>
+    <div class="card-body">
+      <div th:each="c : ${contractes}" class="mb-2">
+        <p class="mb-1"><strong>Contracte #</strong><span th:text="${c.idContracte}"></span>
+          — <span th:text="${c.nomAssistentComplet != null ? c.nomAssistentComplet : 'Assistent #' + c.idAssistent}"></span></p>
+        <p class="mb-1"><i class="bi bi-calendar me-1"></i>Data inici: <span th:text="${#temporals.format(c.dataInici, 'dd/MM/yyyy')}"></span></p>
+        <p th:if="${c.dataFi != null}" class="mb-0"><i class="bi bi-calendar me-1"></i>Data fi: <span th:text="${#temporals.format(c.dataFi, 'dd/MM/yyyy')}"></span></p>
       </div>
     </div>
   </div>

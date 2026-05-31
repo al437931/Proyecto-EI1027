@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>Registrar contracte</title></head>
+<body>
+<section layout:fragment="content">
+  <nav class="breadcrumb-sgovi" aria-label="Ruta">
+    <a th:href="@{/}">Inici</a><span class="separator">›</span>
+    <a th:href="@{/usuari/solicituds}">Sol·licituds</a><span class="separator">›</span>
+    <a th:href="@{'/usuari/solicitud/' + ${solicitud.idRequest}}"
+       th:text="'Sol·licitud #' + ${solicitud.idRequest}"></a><span class="separator">›</span>
+    <span class="current">Registrar contracte</span>
+  </nav>
+
+  <h1><i class="bi bi-file-earmark-pdf me-2"></i>Registrar contracte</h1>
+
+  <div class="alert alert-info">
+    <i class="bi bi-info-circle me-1"></i>
+    Una vegada hàgeu formalitzat el contracte amb l'assistent fora del sistema, empleneu les dades a continuació per registrar-lo.
+  </div>
+
+  <div class="card card-sgovi">
+    <div class="card-body">
+      <form th:action="@{'/usuari/solicitud/' + ${solicitud.idRequest} + '/registrar-contracte'}"
+            th:object="${registreContracte}" method="post" class="row g-3">
+
+        <div class="col-md-6">
+          <label for="idAssistent" class="form-label">Assistent seleccionat <span class="text-danger">*</span></label>
+          <select id="idAssistent" th:field="*{idAssistent}" class="form-select" required
+                  th:errorclass="is-invalid">
+            <option value="">-- Seleccioneu l'assistent --</option>
+            <option th:each="c : ${candidats}" th:value="${c.idAssistent}"
+                    th:text="${c.nom + ' ' + c.cognoms + ' (' + c.tipusAssistent + ')'}"></option>
+          </select>
+          <div th:if="${#fields.hasErrors('idAssistent')}" th:errors="*{idAssistent}" class="text-danger small mt-1"></div>
+        </div>
+
+        <div class="col-md-3">
+          <label for="dataInici" class="form-label">Data d'inici <span class="text-danger">*</span></label>
+          <input id="dataInici" type="date" th:field="*{dataInici}" class="form-control" required
+                 th:errorclass="is-invalid"/>
+          <div th:if="${#fields.hasErrors('dataInici')}" th:errors="*{dataInici}" class="text-danger small mt-1"></div>
+        </div>
+
+        <div class="col-md-3">
+          <label for="dataFi" class="form-label">Data de fi</label>
+          <input id="dataFi" type="date" th:field="*{dataFi}" class="form-control"
+                 th:errorclass="is-invalid"/>
+          <div th:if="${#fields.hasErrors('dataFi')}" th:errors="*{dataFi}" class="text-danger small mt-1"></div>
+        </div>
+
+        <div class="col-12 mt-3">
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-check-lg me-1"></i>Registrar contracte
+          </button>
+          <a th:href="@{'/usuari/solicitud/' + ${solicitud.idRequest}}" class="btn btn-outline-secondary ms-2">
+            <i class="bi bi-x-lg me-1"></i>Cancel·lar
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+</body>
+</html>

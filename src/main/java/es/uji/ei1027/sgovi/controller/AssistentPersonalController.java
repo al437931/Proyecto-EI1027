@@ -14,6 +14,7 @@ public class AssistentPersonalController {
 
     private AssistentPersonalDao assistentPersonalDao;
     private es.uji.ei1027.sgovi.services.EmailValidationService emailValidationService;
+    private es.uji.ei1027.sgovi.dao.ComunicacioUsuariOVIPAPDao comunicacioDao;
 
     @Autowired
     public void setAssistentPersonalDao(AssistentPersonalDao assistentPersonalDao) {
@@ -23,6 +24,11 @@ public class AssistentPersonalController {
     @Autowired
     public void setEmailValidationService(es.uji.ei1027.sgovi.services.EmailValidationService emailValidationService) {
         this.emailValidationService = emailValidationService;
+    }
+
+    @Autowired
+    public void setComunicacioDao(es.uji.ei1027.sgovi.dao.ComunicacioUsuariOVIPAPDao comunicacioDao) {
+        this.comunicacioDao = comunicacioDao;
     }
 
     // LISTAR
@@ -82,10 +88,66 @@ public class AssistentPersonalController {
         return "redirect:/assistentpersonal/list";
     }
 
+    // CONTRASEÑA (GET)
+    @GetMapping("/password/{id}")
+    public String changePasswordForm(@PathVariable int id, Model model) {
+        AssistentPersonal assistent = assistentPersonalDao.getAssistentPersonal(id);
+        if (assistent == null) {
+            return "redirect:/assistentpersonal/list";
+        }
+        // Pasamos el objeto al modelo
+        model.addAttribute("assistentPersonal", assistent);
+        return "assistentpersonal/password";
+    }
+
+    // CONTRASEÑA (POST)
+    @PostMapping("/password")
+    public String updatePassword(@RequestParam("idAssistent") int idAssistent,
+                                 @RequestParam("password") String password,
+                                 org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        if (password == null || password.trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("missatgeErrorFlash", "La contrasenya no pot estar buida.");
+            return "redirect:/assistentpersonal/password/" + idAssistent;
+        }
+        assistentPersonalDao.updatePassword(idAssistent, password.trim());
+        redirectAttributes.addFlashAttribute("missatgeExitFlash", "Contrasenya actualitzada correctament.");
+        return "redirect:/assistentpersonal/list";
+    }
+
     // BORRAR
     @GetMapping("/delete/{id}")
     public String deleteAssistent(@PathVariable int id) {
         assistentPersonalDao.deleteAssistentPersonal(id);
+        return "redirect:/assistentpersonal/list";
+    }
+
+    @PostMapping("/rebutjar/{id}")
+    public String rebutjarAssistent(@PathVariable int id,
+                                    @RequestParam("motiu") String motiu,
+                                    org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        AssistentPersonal assistent = assistentPersonalDao.getAssistentPersonal(id);
+        if (assistent != null) {
+            assistent.setEstatAcceptat(false);
+            assistent.setMotiuRebuig(motiu);
+            assistentPersonalDao.updateAssistentPersonal(assistent);
+
+            // Generar correu simulat
+            es.uji.ei1027.sgovi.model.ComunicacioUsuariOVIPAP c = new es.uji.ei1027.sgovi.model.ComunicacioUsuariOVIPAP();
+            c.setIdComunicacio(comunicacioDao.getNextId());
+            c.setDestinatari(assistent.getEmail());
+            c.setAssumpte("Sol·licitud de registre rebutjada");
+            c.setDataHora(java.time.LocalDateTime.now());
+            c.setEmissor("tecnic@ovi.es");
+            c.setMissatge("Estimat/ada " + assistent.getNom() + ",\n\n" +
+                    "La seua sol·licitud de registre com a Assistent Personal a OVI ha estat REBUTJADA.\n\n" +
+                    "Motiu: " + motiu + "\n\n" +
+                    "Atentament,\nTècnic OVI");
+            c.setTipusComunicacio("rebuig_registre");
+            comunicacioDao.addComunicacio(c);
+
+            redirectAttributes.addFlashAttribute("missatgeExitFlash",
+                    "S'ha rebutjat la sol·licitud de registre de l'assistent correctament.");
+        }
         return "redirect:/assistentpersonal/list";
     }
 }

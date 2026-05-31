@@ -11,6 +11,9 @@ public class APRequest {
     private String estat;
     private String tipusAssistencia;
     private String descripcioNecessitats;
+    
+    // Transient field
+    private String nomAssistentAssignat;
 
     public APRequest() {
 
@@ -63,6 +66,14 @@ public class APRequest {
 
     public void setDescripcioNecessitats(String descripcioNecessitats) {
         this.descripcioNecessitats = descripcioNecessitats;
+    }
+
+    public String getNomAssistentAssignat() {
+        return nomAssistentAssignat;
+    }
+
+    public void setNomAssistentAssignat(String nomAssistentAssignat) {
+        this.nomAssistentAssignat = nomAssistentAssignat;
     }
 
     @Override

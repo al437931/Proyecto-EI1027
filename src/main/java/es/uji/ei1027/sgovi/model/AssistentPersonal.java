@@ -10,6 +10,9 @@ public class AssistentPersonal {
     private String experiencia;
     private String disponibilitat;
     private Boolean estatAcceptat;
+    private String password;
+    private String tipusAssistent; // "PAP" o "PATI"
+    private String motiuRebuig;
 
     public AssistentPersonal() {
 
@@ -92,6 +95,30 @@ public class AssistentPersonal {
         this.estatAcceptat = estatAcceptat;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getTipusAssistent() {
+        return tipusAssistent;
+    }
+
+    public void setTipusAssistent(String tipusAssistent) {
+        this.tipusAssistent = tipusAssistent;
+    }
+
+    public String getMotiuRebuig() {
+        return motiuRebuig;
+    }
+
+    public void setMotiuRebuig(String motiuRebuig) {
+        this.motiuRebuig = motiuRebuig;
+    }
+
     @Override
     public String toString() {
         return "AssistentPersonal{" +
@@ -104,6 +131,7 @@ public class AssistentPersonal {
                 ", experiencia='" + experiencia + '\'' +
                 ", disponibilitat='" + disponibilitat + '\'' +
                 ", estatAcceptat=" + estatAcceptat +
+                ", tipusAssistent='" + tipusAssistent + '\'' +
                 '}';
     }
 }

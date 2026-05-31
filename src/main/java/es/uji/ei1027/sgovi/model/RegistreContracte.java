@@ -13,6 +13,10 @@ public class RegistreContracte {
     private LocalDate dataFi;
     private String pdfContracte;
 
+    // Transient fields
+    private String nomUsuariComplet;
+    private String nomAssistentComplet;
+
     public RegistreContracte() {
 
     }
@@ -64,6 +68,22 @@ public class RegistreContracte {
 
     public void setPdfContracte(String pdfContracte) {
         this.pdfContracte = pdfContracte;
+    }
+
+    public String getNomUsuariComplet() {
+        return nomUsuariComplet;
+    }
+
+    public void setNomUsuariComplet(String nomUsuariComplet) {
+        this.nomUsuariComplet = nomUsuariComplet;
+    }
+
+    public String getNomAssistentComplet() {
+        return nomAssistentComplet;
+    }
+
+    public void setNomAssistentComplet(String nomAssistentComplet) {
+        this.nomAssistentComplet = nomAssistentComplet;
     }
 
     @Override

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>Candidats disponibles</title></head>
+<body>
+<section layout:fragment="content">
+  <nav class="breadcrumb-sgovi" aria-label="Ruta de navegació">
+    <a th:href="@{/}">Inici</a>
+    <span class="separator">›</span>
+    <a th:href="@{/usuari/solicituds}">Sol·licituds</a>
+    <span class="separator">›</span>
+    <a th:href="@{'/usuari/solicitud/' + ${solicitud.idRequest}}"
+       th:text="'Sol·licitud #' + ${solicitud.idRequest}"></a>
+    <span class="separator">›</span>
+    <span class="current">Candidats</span>
+  </nav>
+
+  <h1><i class="bi bi-people me-2"></i>Candidats disponibles</h1>
+
+  <div class="alert alert-info">
+    <i class="bi bi-info-circle me-1"></i>
+    A continuació es mostren els professionals
+    <strong th:text="${solicitud.tipusAssistencia}"></strong>
+    disponibles per a la seua sol·licitud
+    <strong th:text="'REQ-2026-' + ${#numbers.formatInteger(solicitud.idRequest, 4)}"></strong>.
+    <br><small>La comunicació i formalització del contracte es realitzen fora del sistema.
+    Una vegada formalitzat, podeu registrar-lo des del detall de la sol·licitud.</small>
+  </div>
+
+  <div th:if="${#lists.isEmpty(candidats)}" class="alert alert-warning">
+    <i class="bi bi-exclamation-triangle me-1"></i>
+    No hi ha professionals <span th:text="${solicitud.tipusAssistencia}"></span> acceptats disponibles en aquest moment.
+  </div>
+
+  <div th:unless="${#lists.isEmpty(candidats)}" class="table-responsive">
+    <table class="table table-striped table-hover sortable">
+      <caption>Professionals disponibles</caption>
+      <thead class="table-success">
+        <tr>
+          <th scope="col">Nom</th>
+          <th scope="col">Cognoms</th>
+          <th scope="col">Email</th>
+          <th scope="col">Telèfon</th>
+          <th scope="col">Formació</th>
+          <th scope="col">Experiència</th>
+          <th scope="col">Disponibilitat</th>
+          <th scope="col">Accions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="c : ${candidats}">
+          <td th:text="${c.nom}"></td>
+          <td th:text="${c.cognoms}"></td>
+          <td><a th:href="'mailto:' + ${c.email}" th:text="${c.email}"></a></td>
+          <td th:text="${c.telefon}"></td>
+          <td th:text="${c.formacio}"></td>
+          <td th:text="${c.experiencia}"></td>
+          <td th:text="${c.disponibilitat}"></td>
+          <td>
+            <!-- Comprovar si ja l'ha proposat -->
+            <span th:with="proposat=${seleccions.![idAssistent].contains(c.idAssistent)}">
+              <span th:if="${proposat}" class="badge bg-secondary">Ja proposat</span>
+              <form th:unless="${proposat}" th:action="@{'/usuari/solicitud/' + ${solicitud.idRequest} + '/proposar/' + ${c.idAssistent}}"
+                    method="post" style="display:inline;"
+                    onsubmit="return confirm('Confirmeu que voleu proposar aquest candidat per a la vostra assistència?')">
+                <button type="submit" class="btn btn-sm btn-primary">
+                  <i class="bi bi-hand-index me-1"></i>Proposar
+                </button>
+              </form>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex gap-2 mt-3">
+    <a th:href="@{'/usuari/solicitud/' + ${solicitud.idRequest}}" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-left me-1"></i>Tornar al detall
+    </a>
+    <a th:href="@{'/usuari/solicitud/' + ${solicitud.idRequest} + '/registrar-contracte'}" class="btn btn-primary">
+      <i class="bi bi-file-earmark-pdf me-1"></i>Registrar contracte
+    </a>
+  </div>
+</section>
+</body>
+</html>

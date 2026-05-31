@@ -18,6 +18,9 @@ public final class AssistentPersonalRowMapper implements RowMapper<AssistentPers
         assistentPersonal.setExperiencia(rs.getString("experiencia"));
         assistentPersonal.setDisponibilitat(rs.getString("disponibilitat"));
         assistentPersonal.setEstatAcceptat(rs.getBoolean("estatacceptat"));
+        assistentPersonal.setPassword(rs.getString("password"));
+        assistentPersonal.setTipusAssistent(rs.getString("tipusassistent"));
+        assistentPersonal.setMotiuRebuig(rs.getString("motiu_rebuig"));
         return assistentPersonal;
     }
 }

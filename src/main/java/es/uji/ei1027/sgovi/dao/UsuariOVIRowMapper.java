@@ -17,6 +17,7 @@ public final class UsuariOVIRowMapper implements RowMapper<UsuariOVI> {
         usuariOVI.setConsentimentRGPD(rs.getBoolean("consentimentrgpd"));
         usuariOVI.setDataRegistre(rs.getDate("dataregistre").toLocalDate());
         usuariOVI.setEstatCompte(rs.getString("estatcompte"));
+        usuariOVI.setMotiuRebuig(rs.getString("motiu_rebuig"));
         try { usuariOVI.setPassword(rs.getString("password")); } catch (Exception ignored) {}
         try { usuariOVI.setRol(rs.getString("rol")); } catch (Exception ignored) {}
         return usuariOVI;

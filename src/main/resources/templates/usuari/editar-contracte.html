@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>Editar Contracte</title></head>
+<body>
+<section layout:fragment="content">
+  <nav class="breadcrumb-sgovi" aria-label="Ruta de navegació">
+    <a th:href="@{/}">Inici</a>
+    <span class="separator">›</span>
+    <a th:href="@{/usuari/historial}">El meu historial</a>
+    <span class="separator">›</span>
+    <span class="current" th:text="|Contracte CONT-2026-${#numbers.formatInteger(registreContracte.idContracte, 4)}|"></span>
+  </nav>
+
+  <h1><i class="bi bi-pencil-square me-2"></i>Editar Contracte</h1>
+
+  <div class="card card-sgovi mt-4">
+    <div class="card-header bg-primary text-white">
+      <i class="bi bi-file-earmark-text me-1"></i>Dades del contracte
+    </div>
+    <div class="card-body">
+      <div class="mb-4 bg-light p-3 rounded">
+        <p class="mb-1"><strong>Sol·licitud associada:</strong> REQ-2026-<span th:text="${#numbers.formatInteger(registreContracte.idRequest, 4)}"></span></p>
+        <p class="mb-1"><strong>Assistent personal contractat:</strong> <span th:text="${assistent.nom + ' ' + assistent.cognoms}"></span></p>
+      </div>
+
+      <form th:action="@{'/usuari/contracte/' + ${registreContracte.idContracte} + '/editar'}" th:object="${registreContracte}" method="post">
+        
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="dataInici" class="form-label">Data d'inici <span class="text-danger">*</span></label>
+            <input type="date" id="dataInici" th:field="*{dataInici}" class="form-control" required th:errorclass="is-invalid" />
+            <div th:if="${#fields.hasErrors('dataInici')}" th:errors="*{dataInici}" class="text-danger small mt-1"></div>
+          </div>
+          <div class="col-md-6">
+            <label for="dataFi" class="form-label">Data de finalització</label>
+            <input type="date" id="dataFi" th:field="*{dataFi}" class="form-control" th:errorclass="is-invalid" />
+            <div class="form-text">Deixeu aquest camp buit si el contracte és indefinit o encara està actiu.</div>
+            <div th:if="${#fields.hasErrors('dataFi')}" th:errors="*{dataFi}" class="text-danger small mt-1"></div>
+          </div>
+          
+          <div class="col-12 mt-3">
+            <label for="pdfContracte" class="form-label">Ruta / Nom del fitxer PDF (Opcional)</label>
+            <input type="text" id="pdfContracte" th:field="*{pdfContracte}" class="form-control" placeholder="Exemple: contracte_signat.pdf" />
+          </div>
+
+          <div class="col-12 mt-4 d-flex justify-content-between">
+            <a th:href="@{/usuari/historial}" class="btn btn-outline-secondary">
+              <i class="bi bi-arrow-left me-1"></i>Cancel·lar
+            </a>
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-save me-1"></i>Guardar canvis
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+</body>
+</html>

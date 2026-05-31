@@ -52,32 +52,96 @@
     </div>
   </div>
 
-  <!-- Accions del tècnic -->
-  <div th:if="${solicitud.estat == 'en revisio'}" class="d-flex gap-2 mb-3">
-    <form th:action="@{'/tecnic/solicitud/' + ${solicitud.idRequest} + '/aprovar'}" method="post">
-      <button type="submit" class="btn btn-success">
-        <i class="bi bi-check-circle me-1"></i>Aprovar sol·licitud
-      </button>
-    </form>
-    <form th:action="@{'/tecnic/solicitud/' + ${solicitud.idRequest} + '/rebutjar'}" method="post"
-          onsubmit="return confirm('Esteu segur de voler rebutjar aquesta sol·licitud?')">
-      <button type="submit" class="btn btn-danger">
-        <i class="bi bi-x-circle me-1"></i>Rebutjar sol·licitud
-      </button>
-    </form>
+  <!-- Accions del tècnic per a sol·licituds en revisió -->
+  <div th:if="${solicitud.estat == 'en revisio'}" class="card card-sgovi mb-3 border-warning">
+    <div class="card-header bg-warning text-dark">
+      <i class="bi bi-exclamation-circle me-1"></i>Accions pendents
+    </div>
+    <div class="card-body">
+      <div class="d-flex gap-2">
+        <form th:action="@{'/tecnic/solicitud/' + ${solicitud.idRequest} + '/aprovar'}" method="post">
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-check-circle me-1"></i>Aprovar sol·licitud
+          </button>
+        </form>
+        <form th:action="@{'/tecnic/solicitud/' + ${solicitud.idRequest} + '/rebutjar'}" method="post"
+              onsubmit="return confirm('Esteu segur de voler rebutjar aquesta sol·licitud?')">
+          <button type="submit" class="btn btn-danger">
+            <i class="bi bi-x-circle me-1"></i>Rebutjar sol·licitud
+          </button>
+        </form>
+      </div>
+    </div>
   </div>
 
-  <div th:if="${solicitud.estat == 'aprovada'}" class="d-flex gap-2 mb-3">
-    <a th:href="@{'/tecnic/solicitud/' + ${solicitud.idRequest} + '/candidats'}"
-       class="btn btn-primary">
-      <i class="bi bi-people me-1"></i>Proposar candidats
-    </a>
-    <form th:action="@{'/tecnic/solicitud/' + ${solicitud.idRequest} + '/revertir'}" method="post"
-          onsubmit="return confirm('Esteu segur de voler desfer l\'aprovació?')">
-      <button type="submit" class="btn btn-outline-danger">
-        <i class="bi bi-arrow-counterclockwise me-1"></i>Desfer aprovació
-      </button>
-    </form>
+  <!-- Info per a sol·licitud aprovada -->
+  <div th:if="${solicitud.estat == 'aprovada'}" class="card card-sgovi mb-3 border-success">
+    <div class="card-header bg-success text-white">
+      <i class="bi bi-check-circle me-1"></i>Sol·licitud aprovada
+    </div>
+    <div class="card-body">
+      <p class="mb-2">L'usuari ja pot consultar la llista de candidats <strong th:text="${solicitud.tipusAssistencia}"></strong> i formalitzar el contracte externament.</p>
+      
+      <div class="d-flex gap-2 mb-3">
+        <a th:href="@{'/tecnic/solicitud/' + ${solicitud.idRequest} + '/candidats'}" class="btn btn-primary btn-sm">
+          <i class="bi bi-people me-1"></i>Proposar candidats
+        </a>
+        <form th:action="@{'/tecnic/solicitud/' + ${solicitud.idRequest} + '/revertir'}" method="post"
+              onsubmit="return confirm('Esteu segur de voler desfer l\'aprovació?')">
+          <button type="submit" class="btn btn-outline-danger btn-sm">
+            <i class="bi bi-arrow-counterclockwise me-1"></i>Desfer aprovació
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Propostes d'Assistents (Seleccions) -->
+  <div th:if="${seleccions != null and !seleccions.isEmpty()}" class="card card-sgovi mb-3 border-info">
+    <div class="card-header bg-info text-dark">
+      <i class="bi bi-envelope-paper me-1"></i>Estat de les propostes (Seleccions)
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-sm table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>ID Assistent</th>
+              <th>Data Proposta</th>
+              <th>Estat</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="s : ${seleccions}">
+              <td th:text="${s.nomAssistentComplet != null ? s.nomAssistentComplet : 'Assistent #' + s.idAssistent}"></td>
+              <td th:text="${#temporals.format(s.dataProposta, 'dd/MM/yyyy')}"></td>
+              <td>
+                <span th:class="${s.estat == 'Pendent Assistent' ? 'badge bg-warning text-dark' :
+                                 s.estat == 'pendent_ambdos' ? 'badge bg-warning text-dark' :
+                                 s.estat == 'Pendent Usuari' ? 'badge bg-info text-dark' :
+                                 s.estat == 'Acceptada' ? 'badge bg-success' : 'badge bg-secondary'}"
+                      th:text="${s.estat == 'pendent_ambdos' ? 'Pendent Ambdós' : s.estat}"></span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contractes associats -->
+  <div th:if="${contractes != null and !contractes.isEmpty()}" class="card card-sgovi mb-3 border-info">
+    <div class="card-header" style="background-color: #0d6efd; color: white;">
+      <i class="bi bi-file-earmark-check me-1"></i>Contractes registrats
+    </div>
+    <div class="card-body">
+      <div th:each="c : ${contractes}" class="mb-2">
+        <p class="mb-1"><strong>Contracte #</strong><span th:text="${c.idContracte}"></span>
+          — <span th:text="${c.nomAssistentComplet != null ? c.nomAssistentComplet : 'Assistent #' + c.idAssistent}"></span></p>
+        <p class="mb-1"><i class="bi bi-calendar me-1"></i>Inici: <span th:text="${#temporals.format(c.dataInici, 'dd/MM/yyyy')}"></span></p>
+        <p th:if="${c.dataFi != null}" class="mb-0"><i class="bi bi-calendar me-1"></i>Fi: <span th:text="${#temporals.format(c.dataFi, 'dd/MM/yyyy')}"></span></p>
+      </div>
+    </div>
   </div>
 
   <a th:href="@{/tecnic/solicituds}" class="btn btn-outline-secondary">

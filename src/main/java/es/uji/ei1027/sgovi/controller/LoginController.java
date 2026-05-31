@@ -4,6 +4,7 @@ import es.uji.ei1027.sgovi.dao.UserDao;
 import es.uji.ei1027.sgovi.dao.UsuariOVIDao;
 import es.uji.ei1027.sgovi.model.UserDetails;
 import es.uji.ei1027.sgovi.model.UsuariOVI;
+import es.uji.ei1027.sgovi.model.AssistentPersonal;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,11 +17,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class LoginController {
@@ -68,13 +64,38 @@ public class LoginController {
             tecnic.setRol("tecnic");
             session.setAttribute("usuariLogat", tecnic);
 
-            // Redirigir a nextUrl si existeix
             String nextUrl = (String) session.getAttribute("nextUrl");
             if (nextUrl != null) {
                 session.removeAttribute("nextUrl");
                 return "redirect:" + nextUrl;
             }
             return "redirect:/tecnic/solicituds";
+        }
+
+        // Comprovar si és un assistent personal
+        AssistentPersonal assistent = assistentPersonalDao.getAssistentByEmail(user.getUsername());
+        if (assistent != null && assistent.getPassword() != null
+                && assistent.getPassword().equals(user.getPassword())) {
+            if (assistent.isEstatAcceptat() == null || !assistent.isEstatAcceptat()) {
+                bindingResult.rejectValue("username", "notActive",
+                        "El compte d'assistent encara no ha estat activat pel tècnic.");
+                return "login/login";
+            }
+            // Crear un UsuariOVI amb rol "assistent" per guardar a la sessió
+            UsuariOVI sessionUser = new UsuariOVI();
+            sessionUser.setIdUsuari(assistent.getIdAssistent());
+            sessionUser.setNom(assistent.getNom());
+            sessionUser.setCognoms(assistent.getCognoms());
+            sessionUser.setEmail(assistent.getEmail());
+            sessionUser.setRol("assistent");
+            session.setAttribute("usuariLogat", sessionUser);
+
+            String nextUrl = (String) session.getAttribute("nextUrl");
+            if (nextUrl != null) {
+                session.removeAttribute("nextUrl");
+                return "redirect:" + nextUrl;
+            }
+            return "redirect:/";
         }
 
         // Usuari OVI normal - comprova credencials a la BD
@@ -96,7 +117,6 @@ public class LoginController {
         usuari.setRol("usuari");
         session.setAttribute("usuariLogat", usuari);
 
-        // Redirigir a nextUrl si existeix
         String nextUrl = (String) session.getAttribute("nextUrl");
         if (nextUrl != null) {
             session.removeAttribute("nextUrl");
@@ -125,17 +145,20 @@ public class LoginController {
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
 
+        // Validació completa amb el validator
+        UsuariOVIValidator validator = new UsuariOVIValidator();
+        validator.validate(usuariOVI, bindingResult);
+
         if (usuariOVI.getConsentimentRGPD() == null || !usuariOVI.getConsentimentRGPD()) {
             bindingResult.rejectValue("consentimentRGPD", "rgpd.obligatori",
                     "És obligatori acceptar les condicions RGPD.");
-            return "login/register";
         }
 
         // Verificar si l'email ja existeix globalment
-        if (emailValidationService.isEmailTaken(usuariOVI.getEmail(), null, null)) {
+        if (usuariOVI.getEmail() != null && !usuariOVI.getEmail().trim().isEmpty()
+                && emailValidationService.isEmailTaken(usuariOVI.getEmail(), null, null)) {
             bindingResult.rejectValue("email", "email.duplicat",
-                    "Aquest correu electrònic ja està registrat en el sistema (com a usuari, assistent o formador).");
-            return "login/register";
+                    "Aquest correu electrònic ja està registrat en el sistema.");
         }
 
         if (bindingResult.hasErrors()) {
@@ -148,7 +171,7 @@ public class LoginController {
         usuariOVI.setIdUsuari(nouId);
 
         usuariOVI.setDataRegistre(LocalDate.now());
-        usuariOVI.setEstatCompte("pendent"); // El tècnic haurà d'acceptar-lo
+        usuariOVI.setEstatCompte("pendent");
         usuariOVI.setRol("usuari");
 
         usuariOVIDao.addUsuariOVI(usuariOVI);
@@ -158,26 +181,29 @@ public class LoginController {
         return "redirect:/login";
     }
 
-    // GET /register-assistent - mostra el formulari de registre públic per a
-    // assistents
+    // GET /register-assistent - mostra el formulari de registre públic per a assistents
     @RequestMapping(value = "/register-assistent", method = RequestMethod.GET)
     public String registerAssistentForm(Model model) {
-        model.addAttribute("assistentPersonal", new es.uji.ei1027.sgovi.model.AssistentPersonal());
+        model.addAttribute("assistentPersonal", new AssistentPersonal());
         return "login/register-assistent";
     }
 
     // POST /register-assistent - processa el registre públic per a assistents
     @RequestMapping(value = "/register-assistent", method = RequestMethod.POST)
     public String checkRegisterAssistent(
-            @ModelAttribute("assistentPersonal") es.uji.ei1027.sgovi.model.AssistentPersonal assistent,
+            @ModelAttribute("assistentPersonal") AssistentPersonal assistent,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
 
+        // Validació completa
+        AssistentPersonalValidator validator = new AssistentPersonalValidator(true);
+        validator.validate(assistent, bindingResult);
+
         // Validar que l'email no estiga ja registrat globalment
-        if (emailValidationService.isEmailTaken(assistent.getEmail(), null, null)) {
+        if (assistent.getEmail() != null && !assistent.getEmail().trim().isEmpty()
+                && emailValidationService.isEmailTaken(assistent.getEmail(), null, null)) {
             bindingResult.rejectValue("email", "email.duplicat",
-                    "Aquest correu electrònic ja està registrat en el sistema (com a usuari, assistent o formador).");
-            return "login/register-assistent";
+                    "Aquest correu electrònic ja està registrat en el sistema.");
         }
 
         if (bindingResult.hasErrors()) {
@@ -185,13 +211,12 @@ public class LoginController {
         }
 
         // Generar ID
-        List<es.uji.ei1027.sgovi.model.AssistentPersonal> tots = assistentPersonalDao.getAssistentsPersonals();
-        int nouId = tots.stream().mapToInt(es.uji.ei1027.sgovi.model.AssistentPersonal::getIdAssistent).max().orElse(0)
-                + 1;
+        List<AssistentPersonal> tots = assistentPersonalDao.getAssistentsPersonals();
+        int nouId = tots.stream().mapToInt(AssistentPersonal::getIdAssistent).max().orElse(0) + 1;
         assistent.setIdAssistent(nouId);
 
         // Per defecte a l'hora de registrar-se
-        assistent.setEstatAcceptat(false); // false indica que encara no està acceptat pel tècnic
+        assistent.setEstatAcceptat(false);
 
         assistentPersonalDao.addAssistentPersonal(assistent);
 

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>Detall comunicació</title></head>
+<body>
+<section layout:fragment="content">
+  <nav class="breadcrumb-sgovi" aria-label="Ruta">
+    <a th:href="@{/}">Inici</a><span class="separator">›</span>
+    <a th:href="@{/comunicacio/list}">Comunicacions</a><span class="separator">›</span>
+    <span class="current" th:text="'Comunicació #' + ${comunicacio.idComunicacio}"></span>
+  </nav>
+
+  <h1><i class="bi bi-envelope-open me-2"></i>Detall de la comunicació</h1>
+
+  <div class="card card-sgovi">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6 info-group">
+          <div class="info-label">Destinatari</div>
+          <div class="info-value" th:text="${comunicacio.destinatari}"></div>
+        </div>
+        <div class="col-md-3 info-group">
+          <div class="info-label">Tipus</div>
+          <div class="info-value">
+            <span th:class="${
+              comunicacio.tipusComunicacio == 'acceptacio_solicitud' ? 'badge-estat badge-aprovada' :
+              comunicacio.tipusComunicacio == 'rebuig_solicitud' ? 'badge-estat badge-rebutjada' :
+              'badge-estat badge-en-revisio'}"
+                  th:text="${comunicacio.tipusComunicacio}"></span>
+          </div>
+        </div>
+        <div class="col-md-3 info-group">
+          <div class="info-label">Data i hora</div>
+          <div class="info-value" th:text="${#temporals.format(comunicacio.dataHora, 'dd/MM/yyyy HH:mm')}"></div>
+        </div>
+        <div class="col-12 info-group mt-2">
+          <div class="info-label">Assumpte</div>
+          <div class="info-value" th:text="${comunicacio.assumpte}"></div>
+        </div>
+        <div class="col-12 info-group mt-2">
+          <div class="info-label">Missatge</div>
+          <div class="info-value" style="white-space: pre-wrap;" th:text="${comunicacio.missatge}"></div>
+        </div>
+        <div class="col-12 info-group mt-2">
+          <div class="info-label">Emissor</div>
+          <div class="info-value" th:text="${comunicacio.emissor}"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a th:href="@{/comunicacio/list}" class="btn btn-outline-secondary mt-3">
+    <i class="bi bi-arrow-left me-1"></i>Tornar a comunicacions
+  </a>
+</section>
+</body>
+</html>

@@ -43,7 +43,7 @@
                 <tr th:each="r : ${registres}">
                     <td th:text="${r.idContracte}"></td>
                     <td th:text="${nomsAssistents[r.idAssistent] != null ? nomsAssistents[r.idAssistent] : 'Assistent #' + r.idAssistent}"></td>
-                    <td th:text="${'Sol·licitud #' + r.idRequest}"></td>
+                    <td th:text="${'Sol·licitud #' + r.idRequest + (nomsUsuaris[r.idRequest] != null ? ' - ' + nomsUsuaris[r.idRequest] : '')}"></td>
                     <td th:text="${r.dataInici != null ? #temporals.format(r.dataInici, 'dd/MM/yyyy') : '-'}"></td>
                     <td th:text="${r.dataFi != null ? #temporals.format(r.dataFi, 'dd/MM/yyyy') : '-'}"></td>
                     <td>

@@ -8,12 +8,12 @@ import java.sql.SQLException;
 
 public final class AssistenciaFormacioRowMapper implements RowMapper<AssistenciaFormacio> {
     public AssistenciaFormacio mapRow(ResultSet rs, int numRow) throws SQLException {
-        AssistenciaFormacio assistenciaFormacio = new AssistenciaFormacio();
-        assistenciaFormacio.setIdAssistencia(rs.getInt("idassistencia"));
-        assistenciaFormacio.setIdActivitat(rs.getInt("idactivitat"));
-        assistenciaFormacio.setIdAssistent(rs.getInt("idassistent"));
-        assistenciaFormacio.setAssistent(rs.getBoolean("assistent"));
-        assistenciaFormacio.setCertificatEmes(rs.getBoolean("certificatemes"));
-        return assistenciaFormacio;
+        AssistenciaFormacio a = new AssistenciaFormacio();
+        a.setIdAssistencia(rs.getInt("idassistencia"));
+        a.setIdActivitat(rs.getInt("idactivitat"));
+        a.setIdUsuari(rs.getInt("idusuari"));
+        a.setAssisteix(rs.getBoolean("assisteix"));
+        a.setCertificatEmes(rs.getBoolean("certificatemes"));
+        return a;
     }
 }

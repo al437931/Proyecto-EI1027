@@ -56,6 +56,9 @@
                 (u.estatCompte == 'acceptat' ? 'badge-aprovada' :
                  u.estatCompte == 'rebutjat' ? 'badge-rebutjada' : 'badge-en-revisio')}"
                   th:text="${u.estatCompte}"></span>
+            <div th:if="${u.estatCompte == 'rebutjat' and u.motiuRebuig != null}" class="small text-danger mt-1">
+              <strong>Motiu:</strong> <span th:text="${u.motiuRebuig}"></span>
+            </div>
           </td>
           <td class="d-flex gap-1">
             <form th:if="${u.estatCompte == 'pendent'}" th:action="@{'/usuariovi/activar/' + ${u.idUsuari}}" method="post" style="display:inline">
@@ -72,6 +75,38 @@
                onclick="return confirm('Esteu segur de voler eliminar aquest usuari?')">
               <i class="bi bi-trash"></i>
             </a>
+            
+            <!-- Botó per rebutjar (només si està pendent) -->
+            <button th:if="${u.estatCompte == 'pendent'}" type="button" class="btn btn-sm btn-outline-warning" 
+                    data-bs-toggle="modal" th:data-bs-target="'#modalRebutjarUsuari' + ${u.idUsuari}" title="Rebutjar compte">
+              <i class="bi bi-x-circle"></i>
+            </button>
+
+            <!-- Modal Rebutjar -->
+            <div th:if="${u.estatCompte == 'pendent'}" class="modal fade" th:id="'modalRebutjarUsuari' + ${u.idUsuari}" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title"><i class="bi bi-exclamation-triangle me-2"></i>Rebutjar sol·licitud d'Usuari</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tancar"></button>
+                  </div>
+                  <form th:action="@{'/usuariovi/rebutjar/' + ${u.idUsuari}}" method="post">
+                    <div class="modal-body text-start">
+                      <p>Aneu a rebutjar la sol·licitud de registre de l'usuari <strong th:text="${u.nom + ' ' + u.cognoms}"></strong>.</p>
+                      <p>S'enviarà un correu electrònic a l'usuari amb el motiu indicat:</p>
+                      <div class="mb-3">
+                        <label class="form-label text-dark">Motiu del rebuig <span class="text-danger">*</span></label>
+                        <textarea name="motiu" class="form-control" rows="3" required placeholder="Especifiqueu el motiu pel qual no s'accepta l'usuari en la plataforma..."></textarea>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel·lar</button>
+                      <button type="submit" class="btn btn-warning">Rebutjar i Notificar</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
           </td>
         </tr>
       </tbody>

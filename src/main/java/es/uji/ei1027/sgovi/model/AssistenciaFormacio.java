@@ -1,20 +1,16 @@
 package es.uji.ei1027.sgovi.model;
 
-import org.codehaus.groovy.runtime.dgmimpl.arrays.IntegerArrayGetAtMetaMethod;
-
 public class AssistenciaFormacio {
     private Integer idAssistencia;
     private int idActivitat;
-    private Integer idAssistent;
-    private Boolean assistent;
+    private Integer idUsuari; // ID de l'usuari OVI inscrit
+    private Boolean assisteix; // Ha assistit?
     private Boolean certificatEmes;
 
     public AssistenciaFormacio() {
-
     }
 
-
-    public int getIdAssistencia() {
+    public Integer getIdAssistencia() {
         return idAssistencia;
     }
 
@@ -30,20 +26,20 @@ public class AssistenciaFormacio {
         this.idActivitat = idActivitat;
     }
 
-    public int getIdAssistent() {
-        return idAssistent;
+    public Integer getIdUsuari() {
+        return idUsuari;
     }
 
-    public void setIdAssistent(Integer idAssistent) {
-        this.idAssistent = idAssistent;
+    public void setIdUsuari(Integer idUsuari) {
+        this.idUsuari = idUsuari;
     }
 
-    public Boolean isAssistent() {
-        return assistent;
+    public Boolean isAssisteix() {
+        return assisteix;
     }
 
-    public void setAssistent(Boolean assistent) {
-        this.assistent = assistent;
+    public void setAssisteix(Boolean assisteix) {
+        this.assisteix = assisteix;
     }
 
     public Boolean isCertificatEmes() {
@@ -59,8 +55,8 @@ public class AssistenciaFormacio {
         return "AssistenciaFormacio{" +
                 "idAssistencia=" + idAssistencia +
                 ", idActivitat=" + idActivitat +
-                ", idAssistent=" + idAssistent +
-                ", assistent=" + assistent +
+                ", idUsuari=" + idUsuari +
+                ", assisteix=" + assisteix +
                 ", certificatEmes=" + certificatEmes +
                 '}';
     }

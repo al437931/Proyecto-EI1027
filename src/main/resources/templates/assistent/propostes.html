@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>Propostes de Treball</title></head>
+<body>
+<section layout:fragment="content">
+  <nav class="breadcrumb-sgovi" aria-label="Ruta">
+    <a th:href="@{/}">Inici</a><span class="separator">›</span>
+    <span class="current">Propostes de treball</span>
+  </nav>
+
+  <h1><i class="bi bi-envelope-paper me-2"></i>Les meues propostes</h1>
+
+  <div class="card card-sgovi mb-4">
+    <div class="card-header bg-primary text-white">
+      <i class="bi bi-envelope-paper me-1"></i>Propostes de treball assignades
+    </div>
+    <div class="card-body">
+      <div th:if="${#lists.isEmpty(seleccions)}" class="alert alert-info mb-0">
+        <i class="bi bi-info-circle me-1"></i>No teniu cap proposta de treball en aquest moment.
+      </div>
+      <div th:unless="${#lists.isEmpty(seleccions)}" class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Sol·licitud</th>
+              <th>Nom de l'Usuari</th>
+              <th>Data Proposta</th>
+              <th>Estat</th>
+              <th>Accions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="s : ${seleccions}">
+              <td th:text="'REQ-2026-' + ${#numbers.formatInteger(s.idRequest, 4)}"></td>
+              <td th:text="${s.nomUsuariComplet}"></td>
+              <td th:text="${#temporals.format(s.dataProposta, 'dd/MM/yyyy')}"></td>
+              <td>
+                <span th:class="${s.estat == 'Pendent Assistent' ? 'badge bg-warning text-dark' :
+                                 s.estat == 'pendent_ambdos' ? 'badge bg-warning text-dark' :
+                                 s.estat == 'Pendent Usuari' ? 'badge bg-info text-dark' :
+                                 s.estat == 'Acceptada' ? 'badge bg-success' : 'badge bg-secondary'}"
+                      th:text="${s.estat == 'pendent_ambdos' ? 'Pendent Ambdós' : s.estat}"></span>
+              </td>
+              <td>
+                <div th:if="${s.estat == 'Pendent Assistent' or s.estat == 'pendent_ambdos'}" class="d-flex gap-2">
+                  <form th:action="@{'/assistent/seleccion/' + ${s.idSeleccion} + '/acceptar'}" method="post" style="display:inline;"
+                        onsubmit="return confirm('Esteu segur de voler acceptar aquesta proposta?')">
+                    <button type="submit" class="btn btn-sm btn-success">
+                      <i class="bi bi-check-circle me-1"></i>Acceptar
+                    </button>
+                  </form>
+                  <form th:action="@{'/assistent/seleccion/' + ${s.idSeleccion} + '/rebutjar'}" method="post" style="display:inline;"
+                        onsubmit="return confirm('Esteu segur de voler rebutjar aquesta proposta?')">
+                    <button type="submit" class="btn btn-sm btn-danger">
+                      <i class="bi bi-x-circle me-1"></i>Rebutjar
+                    </button>
+                  </form>
+                </div>
+                <span th:unless="${s.estat == 'Pendent Assistent' or s.estat == 'pendent_ambdos'}">-</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>
