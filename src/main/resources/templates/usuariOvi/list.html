@@ -11,11 +11,15 @@
     <span class="current">Usuaris OVI</span>
   </nav>
 
-  <h1><i class="bi bi-people me-2"></i>Usuaris OVI</h1>
-
-  <a th:href="@{/usuariovi/add}" class="btn btn-success mb-3">
-    <i class="bi bi-person-plus me-1"></i>Afegir usuari
-  </a>
+  <h1><i class="bi bi-person me-2"></i>Usuaris OVI</h1>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <a th:href="@{/usuariovi/add}" class="btn btn-success"><i class="bi bi-plus-circle me-1"></i>Afegir usuari</a>
+    <form th:action="@{/usuariovi/list}" method="get" class="d-flex">
+      <input type="text" name="cerca" class="form-control me-2" th:value="${cerca}" placeholder="Cercar per nom, email..." aria-label="Cerca d'usuaris">
+      <button type="submit" class="btn btn-primary" aria-label="Cercar"><i class="bi bi-search"></i></button>
+      <a th:href="@{/usuariovi/list}" th:if="${cerca != null and !cerca.isEmpty()}" class="btn btn-outline-secondary ms-1" aria-label="Netejar cerca"><i class="bi bi-x"></i></a>
+    </form>
+  </div>
 
   <!-- Avís de comptes pendents -->
   <div th:if="${#lists.size(usuaris.?[estatCompte == 'pendent']) > 0}" class="alert alert-warning mb-3">
@@ -62,51 +66,24 @@
           </td>
           <td class="d-flex gap-1">
             <form th:if="${u.estatCompte == 'pendent'}" th:action="@{'/usuariovi/activar/' + ${u.idUsuari}}" method="post" style="display:inline">
-              <button type="submit" class="btn btn-sm btn-success" title="Activar compte">
+              <button type="submit" class="btn btn-sm btn-success" title="Activar compte" aria-label="Activar compte">
                 <i class="bi bi-check-circle"></i>
               </button>
             </form>
             <a th:href="@{'/usuariovi/update/' + ${u.idUsuari}}"
-               class="btn btn-sm btn-outline-primary">
+               class="btn btn-sm btn-outline-primary" aria-label="Editar usuari">
               <i class="bi bi-pencil"></i>
             </a>
             <a th:href="@{'/usuariovi/delete/' + ${u.idUsuari}}"
-               class="btn btn-sm btn-outline-danger"
-               onclick="return confirm('Esteu segur de voler eliminar aquest usuari?')">
+               class="btn btn-sm btn-outline-danger" aria-label="Esborrar usuari">
               <i class="bi bi-trash"></i>
             </a>
             
             <!-- Botó per rebutjar (només si està pendent) -->
-            <button th:if="${u.estatCompte == 'pendent'}" type="button" class="btn btn-sm btn-outline-warning" 
-                    data-bs-toggle="modal" th:data-bs-target="'#modalRebutjarUsuari' + ${u.idUsuari}" title="Rebutjar compte">
+            <a th:if="${u.estatCompte == 'pendent'}" th:href="@{'/usuariovi/rebutjar/' + ${u.idUsuari}}"
+               class="btn btn-sm btn-outline-warning" title="Rebutjar compte" aria-label="Rebutjar compte">
               <i class="bi bi-x-circle"></i>
-            </button>
-
-            <!-- Modal Rebutjar -->
-            <div th:if="${u.estatCompte == 'pendent'}" class="modal fade" th:id="'modalRebutjarUsuari' + ${u.idUsuari}" tabindex="-1" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header bg-warning text-dark">
-                    <h5 class="modal-title"><i class="bi bi-exclamation-triangle me-2"></i>Rebutjar sol·licitud d'Usuari</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tancar"></button>
-                  </div>
-                  <form th:action="@{'/usuariovi/rebutjar/' + ${u.idUsuari}}" method="post">
-                    <div class="modal-body text-start">
-                      <p>Aneu a rebutjar la sol·licitud de registre de l'usuari <strong th:text="${u.nom + ' ' + u.cognoms}"></strong>.</p>
-                      <p>S'enviarà un correu electrònic a l'usuari amb el motiu indicat:</p>
-                      <div class="mb-3">
-                        <label class="form-label text-dark">Motiu del rebuig <span class="text-danger">*</span></label>
-                        <textarea name="motiu" class="form-control" rows="3" required placeholder="Especifiqueu el motiu pel qual no s'accepta l'usuari en la plataforma..."></textarea>
-                      </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel·lar</button>
-                      <button type="submit" class="btn btn-warning">Rebutjar i Notificar</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
+            </a>
           </td>
         </tr>
       </tbody>

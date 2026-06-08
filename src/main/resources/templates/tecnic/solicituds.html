@@ -15,6 +15,32 @@
 
     <h1><i class="bi bi-clipboard-check me-2"></i>Panell del tècnic OVI</h1>
 
+    <!-- Formulari de cerca sense JS -->
+    <div class="card mb-4 bg-light">
+      <div class="card-body py-2">
+        <form th:action="@{/tecnic/solicituds}" method="get" class="row g-2 align-items-center">
+          <div class="col-auto flex-grow-1">
+            <input type="text" name="cerca" class="form-control" th:value="${cerca}" 
+                   placeholder="Cercar sol·licituds per nom d'usuari o codi (ex. REQ-2026-0012)..."
+                   aria-label="Cerca">
+          </div>
+          <div class="col-auto">
+            <select name="estatFiltre" class="form-select" aria-label="Filtre">
+              <option value="">-- Tots els estats --</option>
+              <option value="en revisio" th:selected="${estatFiltre == 'en revisio'}">En revisió</option>
+              <option value="aprovada" th:selected="${estatFiltre == 'aprovada'}">Aprovada</option>
+              <option value="rebutjada" th:selected="${estatFiltre == 'rebutjada'}">Rebutjada</option>
+              <option value="tancada" th:selected="${estatFiltre == 'tancada'}">Tancada</option>
+            </select>
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i>Filtrar</button>
+            <a th:href="@{/tecnic/solicituds}" th:if="${(cerca != null and !cerca.isEmpty()) or (estatFiltre != null and !estatFiltre.isEmpty())}" class="btn btn-outline-secondary">Netejar</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <!-- Sol·licituds pendents -->
     <div class="card card-sgovi mb-4">
         <div class="card-header">

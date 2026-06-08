@@ -16,7 +16,7 @@
         <td th:text="${c.dataHora}"></td>
         <td><span th:class="${c.emissor == 'tecnic' ? 'badge-estat badge-aprovada' : c.emissor == 'usuari' ? 'badge-estat badge-en-revisio' : 'badge-estat badge-proposat'}" th:text="${c.emissor}"></span></td>
         <td th:text="${c.missatge}"></td>
-        <td><a th:href="@{'/comunicaciousuariovipap/delete/' + ${c.idComunicacio}}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Esteu segur?')"><i class="bi bi-trash"></i></a></td>
+        <td><a th:href="@{'/comunicaciousuariovipap/delete/' + ${c.idComunicacio}}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a></td>
       </tr></tbody>
     </table>
   </div>

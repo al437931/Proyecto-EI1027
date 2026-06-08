@@ -17,6 +17,32 @@
     <i class="bi bi-plus-circle me-1"></i>Nova sol·licitud
   </a>
 
+  <!-- Formulari de cerca sense JS -->
+  <div class="card mb-4 bg-light">
+    <div class="card-body py-2">
+      <form th:action="@{/usuari/solicituds}" method="get" class="row g-2 align-items-center">
+        <div class="col-auto flex-grow-1">
+          <input type="text" name="cerca" class="form-control" th:value="${cerca}" 
+                 placeholder="Cercar per tipus d'assistència o nom de l'assistent (ex. PAP, PATI)..."
+                 aria-label="Cerca sol·licituds">
+        </div>
+        <div class="col-auto">
+          <select name="estatFiltre" class="form-select" aria-label="Filtre d'estat">
+            <option value="">-- Tots els estats --</option>
+            <option value="en revisio" th:selected="${estatFiltre == 'en revisio'}">En revisió</option>
+            <option value="aprovada" th:selected="${estatFiltre == 'aprovada'}">Aprovada</option>
+            <option value="rebutjada" th:selected="${estatFiltre == 'rebutjada'}">Rebutjada</option>
+            <option value="tancada" th:selected="${estatFiltre == 'tancada'}">Tancada</option>
+          </select>
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i>Filtrar</button>
+          <a th:href="@{/usuari/solicituds}" th:if="${(cerca != null and !cerca.isEmpty()) or (estatFiltre != null and !estatFiltre.isEmpty())}" class="btn btn-outline-secondary">Netejar</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <div th:if="${#lists.isEmpty(solicituds)}" class="alert alert-info">
     <i class="bi bi-info-circle me-1"></i>Encara no heu creat cap sol·licitud.
   </div>

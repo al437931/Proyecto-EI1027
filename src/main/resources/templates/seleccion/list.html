@@ -14,7 +14,7 @@
         <td th:text="${s.idSeleccion}"></td><td th:text="${'#' + s.idRequest}"></td><td th:text="${'#' + s.idAssistent}"></td>
         <td th:text="${s.dataProposta != null ? #temporals.format(s.dataProposta, 'dd/MM/yyyy') : '-'}"></td>
         <td><span th:class="${'badge-estat ' + (s.estat == 'acceptat' ? 'badge-aprovada' : s.estat == 'rebutjat' ? 'badge-rebutjada' : 'badge-en-revisio')}" th:text="${s.estat}"></span></td>
-        <td><a th:href="@{'/seleccion/delete/' + ${s.idSeleccion}}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Esteu segur?')"><i class="bi bi-trash"></i></a></td>
+        <td><a th:href="@{'/seleccion/delete/' + ${s.idSeleccion}}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a></td>
       </tr></tbody>
     </table>
   </div>

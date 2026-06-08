@@ -12,6 +12,33 @@
 
   <h1><i class="bi bi-envelope-paper me-2"></i>Les meues propostes</h1>
 
+  <!-- Formulari de cerca sense JS -->
+  <div class="card mb-4 bg-light">
+    <div class="card-body py-2">
+      <form th:action="@{/assistent/propostes}" method="get" class="row g-2 align-items-center">
+        <div class="col-auto flex-grow-1">
+          <input type="text" name="cerca" class="form-control" th:value="${cerca}" 
+                 placeholder="Cercar per nom de l'usuari o número de sol·licitud (ex. REQ-2026-0012)..."
+                 aria-label="Cerca propostes">
+        </div>
+        <div class="col-auto">
+          <select name="estatFiltre" class="form-select" aria-label="Filtre d'estat">
+            <option value="">-- Tots els estats --</option>
+            <option value="Pendent Assistent" th:selected="${estatFiltre == 'Pendent Assistent'}">Pendent de mi</option>
+            <option value="Pendent Usuari" th:selected="${estatFiltre == 'Pendent Usuari'}">Pendent d'Usuari</option>
+            <option value="pendent_ambdos" th:selected="${estatFiltre == 'pendent_ambdos'}">Pendent Ambdós</option>
+            <option value="Acceptada" th:selected="${estatFiltre == 'Acceptada'}">Acceptada</option>
+            <option value="Rebutjada" th:selected="${estatFiltre == 'Rebutjada'}">Rebutjada</option>
+          </select>
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-primary" aria-label="Cercar"><i class="bi bi-search me-1"></i>Filtrar</button>
+          <a th:href="@{/assistent/propostes}" th:if="${(cerca != null and !cerca.isEmpty()) or (estatFiltre != null and !estatFiltre.isEmpty())}" class="btn btn-outline-secondary" aria-label="Netejar cerca">Netejar</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <div class="card card-sgovi mb-4">
     <div class="card-header bg-primary text-white">
       <i class="bi bi-envelope-paper me-1"></i>Propostes de treball assignades
@@ -37,28 +64,29 @@
               <td th:text="${s.nomUsuariComplet}"></td>
               <td th:text="${#temporals.format(s.dataProposta, 'dd/MM/yyyy')}"></td>
               <td>
-                <span th:class="${s.estat == 'Pendent Assistent' ? 'badge bg-warning text-dark' :
-                                 s.estat == 'pendent_ambdos' ? 'badge bg-warning text-dark' :
-                                 s.estat == 'Pendent Usuari' ? 'badge bg-info text-dark' :
-                                 s.estat == 'Acceptada' ? 'badge bg-success' : 'badge bg-secondary'}"
+                <span th:class="${s.estat == 'Pendent Assistent' ? 'badge bg-warning text-dark p-2 fs-6' :
+                                 s.estat == 'pendent_ambdos' ? 'badge bg-warning text-dark p-2 fs-6' :
+                                 s.estat == 'Pendent Usuari' ? 'badge bg-info text-dark p-2 fs-6' :
+                                 s.estat == 'Acceptada' ? 'badge bg-success p-2 fs-6' : 'badge bg-secondary p-2 fs-6'}"
                       th:text="${s.estat == 'pendent_ambdos' ? 'Pendent Ambdós' : s.estat}"></span>
               </td>
               <td>
-                <div th:if="${s.estat == 'Pendent Assistent' or s.estat == 'pendent_ambdos'}" class="d-flex gap-2">
-                  <form th:action="@{'/assistent/seleccion/' + ${s.idSeleccion} + '/acceptar'}" method="post" style="display:inline;"
-                        onsubmit="return confirm('Esteu segur de voler acceptar aquesta proposta?')">
+                <div th:if="${s.estat == 'Pendent Assistent' or s.estat == 'pendent_ambdos'}" class="d-flex gap-2 flex-wrap">
+                  <form th:action="@{'/assistent/seleccion/' + ${s.idSeleccion} + '/acceptar'}" method="post" style="display:inline;">
                     <button type="submit" class="btn btn-sm btn-success">
                       <i class="bi bi-check-circle me-1"></i>Acceptar
                     </button>
                   </form>
-                  <form th:action="@{'/assistent/seleccion/' + ${s.idSeleccion} + '/rebutjar'}" method="post" style="display:inline;"
-                        onsubmit="return confirm('Esteu segur de voler rebutjar aquesta proposta?')">
+                  <form th:action="@{'/assistent/seleccion/' + ${s.idSeleccion} + '/rebutjar'}" method="post" style="display:inline;">
                     <button type="submit" class="btn btn-sm btn-danger">
                       <i class="bi bi-x-circle me-1"></i>Rebutjar
                     </button>
                   </form>
                 </div>
-                <span th:unless="${s.estat == 'Pendent Assistent' or s.estat == 'pendent_ambdos'}">-</span>
+                <!-- Botó missatge sempre visible -->
+                <a th:href="@{'/missatge/chat/' + ${s.idSeleccion}}" class="btn btn-sm btn-outline-primary mt-1">
+                  <i class="bi bi-chat-dots me-1"></i>Missatge
+                </a>
               </td>
             </tr>
           </tbody>

@@ -18,14 +18,38 @@
 
   <h1><i class="bi bi-people me-2"></i>Candidats disponibles</h1>
 
-  <div class="alert alert-info">
-    <i class="bi bi-info-circle me-1"></i>
-    A continuació es mostren els professionals
-    <strong th:text="${solicitud.tipusAssistencia}"></strong>
-    disponibles per a la seua sol·licitud
-    <strong th:text="'REQ-2026-' + ${#numbers.formatInteger(solicitud.idRequest, 4)}"></strong>.
-    <br><small>La comunicació i formalització del contracte es realitzen fora del sistema.
-    Una vegada formalitzat, podeu registrar-lo des del detall de la sol·licitud.</small>
+  <!-- Formulari de cerca sense JS -->
+  <div class="card mb-4 bg-light">
+    <div class="card-body py-2">
+      <form th:action="@{'/usuari/solicitud/' + ${solicitud.idRequest} + '/candidats'}" method="get" class="row g-2 align-items-center">
+        <div class="col-auto flex-grow-1">
+          <input type="text" name="cerca" class="form-control" th:value="${cerca}" 
+                 placeholder="Cercar per nom, formació, experiència o disponibilitat (ex. autisme, vesprades)...">
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i>Filtrar Candidats</button>
+          <a th:href="@{'/usuari/solicitud/' + ${solicitud.idRequest} + '/candidats'}" th:if="${cerca != null and !cerca.isEmpty()}" class="btn btn-outline-secondary">Netejar</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card mb-4 shadow-sm border-info">
+    <div class="card-header bg-info text-white">
+      <h5 class="mb-0"><i class="bi bi-journal-text me-2"></i>Resum de la Sol·licitud</h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <p><strong>Codi:</strong> <span th:text="'REQ-2026-' + ${#numbers.formatInteger(solicitud.idRequest, 4)}"></span></p>
+          <p><strong>Tipus d'assistència:</strong> <span th:text="${solicitud.tipusAssistencia}"></span></p>
+        </div>
+        <div class="col-md-6">
+          <p><strong>Les teues necessitats:</strong></p>
+          <p class="fst-italic" th:text="${solicitud.descripcioNecessitats != null ? solicitud.descripcioNecessitats : 'No has especificat cap necessitat detallada.'}"></p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div th:if="${#lists.isEmpty(candidats)}" class="alert alert-warning">
@@ -49,8 +73,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr th:each="c : ${candidats}">
-          <td th:text="${c.nom}"></td>
+        <tr th:each="c : ${candidats}" th:class="${c.recomanat ? 'table-warning' : ''}">
+          <td>
+            <span th:text="${c.nom}"></span>
+            <span th:if="${c.recomanat}" class="badge bg-warning text-dark ms-1" title="Alta afinitat amb la teua sol·licitud">
+              <i class="bi bi-star-fill"></i> Recomanat
+            </span>
+          </td>
           <td th:text="${c.cognoms}"></td>
           <td><a th:href="'mailto:' + ${c.email}" th:text="${c.email}"></a></td>
           <td th:text="${c.telefon}"></td>
@@ -62,8 +91,7 @@
             <span th:with="proposat=${seleccions.![idAssistent].contains(c.idAssistent)}">
               <span th:if="${proposat}" class="badge bg-secondary">Ja proposat</span>
               <form th:unless="${proposat}" th:action="@{'/usuari/solicitud/' + ${solicitud.idRequest} + '/proposar/' + ${c.idAssistent}}"
-                    method="post" style="display:inline;"
-                    onsubmit="return confirm('Confirmeu que voleu proposar aquest candidat per a la vostra assistència?')">
+                    method="post" style="display:inline;">
                 <button type="submit" class="btn btn-sm btn-primary">
                   <i class="bi bi-hand-index me-1"></i>Proposar
                 </button>

@@ -5,7 +5,14 @@
 <section layout:fragment="content">
   <nav class="breadcrumb-sgovi" aria-label="Ruta"><a th:href="@{/}">Inici</a><span class="separator">&#8250;</span><span class="current">Formadors</span></nav>
   <h1><i class="bi bi-mortarboard me-2"></i>Formadors</h1>
-  <a th:href="@{/formador/add}" class="btn btn-success mb-3"><i class="bi bi-plus-circle me-1"></i>Afegir formador</a>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <a th:href="@{/formador/add}" class="btn btn-success"><i class="bi bi-plus-circle me-1"></i>Afegir formador</a>
+    <form th:action="@{/formador/list}" method="get" class="d-flex">
+      <input type="text" name="cerca" class="form-control me-2" th:value="${cerca}" placeholder="Cercar per nom, email, esp..." aria-label="Cerca formadors">
+      <button type="submit" class="btn btn-primary" aria-label="Cercar"><i class="bi bi-search"></i></button>
+      <a th:href="@{/formador/list}" th:if="${cerca != null and !cerca.isEmpty()}" class="btn btn-outline-secondary ms-1" aria-label="Netejar cerca"><i class="bi bi-x"></i></a>
+    </form>
+  </div>
   <div th:if="${#lists.isEmpty(formadors)}" class="alert alert-info">No hi ha formadors registrats.</div>
   <div th:unless="${#lists.isEmpty(formadors)}" class="table-responsive">
     <table class="table table-striped table-hover sortable">
@@ -13,7 +20,7 @@
       <thead class="table-success"><tr><th scope="col">ID</th><th scope="col">Nom</th><th scope="col">Cognoms</th><th scope="col">Especialitat</th><th scope="col">Email</th><th scope="col" class="no-sort">Accions</th></tr></thead>
       <tbody><tr th:each="f : ${formadors}">
         <td th:text="${f.idFormador}"></td><td th:text="${f.nom}"></td><td th:text="${f.cognoms}"></td><td th:text="${f.especialitat}"></td><td th:text="${f.email}"></td>
-        <td><a th:href="@{'/formador/update/' + ${f.idFormador}}" class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-pencil"></i></a><a th:href="@{'/formador/delete/' + ${f.idFormador}}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Esteu segur?')"><i class="bi bi-trash"></i></a></td>
+        <td><a th:href="@{'/formador/update/' + ${f.idFormador}}" class="btn btn-sm btn-outline-primary me-1" aria-label="Editar formador"><i class="bi bi-pencil"></i></a><a th:href="@{'/formador/delete/' + ${f.idFormador}}" class="btn btn-sm btn-outline-danger" aria-label="Esborrar formador"><i class="bi bi-trash"></i></a></td>
       </tr></tbody>
     </table>
   </div>
