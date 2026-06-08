@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>Xat</title></head>
+<body>
+<section layout:fragment="content">
+  <nav class="breadcrumb-sgovi" aria-label="Ruta">
+    <a th:href="@{/}">Inici</a><span class="separator">&#8250;</span>
+    <a th:href="@{/missatge/meues}">Missatges</a><span class="separator">&#8250;</span>
+    <span class="current" th:text="|Conversa - Selecció #${seleccion.idSeleccion}|"></span>
+  </nav>
+
+  <h1><i class="bi bi-chat-dots me-2"></i>Conversa</h1>
+
+  <div class="card card-sgovi mb-3">
+    <div class="card-header">
+      <i class="bi bi-info-circle me-1"></i>
+      Selecció #<span th:text="${seleccion.idSeleccion}"></span>
+      — Sol·licitud REQ-2026-<span th:text="${#numbers.formatInteger(seleccion.idRequest, 4)}"></span>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6 info-group">
+          <div class="info-label">Usuari</div>
+          <div class="info-value" th:text="${nomUsuari}"></div>
+        </div>
+        <div class="col-md-6 info-group">
+          <div class="info-label">Assistent</div>
+          <div class="info-value" th:text="${nomAssistent}"></div>
+        </div>
+        <div class="col-md-6 info-group">
+          <div class="info-label">Estat de la proposta</div>
+          <div class="info-value">
+            <span th:class="${seleccion.estat == 'Acceptada' ? 'badge bg-success' :
+                             seleccion.estat == 'Rebutjada' ? 'badge bg-secondary' :
+                             'badge bg-warning text-dark'}"
+                  th:text="${seleccion.estat == 'pendent_ambdos' ? 'Pendent Ambdós' : seleccion.estat}"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fil de missatges -->
+  <div class="card card-sgovi mb-3">
+    <div class="card-header" style="background-color:#0d6efd;">
+      <i class="bi bi-chat-left-text me-1"></i>Fil de missatges
+    </div>
+    <div class="card-body p-0">
+      <div class="chat-container">
+        <div th:if="${#lists.isEmpty(missatges)}" class="chat-empty">
+          <i class="bi bi-chat-dots" style="font-size:2rem;"></i>
+          <p>Encara no hi ha missatges. Sigues el primer en escriure!</p>
+        </div>
+
+        <div th:each="m : ${missatges}"
+             th:class="${m.emissor == rolChat ? 'chat-message chat-message-own' : 'chat-message chat-message-other'}">
+          <div class="chat-meta" th:text="${m.nomEmisor + ' (' + m.emissor + ')'}"></div>
+          <div class="chat-text" th:text="${m.missatge}"></div>
+          <div class="chat-time" th:text="${#temporals.format(m.dataHora, 'dd/MM/yyyy HH:mm')}"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulari per enviar missatge -->
+  <div class="card card-sgovi mb-3">
+    <div class="card-header" style="background-color:#2c6e49;">
+      <i class="bi bi-pencil-square me-1"></i>Enviar missatge
+    </div>
+    <div class="card-body">
+      <form th:action="@{'/missatge/enviar/' + ${seleccion.idSeleccion}}" method="post">
+        <div class="mb-3">
+          <label for="missatge" class="form-label">Missatge</label>
+          <textarea id="missatge" name="missatge" class="form-control" rows="3"
+                    required placeholder="Escriviu el vostre missatge ací..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">
+          <i class="bi bi-send me-1"></i>Enviar
+        </button>
+        <a th:href="@{/missatge/meues}" class="btn btn-outline-secondary ms-2">
+          <i class="bi bi-arrow-left me-1"></i>Tornar als missatges
+        </a>
+      </form>
+    </div>
+  </div>
+
+</section>
+</body>
+</html>

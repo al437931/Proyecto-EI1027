@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>Missatges</title></head>
+<body>
+<section layout:fragment="content">
+  <nav class="breadcrumb-sgovi" aria-label="Ruta">
+    <a th:href="@{/}">Inici</a><span class="separator">&#8250;</span>
+    <span class="current">Missatges</span>
+  </nav>
+
+  <h1><i class="bi bi-chat-dots me-2"></i>Les meues converses</h1>
+
+  <!-- Formulari de cerca sense JS -->
+  <div class="card mb-4 bg-light">
+    <div class="card-body py-2">
+      <form th:action="@{/missatge/meues}" method="get" class="row g-2 align-items-center">
+        <div class="col-auto flex-grow-1">
+          <input type="text" name="cerca" class="form-control" th:value="${cerca}" 
+                 placeholder="Cercar per nom de la persona o número de sol·licitud (ex. REQ)..."
+                 aria-label="Cerca converses">
+        </div>
+        <div class="col-auto">
+          <select name="estatFiltre" class="form-select" aria-label="Filtre d'estat">
+            <option value="">-- Tots els estats --</option>
+            <option value="Pendent Assistent" th:selected="${estatFiltre == 'Pendent Assistent'}">Pendent d'Assistent</option>
+            <option value="Pendent Usuari" th:selected="${estatFiltre == 'Pendent Usuari'}">Pendent d'Usuari</option>
+            <option value="pendent_ambdos" th:selected="${estatFiltre == 'pendent_ambdos'}">Pendent Ambdós</option>
+            <option value="Acceptada" th:selected="${estatFiltre == 'Acceptada'}">Acceptada (Match)</option>
+            <option value="Rebutjada" th:selected="${estatFiltre == 'Rebutjada'}">Rebutjada</option>
+          </select>
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i>Filtrar</button>
+          <a th:href="@{/missatge/meues}" th:if="${(cerca != null and !cerca.isEmpty()) or (estatFiltre != null and !estatFiltre.isEmpty())}" class="btn btn-outline-secondary">Netejar</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div th:if="${#lists.isEmpty(converses)}" class="alert alert-info">
+    <i class="bi bi-info-circle me-1"></i>No teniu cap conversa activa.
+    Les converses apareixeran quan hi haja propostes de treball (seleccions) entre un usuari i un assistent.
+  </div>
+
+  <div th:unless="${#lists.isEmpty(converses)}">
+    <div th:each="c : ${converses}" class="card mb-3 shadow-sm">
+      <div class="card-body d-flex justify-content-between align-items-center">
+        <div>
+          <h3 class="h6 mb-1">
+            <i class="bi bi-person me-1"></i>
+            <span th:text="${c.nomAltre}"></span>
+          </h3>
+          <p class="mb-1" style="font-size:0.85rem; color:#495057;">
+            Sol·licitud REQ-2026-<span th:text="${#numbers.formatInteger(c.idRequest, 4)}"></span>
+            — Estat:
+            <span th:class="${c.estat == 'Acceptada' ? 'badge bg-success' :
+                             c.estat == 'Rebutjada' ? 'badge bg-secondary' :
+                             'badge bg-warning text-dark'}"
+                  th:text="${c.estat == 'pendent_ambdos' ? 'Pendent Ambdós' : c.estat}"></span>
+          </p>
+          <p class="mb-0" style="font-size:0.8rem; color:#6c757d;">
+            <span th:if="${c.numMissatges > 0}">
+              <i class="bi bi-chat-left-text me-1"></i>
+              <span th:text="${c.numMissatges}"></span> missatge/s
+              — Últim: <span th:text="${c.ultimMissatge != null ? #temporals.format(c.ultimMissatge.dataHora, 'dd/MM/yyyy HH:mm') : '-'}"></span>
+            </span>
+            <span th:unless="${c.numMissatges > 0}">
+              <i class="bi bi-chat-left me-1"></i>Sense missatges encara
+            </span>
+          </p>
+        </div>
+        <a th:href="@{'/missatge/chat/' + ${c.idSeleccion}}" class="btn btn-primary btn-sm">
+          <i class="bi bi-chat-dots me-1"></i>Obrir xat
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>
