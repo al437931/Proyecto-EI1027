@@ -56,7 +56,7 @@ public class ActivitatFormacioController {
     // ==================== VISTA TÈCNIC (CRUD) ====================
 
     @GetMapping("/list")
-    public String listActivitats(HttpSession session, Model model) {
+    public String listActivitats(@RequestParam(value = "cerca", required = false) String cerca, HttpSession session, Model model) {
         UsuariOVI tecnic = getTecnicSession(session);
         if (tecnic == null) {
             session.setAttribute("nextUrl", "/activitatformacio/list");
@@ -64,15 +64,28 @@ public class ActivitatFormacioController {
         }
 
         List<ActivitatFormacio> activitats = activitatFormacioDao.getActivitatsFormacio();
+        String cercaLower = (cerca != null) ? cerca.toLowerCase() : null;
+
+        if (cercaLower != null && !cercaLower.trim().isEmpty()) {
+            activitats = activitats.stream().filter(u -> {
+                String titol = u.getTitol() != null ? u.getTitol().toLowerCase() : "";
+                String desc = u.getDescripcio() != null ? u.getDescripcio().toLowerCase() : "";
+                return titol.contains(cercaLower) || desc.contains(cercaLower);
+            }).toList();
+        }
+
+        List<ActivitatFormacio> mutableActivitats = new java.util.ArrayList<>(activitats);
+        mutableActivitats.sort((a, b) -> Integer.compare(b.getIdActivitat(), a.getIdActivitat()));
 
         // Mapa d'inscrits per activitat
         Map<Integer, Integer> inscritsMap = new HashMap<>();
-        for (ActivitatFormacio a : activitats) {
+        for (ActivitatFormacio a : mutableActivitats) {
             inscritsMap.put(a.getIdActivitat(), assistenciaFormacioDao.countInscrits(a.getIdActivitat()));
         }
 
-        model.addAttribute("activitats", activitats);
+        model.addAttribute("activitats", mutableActivitats);
         model.addAttribute("inscritsMap", inscritsMap);
+        model.addAttribute("cerca", cerca);
         model.addAttribute("usuariLogat", tecnic);
         return "activitatFormacio/list";
     }

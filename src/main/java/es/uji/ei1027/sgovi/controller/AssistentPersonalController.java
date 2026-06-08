@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/assistentpersonal")
 public class AssistentPersonalController {
@@ -33,8 +35,25 @@ public class AssistentPersonalController {
 
     // LISTAR
     @GetMapping("/list")
-    public String listAssistents(Model model) {
-        model.addAttribute("assistents", assistentPersonalDao.getAssistentsPersonals());
+    public String listAssistentsPersonals(@RequestParam(value = "cerca", required = false) String cerca, Model model) {
+        List<AssistentPersonal> assistents = assistentPersonalDao.getAssistentsPersonals();
+        String cercaLower = (cerca != null) ? cerca.toLowerCase() : null;
+
+        if (cercaLower != null && !cercaLower.trim().isEmpty()) {
+            assistents = assistents.stream().filter(u -> {
+                String nom = u.getNom() != null ? u.getNom().toLowerCase() : "";
+                String cognoms = u.getCognoms() != null ? u.getCognoms().toLowerCase() : "";
+                String email = u.getEmail() != null ? u.getEmail().toLowerCase() : "";
+                String tipus = u.getTipusAssistent() != null ? u.getTipusAssistent().toLowerCase() : "";
+                return nom.contains(cercaLower) || cognoms.contains(cercaLower) || email.contains(cercaLower) || tipus.contains(cercaLower);
+            }).toList();
+        }
+        
+        List<AssistentPersonal> mutableAssistents = new java.util.ArrayList<>(assistents);
+        mutableAssistents.sort((a, b) -> Integer.compare(b.getIdAssistent(), a.getIdAssistent()));
+
+        model.addAttribute("assistents", mutableAssistents);
+        model.addAttribute("cerca", cerca);
         return "assistentpersonal/list";
     }
 
@@ -119,6 +138,16 @@ public class AssistentPersonalController {
     public String deleteAssistent(@PathVariable int id) {
         assistentPersonalDao.deleteAssistentPersonal(id);
         return "redirect:/assistentpersonal/list";
+    }
+
+    @GetMapping("/rebutjar/{id}")
+    public String rebutjarAssistentForm(@PathVariable int id, Model model) {
+        AssistentPersonal assistent = assistentPersonalDao.getAssistentPersonal(id);
+        if (assistent == null) {
+            return "redirect:/assistentpersonal/list";
+        }
+        model.addAttribute("assistent", assistent);
+        return "assistentpersonal/rebutjar";
     }
 
     @PostMapping("/rebutjar/{id}")

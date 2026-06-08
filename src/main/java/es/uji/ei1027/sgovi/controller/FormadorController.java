@@ -26,8 +26,25 @@ public class FormadorController {
     }
 
     @GetMapping("/list")
-    public String listFormadors(Model model) {
-        model.addAttribute("formadors", formadorDao.getFormadors());
+    public String listFormadors(@RequestParam(value = "cerca", required = false) String cerca, Model model) {
+        java.util.List<Formador> formadors = formadorDao.getFormadors();
+        String cercaLower = (cerca != null) ? cerca.toLowerCase() : null;
+
+        if (cercaLower != null && !cercaLower.trim().isEmpty()) {
+            formadors = formadors.stream().filter(u -> {
+                String nom = u.getNom() != null ? u.getNom().toLowerCase() : "";
+                String cognoms = u.getCognoms() != null ? u.getCognoms().toLowerCase() : "";
+                String email = u.getEmail() != null ? u.getEmail().toLowerCase() : "";
+                String especialitat = u.getEspecialitat() != null ? u.getEspecialitat().toLowerCase() : "";
+                return nom.contains(cercaLower) || cognoms.contains(cercaLower) || email.contains(cercaLower) || especialitat.contains(cercaLower);
+            }).toList();
+        }
+        
+        java.util.List<Formador> mutableFormadors = new java.util.ArrayList<>(formadors);
+        mutableFormadors.sort((a, b) -> Integer.compare(b.getIdFormador(), a.getIdFormador()));
+
+        model.addAttribute("formadors", mutableFormadors);
+        model.addAttribute("cerca", cerca);
         return "formador/list";
     }
 

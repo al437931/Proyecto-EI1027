@@ -37,8 +37,26 @@ public class UsuariOVIController {
     }
 
     @GetMapping("/list")
-    public String listUsuariOVIs(Model model) {
-        model.addAttribute("usuaris", usuariOVIDao.getUsuariOVIs());
+    public String listUsuariOVIs(@RequestParam(value = "cerca", required = false) String cerca, Model model) {
+        List<UsuariOVI> usuaris = usuariOVIDao.getUsuariOVIs();
+        String cercaLower = (cerca != null) ? cerca.toLowerCase() : null;
+
+        if (cercaLower != null && !cercaLower.trim().isEmpty()) {
+            usuaris = usuaris.stream().filter(u -> {
+                String nom = u.getNom() != null ? u.getNom().toLowerCase() : "";
+                String cognoms = u.getCognoms() != null ? u.getCognoms().toLowerCase() : "";
+                String email = u.getEmail() != null ? u.getEmail().toLowerCase() : "";
+                String estat = u.getEstatCompte() != null ? u.getEstatCompte().toLowerCase() : "";
+                return nom.contains(cercaLower) || cognoms.contains(cercaLower) || email.contains(cercaLower) || estat.contains(cercaLower);
+            }).toList();
+        }
+        
+        // Convert to a mutable list before sorting
+        List<UsuariOVI> mutableUsuaris = new java.util.ArrayList<>(usuaris);
+        mutableUsuaris.sort((a, b) -> Integer.compare(b.getIdUsuari(), a.getIdUsuari()));
+
+        model.addAttribute("usuaris", mutableUsuaris);
+        model.addAttribute("cerca", cerca);
         return "usuariovi/list";
     }
 
@@ -143,6 +161,16 @@ public class UsuariOVIController {
                     "No es pot eliminar aquest usuari perquè té sol·licituds o historial associat. Es recomana canviar el seu estat a 'rebutjat' per desactivar-lo.");
         }
         return "redirect:/usuariovi/list";
+    }
+
+    @GetMapping("/rebutjar/{id}")
+    public String rebutjarUsuariForm(@PathVariable int id, Model model) {
+        UsuariOVI usuari = usuariOVIDao.getUsuariOVI(id);
+        if (usuari == null) {
+            return "redirect:/usuariovi/list";
+        }
+        model.addAttribute("usuari", usuari);
+        return "usuariovi/rebutjar";
     }
 
     @PostMapping("/activar/{id}")

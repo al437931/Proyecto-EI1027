@@ -56,7 +56,9 @@ public class AssistentPanelController {
 
     // GET /assistent/propostes - Veure les propostes de treball
     @GetMapping("/propostes")
-    public String propostes(HttpSession session, Model model) {
+    public String propostes(@RequestParam(value = "cerca", required = false) String cerca,
+                            @RequestParam(value = "estatFiltre", required = false) String estatFiltre,
+                            HttpSession session, Model model) {
         UsuariOVI sessionUser = getAssistentSession(session);
         if (sessionUser == null) {
             session.setAttribute("nextUrl", "/assistent/propostes");
@@ -68,10 +70,12 @@ public class AssistentPanelController {
         model.addAttribute("usuariLogat", sessionUser);
         
         // Obtenir seleccions (propostes de treball)
-        java.util.List<es.uji.ei1027.sgovi.model.Seleccion> seleccions = seleccionDao.getSeleccionsByAssistent(assistent.getIdAssistent());
-        
-        // Populate nomUsuariComplet for each seleccion
-        for (es.uji.ei1027.sgovi.model.Seleccion seleccion : seleccions) {
+        java.util.List<es.uji.ei1027.sgovi.model.Seleccion> totes = seleccionDao.getSeleccionsByAssistent(assistent.getIdAssistent());
+        java.util.List<es.uji.ei1027.sgovi.model.Seleccion> seleccions = new java.util.ArrayList<>();
+        String cercaLower = (cerca != null) ? cerca.toLowerCase() : null;
+
+        // Populate nomUsuariComplet for each seleccion and filter
+        for (es.uji.ei1027.sgovi.model.Seleccion seleccion : totes) {
             if (seleccion.getIdRequest() > 0) {
                 es.uji.ei1027.sgovi.model.APRequest apRequest = apRequestDao.getAPRequest(seleccion.getIdRequest());
                 if (apRequest != null && apRequest.getIdUsuari() > 0) {
@@ -87,10 +91,29 @@ public class AssistentPanelController {
             } else {
                 seleccion.setNomUsuariComplet("Sense sol·licitud");
             }
+
+            if (cercaLower != null && !cercaLower.trim().isEmpty()) {
+                String nomU = seleccion.getNomUsuariComplet().toLowerCase();
+                String reqId = "req-2026-" + String.format("%04d", seleccion.getIdRequest());
+                if (!nomU.contains(cercaLower) && !reqId.contains(cercaLower)) {
+                    continue;
+                }
+            }
+
+            if (estatFiltre != null && !estatFiltre.trim().isEmpty()) {
+                if (!seleccion.getEstat().equalsIgnoreCase(estatFiltre)) {
+                    continue;
+                }
+            }
+
+            seleccions.add(seleccion);
         }
         
-        model.addAttribute("seleccions", seleccions);
+        seleccions.sort((a, b) -> Integer.compare(b.getIdSeleccion(), a.getIdSeleccion()));
 
+        model.addAttribute("seleccions", seleccions);
+        model.addAttribute("cerca", cerca);
+        model.addAttribute("estatFiltre", estatFiltre);
         return "assistent/propostes";
     }
 

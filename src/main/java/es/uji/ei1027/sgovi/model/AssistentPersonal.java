@@ -14,6 +14,10 @@ public class AssistentPersonal {
     private String tipusAssistent; // "PAP" o "PATI"
     private String motiuRebuig;
 
+    // Transient fields for recommendations
+    private Integer afinitat = 0;
+    private Boolean recomanat = false;
+
     public AssistentPersonal() {
 
     }
@@ -117,6 +121,22 @@ public class AssistentPersonal {
 
     public void setMotiuRebuig(String motiuRebuig) {
         this.motiuRebuig = motiuRebuig;
+    }
+
+    public Integer getAfinitat() {
+        return afinitat;
+    }
+
+    public void setAfinitat(Integer afinitat) {
+        this.afinitat = afinitat;
+    }
+
+    public Boolean getRecomanat() {
+        return recomanat;
+    }
+
+    public void setRecomanat(Boolean recomanat) {
+        this.recomanat = recomanat;
     }
 
     @Override

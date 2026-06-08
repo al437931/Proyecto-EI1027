@@ -90,10 +90,29 @@ public class RegistreContracteController {
     }
 
     @GetMapping("/list")
-    public String listRegistres(Model model) {
-        model.addAttribute("registres", registreContracteDao.getRegistresContracte());
-        model.addAttribute("nomsAssistents", getMapaNomsAssistents());
-        model.addAttribute("nomsUsuaris", getMapaNomsUsuaris());
+    public String listRegistres(@RequestParam(value = "cerca", required = false) String cerca, Model model) {
+        List<RegistreContracte> registres = registreContracteDao.getRegistresContracte();
+        Map<Integer, String> nomsAssistents = getMapaNomsAssistents();
+        Map<Integer, String> nomsUsuaris = getMapaNomsUsuaris();
+        
+        String cercaLower = (cerca != null) ? cerca.toLowerCase() : null;
+
+        if (cercaLower != null && !cercaLower.trim().isEmpty()) {
+            registres = registres.stream().filter(u -> {
+                String reqStr = "req-2026-" + String.format("%04d", u.getIdRequest());
+                String nomAss = nomsAssistents.getOrDefault(u.getIdAssistent(), "").toLowerCase();
+                String nomUsr = nomsUsuaris.getOrDefault(u.getIdRequest(), "").toLowerCase();
+                return reqStr.contains(cercaLower) || nomAss.contains(cercaLower) || nomUsr.contains(cercaLower);
+            }).toList();
+        }
+        
+        List<RegistreContracte> mutableRegistres = new java.util.ArrayList<>(registres);
+        mutableRegistres.sort((a, b) -> Integer.compare(b.getIdContracte(), a.getIdContracte()));
+
+        model.addAttribute("registres", mutableRegistres);
+        model.addAttribute("nomsAssistents", nomsAssistents);
+        model.addAttribute("nomsUsuaris", nomsUsuaris);
+        model.addAttribute("cerca", cerca);
         return "registrecontracte/list";
     }
 

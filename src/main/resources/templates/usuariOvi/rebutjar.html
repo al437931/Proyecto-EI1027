@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}">
+<head><title>Rebutjar Usuari OVI</title></head>
+<body>
+<section layout:fragment="content">
+  <nav class="breadcrumb-sgovi" aria-label="Ruta">
+    <a th:href="@{/}">Inici</a><span class="separator">&#8250;</span>
+    <a th:href="@{/usuariovi/list}">Usuaris OVI</a><span class="separator">&#8250;</span>
+    <span class="current">Rebutjar compte</span>
+  </nav>
+
+  <div class="card confirm-card mt-5">
+    <div class="card-header">
+      <i class="bi bi-exclamation-triangle me-2"></i>Rebutjar Compte d'Usuari
+    </div>
+    <div class="card-body">
+      <p>Esteu segur que voleu rebutjar la sol·licitud de registre de l'usuari:</p>
+      <h4 class="text-center my-3" th:text="${usuari.nom + ' ' + usuari.cognoms}"></h4>
+      <p class="text-muted text-center" th:text="${usuari.email}"></p>
+
+      <form th:action="@{'/usuariovi/rebutjar/' + ${usuari.idUsuari}}" method="post">
+        <div class="mb-3">
+          <label for="motiu" class="form-label fw-bold">Motiu del rebuig (opcional)</label>
+          <textarea id="motiu" name="motiu" class="form-control" rows="3"
+                    placeholder="Indiqueu breument el motiu del rebuig..."></textarea>
+        </div>
+        
+        <div class="d-flex justify-content-center gap-3 mt-4">
+          <a th:href="@{/usuariovi/list}" class="btn btn-secondary">
+            <i class="bi bi-x-circle me-1"></i>Cancel·lar
+          </a>
+          <button type="submit" class="btn btn-danger">
+            <i class="bi bi-person-x me-1"></i>Rebutjar usuari
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+</body>
+</html>

@@ -31,13 +31,29 @@ public class ComunicacioUsuariOVIPAPController {
     }
 
     @GetMapping("/list")
-    public String listComunicacions(HttpSession session, Model model) {
+    public String listComunicacions(@RequestParam(value = "cerca", required = false) String cerca, HttpSession session, Model model) {
         UsuariOVI tecnic = getTecnicSession(session);
         if (tecnic == null) {
             session.setAttribute("nextUrl", "/comunicacio/list");
             return "redirect:/login";
         }
-        model.addAttribute("comunicacions", comunicacioDao.getComunicacions());
+        
+        java.util.List<ComunicacioUsuariOVIPAP> comunicacions = comunicacioDao.getComunicacions();
+        String cercaLower = (cerca != null) ? cerca.toLowerCase() : null;
+
+        if (cercaLower != null && !cercaLower.trim().isEmpty()) {
+            comunicacions = comunicacions.stream().filter(u -> {
+                String assumpte = u.getAssumpte() != null ? u.getAssumpte().toLowerCase() : "";
+                String destinatari = u.getDestinatari() != null ? u.getDestinatari().toLowerCase() : "";
+                return assumpte.contains(cercaLower) || destinatari.contains(cercaLower);
+            }).toList();
+        }
+
+        java.util.List<ComunicacioUsuariOVIPAP> mutableComunicacions = new java.util.ArrayList<>(comunicacions);
+        mutableComunicacions.sort((a, b) -> Integer.compare(b.getIdComunicacio(), a.getIdComunicacio()));
+
+        model.addAttribute("comunicacions", mutableComunicacions);
+        model.addAttribute("cerca", cerca);
         model.addAttribute("usuariLogat", tecnic);
         return "comunicacio/list";
     }
