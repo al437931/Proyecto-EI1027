@@ -86,15 +86,44 @@ public class BackOfficeController {
 
     // GET /tecnic/solicituds - panell principal del tècnic
     @RequestMapping(value = "/solicituds", method = RequestMethod.GET)
-    public String llistarSolicituds(HttpSession session, Model model) {
+    public String llistarSolicituds(@RequestParam(value = "cerca", required = false) String cerca,
+                                    @RequestParam(value = "estatFiltre", required = false) String estatFiltre,
+                                    HttpSession session, Model model) {
         UsuariOVI tecnic = getTecnicSession(session);
         if (tecnic == null) {
             session.setAttribute("nextUrl", "/tecnic/solicituds");
             return "redirect:/login";
         }
-        model.addAttribute("pendents", apRequestDao.getAPRequestsPendents());
-        model.addAttribute("totes", apRequestDao.getAPRequests());
-        model.addAttribute("nomsUsuaris", getMapaNomsUsuaris());
+
+        Map<Integer, String> mapNoms = getMapaNomsUsuaris();
+        String cercaLower = (cerca != null) ? cerca.toLowerCase() : null;
+
+        List<APRequest> pendents = apRequestDao.getAPRequestsPendents().stream().filter(s -> {
+            if (cercaLower != null && !cercaLower.trim().isEmpty()) {
+                String reqId = "req-2026-" + String.format("%04d", s.getIdRequest());
+                String nomU = mapNoms.getOrDefault(s.getIdUsuari(), "").toLowerCase();
+                if (!reqId.contains(cercaLower) && !nomU.contains(cercaLower)) return false;
+            }
+            return true;
+        }).sorted((a, b) -> Integer.compare(b.getIdRequest(), a.getIdRequest())).toList();
+
+        List<APRequest> totes = apRequestDao.getAPRequests().stream().filter(s -> {
+            if (cercaLower != null && !cercaLower.trim().isEmpty()) {
+                String reqId = "req-2026-" + String.format("%04d", s.getIdRequest());
+                String nomU = mapNoms.getOrDefault(s.getIdUsuari(), "").toLowerCase();
+                if (!reqId.contains(cercaLower) && !nomU.contains(cercaLower)) return false;
+            }
+            if (estatFiltre != null && !estatFiltre.trim().isEmpty()) {
+                if (!s.getEstat().equalsIgnoreCase(estatFiltre)) return false;
+            }
+            return true;
+        }).sorted((a, b) -> Integer.compare(b.getIdRequest(), a.getIdRequest())).toList();
+
+        model.addAttribute("pendents", pendents);
+        model.addAttribute("totes", totes);
+        model.addAttribute("nomsUsuaris", mapNoms);
+        model.addAttribute("cerca", cerca);
+        model.addAttribute("estatFiltre", estatFiltre);
         model.addAttribute("usuariLogat", tecnic);
         return "tecnic/solicituds";
     }
@@ -183,17 +212,68 @@ public class BackOfficeController {
 
     // GET /tecnic/solicitud/{idRequest}/candidats - Llista candidats per proposar
     @RequestMapping(value = "/solicitud/{idRequest}/candidats", method = RequestMethod.GET)
-    public String veureCandidats(@PathVariable int idRequest, HttpSession session, Model model) {
+    public String veureCandidats(@PathVariable int idRequest, 
+                                 @RequestParam(value = "cerca", required = false) String cerca,
+                                 HttpSession session, Model model) {
         UsuariOVI tecnic = getTecnicSession(session);
         if (tecnic == null) return "redirect:/login";
 
         APRequest solicitud = apRequestDao.getAPRequest(idRequest);
         if (solicitud == null) throw new SgoviException("Sol·licitud no trobada", "Error");
 
-        List<AssistentPersonal> candidats = assistentPersonalDao.getAssistentsAcceptatsByTipus(solicitud.getTipusAssistencia());
+        UsuariOVI solicitant = usuariOVIDao.getUsuariOVI(solicitud.getIdUsuari());
+        String nomSolicitant = solicitant != null
+                ? solicitant.getNom() + " " + solicitant.getCognoms()
+                : "Usuari #" + solicitud.getIdUsuari();
+
+        List<AssistentPersonal> tots = assistentPersonalDao.getAssistentsAcceptatsByTipus(solicitud.getTipusAssistencia());
+        List<AssistentPersonal> candidats = new java.util.ArrayList<>();
+        String cercaLower = (cerca != null) ? cerca.toLowerCase() : null;
+
+        // Extraure paraules clau de les necessitats de la sol·licitud (mes de 3 lletres)
+        String necessitats = (solicitud.getDescripcioNecessitats() != null) ? solicitud.getDescripcioNecessitats().toLowerCase() : "";
+        String[] paraulesClau = necessitats.split("\\W+");
+        List<String> keywords = new java.util.ArrayList<>();
+        for (String p : paraulesClau) {
+            if (p.length() > 3) keywords.add(p);
+        }
+
+        for (AssistentPersonal a : tots) {
+            String exp = (a.getExperiencia() != null) ? a.getExperiencia().toLowerCase() : "";
+            String form = (a.getFormacio() != null) ? a.getFormacio().toLowerCase() : "";
+            String disp = (a.getDisponibilitat() != null) ? a.getDisponibilitat().toLowerCase() : "";
+            
+            // Càlcul d'afinitat
+            int afinitat = 0;
+            String textAssistent = exp + " " + form + " " + disp;
+            for (String kw : keywords) {
+                if (textAssistent.contains(kw)) {
+                    afinitat++;
+                }
+            }
+            a.setAfinitat(afinitat);
+            a.setRecomanat(afinitat > 0);
+
+            // Filtratge per cerca manual
+            if (cercaLower != null && !cercaLower.trim().isEmpty()) {
+                String nomCompleto = (a.getNom() + " " + a.getCognoms()).toLowerCase();
+                if (!nomCompleto.contains(cercaLower) && 
+                    !exp.contains(cercaLower) && 
+                    !form.contains(cercaLower) && 
+                    !disp.contains(cercaLower)) {
+                    continue; // Skip if no match
+                }
+            }
+            candidats.add(a);
+        }
+
+        // Ordenar per afinitat (més recomanats primer)
+        candidats.sort((a, b) -> Integer.compare(b.getAfinitat(), a.getAfinitat()));
 
         model.addAttribute("solicitud", solicitud);
+        model.addAttribute("nomSolicitant", nomSolicitant);
         model.addAttribute("candidats", candidats);
+        model.addAttribute("cerca", cerca);
         model.addAttribute("usuariLogat", tecnic);
         return "tecnic/candidats";
     }

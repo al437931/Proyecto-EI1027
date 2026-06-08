@@ -122,7 +122,7 @@ public class LoginController {
             session.removeAttribute("nextUrl");
             return "redirect:" + nextUrl;
         }
-        return "redirect:/usuari/solicituds";
+        return "redirect:/";
     }
 
     // GET /logout - invalida la sessió
