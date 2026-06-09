@@ -32,11 +32,12 @@
 
         <div class="col-md-6">
             <label for="idRequest" class="form-label">Sol·licitud associada *</label>
-            <select id="idRequest" th:field="*{idRequest}" class="form-select" required disabled th:errorclass="is-invalid">
-                <option value="">-- Primer seleccioneu un assistent --</option>
+            <select id="idRequest" th:field="*{idRequest}" class="form-control" required th:errorclass="is-invalid">
+                <option value="">-- Seleccioneu una sol·licitud --</option>
+                <option th:each="s : ${solicituds}" th:value="${s.idRequest}" 
+                        th:text="|REQ-2026-${#numbers.formatInteger(s.idRequest, 4)} - ${s.tipusAssistencia} (${s.estat})|"></option>
             </select>
             <div th:if="${#fields.hasErrors('idRequest')}" th:errors="*{idRequest}" class="invalid-feedback"></div>
-            <div id="solicitudInfo" class="form-text"></div>
         </div>
 
         <div class="col-md-4">
@@ -67,65 +68,6 @@
             </a>
         </div>
     </form>
-    <script>
-        // Carrega les solicituds de l'assistent actual en cas d'error de validació
-        document.addEventListener('DOMContentLoaded', function() {
-            const idAssistent = document.getElementById('idAssistent').value;
-            const currentIdRequest = document.getElementById('idRequest').getAttribute('value');
-            if (idAssistent) {
-                // Necessitem un timeout xicotet per permetre que Thymeleaf assigne el valor
-                setTimeout(() => carregarSolicituds(idAssistent, currentIdRequest), 100);
-            }
-        });
-
-        document.getElementById('idAssistent').addEventListener('change', function() {
-            carregarSolicituds(this.value, null);
-        });
-
-        function carregarSolicituds(idAssistent, preselect) {
-            const selectSolicitud = document.getElementById('idRequest');
-            const infoDiv = document.getElementById('solicitudInfo');
-            
-            if (!idAssistent) {
-                selectSolicitud.innerHTML = '<option value="">-- Primer seleccioneu un assistent --</option>';
-                selectSolicitud.disabled = true;
-                infoDiv.textContent = '';
-                return;
-            }
-
-            selectSolicitud.innerHTML = '<option value="">Carregant...</option>';
-            selectSolicitud.disabled = true;
-
-            fetch('/registrecontracte/api/solicituds-per-assistent/' + idAssistent)
-                .then(r => r.json())
-                .then(data => {
-                    selectSolicitud.innerHTML = '';
-                    if (data.length === 0) {
-                        selectSolicitud.innerHTML = '<option value="">-- No hi ha sol·licituds per a aquest assistent --</option>';
-                        infoDiv.textContent = 'Aquest assistent no ha estat proposat en cap sol·licitud.';
-                        selectSolicitud.disabled = true;
-                        return;
-                    }
-                    selectSolicitud.innerHTML = '<option value="">-- Seleccioneu una sol·licitud --</option>';
-                    data.forEach(function(s) {
-                        const idPadded = String(s.idRequest).padStart(4, '0');
-                        const opt = document.createElement('option');
-                        opt.value = s.idRequest;
-                        opt.textContent = 'REQ-2026-' + idPadded + ' | ' + s.tipusAssistencia + ' | ' + s.nomUsuari + ' [' + s.estat + ']';
-                        if (s.idRequest == preselect) {
-                            opt.selected = true;
-                        }
-                        selectSolicitud.appendChild(opt);
-                    });
-                    selectSolicitud.disabled = false;
-                    infoDiv.textContent = data.length + ' sol·licitud(s) trobada(es).';
-                })
-                .catch(() => {
-                    selectSolicitud.innerHTML = '<option value="">Error al carregar</option>';
-                    selectSolicitud.disabled = true;
-                });
-        }
-    </script>
 </section>
 </body>
 </html>

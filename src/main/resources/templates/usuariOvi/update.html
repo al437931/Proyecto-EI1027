@@ -18,13 +18,7 @@
   <form th:action="@{/usuariovi/update}" th:object="${usuariOVI}" method="post" class="row g-3">
     <input type="hidden" th:field="*{idUsuari}"/>
 
-    <div class="col-md-12 mb-3">
-      <div class="alert alert-warning">
-        <i class="bi bi-key me-1"></i><strong>Atenció:</strong> La contrasenya de l'usuari és: 
-        <input type="text" th:field="*{password}" class="form-control d-inline-block w-auto ms-2" required/>
-        (Podeu canviar-la si l'usuari ho sol·licita)
-      </div>
-    </div>
+    <input type="hidden" th:field="*{password}"/>
 
     <div class="col-md-4">
       <label for="nom" class="form-label">Nom <span class="text-danger">*</span></label>

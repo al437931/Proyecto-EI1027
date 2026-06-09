@@ -89,16 +89,15 @@
               <td th:text="${s.nomAssistentComplet != null ? s.nomAssistentComplet : 'Assistent #' + s.idAssistent}"></td>
               <td th:text="${#temporals.format(s.dataProposta, 'dd/MM/yyyy')}"></td>
               <td>
-                <span th:class="${s.estat == 'Pendent Assistent' ? 'badge bg-warning text-dark' :
-                                 s.estat == 'pendent_ambdos' ? 'badge bg-warning text-dark' :
-                                 s.estat == 'Pendent Usuari' ? 'badge bg-info text-dark' :
-                                 s.estat == 'Acceptada' ? 'badge bg-success' : 'badge bg-secondary'}"
+                <span th:class="${s.estat == 'Pendent Assistent' ? 'badge bg-warning text-dark p-2 fs-6' :
+                                 s.estat == 'pendent_ambdos' ? 'badge bg-warning text-dark p-2 fs-6' :
+                                 s.estat == 'Pendent Usuari' ? 'badge bg-info text-dark p-2 fs-6' :
+                                 s.estat == 'Acceptada' ? 'badge bg-success p-2 fs-6' : 'badge bg-secondary p-2 fs-6'}"
                       th:text="${s.estat == 'pendent_ambdos' ? 'Pendent Ambdós' : s.estat}"></span>
               </td>
               <td>
                 <!-- Acció si està Pendent Usuari o pendent_ambdos (proposta del tècnic) -->
-                <form th:if="${s.estat == 'Pendent Usuari' or s.estat == 'pendent_ambdos'}" th:action="@{'/usuari/seleccion/' + ${s.idSeleccion} + '/acceptar'}" method="post" style="display:inline;"
-                      onsubmit="return confirm('Esteu segur de voler acceptar aquest assistent?')">
+                <form th:if="${s.estat == 'Pendent Usuari' or s.estat == 'pendent_ambdos'}" th:action="@{'/usuari/seleccion/' + ${s.idSeleccion} + '/acceptar'}" method="post" style="display:inline;">
                   <button type="submit" class="btn btn-sm btn-success">
                     <i class="bi bi-check-circle me-1"></i>Acceptar assistent
                   </button>
@@ -109,7 +108,10 @@
                   <i class="bi bi-file-earmark-pdf me-1"></i>Registrar contracte
                 </a>
                 
-                <span th:unless="${s.estat == 'Pendent Usuari' or s.estat == 'pendent_ambdos' or s.estat == 'Acceptada'}">-</span>
+                <!-- Botó missatge sempre visible quan hi ha una selecció -->
+                <a th:href="@{'/missatge/chat/' + ${s.idSeleccion}}" class="btn btn-sm btn-outline-info">
+                  <i class="bi bi-chat-dots me-1"></i>Missatge
+                </a>
               </td>
             </tr>
           </tbody>
@@ -133,7 +135,7 @@
     </div>
   </div>
 
-  <a th:href="@{/usuari/solicituds}" class="btn btn-outline-secondary mt-3">
+  <a th:href="@{/usuari/solicituds}" class="btn btn-dark mt-3">
     <i class="bi bi-arrow-left me-1"></i>Tornar a les meues sol·licituds
   </a>
 </section>

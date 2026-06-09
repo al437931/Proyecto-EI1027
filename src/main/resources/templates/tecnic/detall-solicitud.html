@@ -64,8 +64,7 @@
             <i class="bi bi-check-circle me-1"></i>Aprovar sol·licitud
           </button>
         </form>
-        <form th:action="@{'/tecnic/solicitud/' + ${solicitud.idRequest} + '/rebutjar'}" method="post"
-              onsubmit="return confirm('Esteu segur de voler rebutjar aquesta sol·licitud?')">
+        <form th:action="@{'/tecnic/solicitud/' + ${solicitud.idRequest} + '/rebutjar'}" method="post">
           <button type="submit" class="btn btn-danger">
             <i class="bi bi-x-circle me-1"></i>Rebutjar sol·licitud
           </button>
@@ -86,8 +85,7 @@
         <a th:href="@{'/tecnic/solicitud/' + ${solicitud.idRequest} + '/candidats'}" class="btn btn-primary btn-sm">
           <i class="bi bi-people me-1"></i>Proposar candidats
         </a>
-        <form th:action="@{'/tecnic/solicitud/' + ${solicitud.idRequest} + '/revertir'}" method="post"
-              onsubmit="return confirm('Esteu segur de voler desfer l\'aprovació?')">
+        <form th:action="@{'/tecnic/solicitud/' + ${solicitud.idRequest} + '/revertir'}" method="post">
           <button type="submit" class="btn btn-outline-danger btn-sm">
             <i class="bi bi-arrow-counterclockwise me-1"></i>Desfer aprovació
           </button>

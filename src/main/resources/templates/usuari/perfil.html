@@ -16,17 +16,16 @@
   <div class="card card-sgovi">
     <div class="card-body">
       <form th:action="@{/usuari/perfil}" th:object="${usuariOVI}" method="post" class="row g-3">
-        <!-- Només lectura -->
         <div class="col-md-4">
-          <label class="form-label">Email (No modificable)</label>
+          <label for="email" class="form-label">Email (No modificable)</label>
           <input type="email" class="form-control" th:field="*{email}" readonly disabled/>
         </div>
         <div class="col-md-4">
-          <label class="form-label">Estat del compte</label>
+          <label for="estatCompte" class="form-label">Estat del compte</label>
           <input type="text" class="form-control" th:field="*{estatCompte}" readonly disabled/>
         </div>
         <div class="col-md-4">
-          <label class="form-label">Data de registre</label>
+          <label for="dataRegistre" class="form-label">Data de registre</label>
           <input type="date" class="form-control" th:field="*{dataRegistre}" readonly disabled/>
         </div>
 

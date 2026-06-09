@@ -20,19 +20,19 @@
       <form th:action="@{/assistent/perfil}" th:object="${assistent}" method="post" class="row g-3">
         <!-- Camps de només lectura -->
         <div class="col-md-3">
-          <label class="form-label">ID</label>
+          <label for="idAssistentDisabled" class="form-label">ID</label>
           <input type="hidden" th:field="*{idAssistent}"/>
-          <input type="text" class="form-control" th:value="${assistent.idAssistent}" readonly disabled/>
+          <input type="text" id="idAssistentDisabled" class="form-control" th:value="${assistent.idAssistent}" readonly disabled/>
         </div>
         <div class="col-md-3">
-          <label class="form-label">Email (No modificable)</label>
+          <label for="emailDisabled" class="form-label">Email (No modificable)</label>
           <input type="hidden" th:field="*{email}"/>
-          <input type="email" class="form-control" th:value="${assistent.email}" readonly disabled/>
+          <input type="email" id="emailDisabled" class="form-control" th:value="${assistent.email}" readonly disabled/>
         </div>
         <div class="col-md-3">
-          <label class="form-label">Tipus</label>
+          <label for="tipusDisabled" class="form-label">Tipus</label>
           <input type="hidden" th:field="*{tipusAssistent}"/>
-          <input type="text" class="form-control" th:value="${assistent.tipusAssistent}" readonly disabled/>
+          <input type="text" id="tipusDisabled" class="form-control" th:value="${assistent.tipusAssistent}" readonly disabled/>
         </div>
         <div class="col-md-3">
           <label class="form-label">Estat</label>
